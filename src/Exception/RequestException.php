@@ -1,10 +1,17 @@
 <?php
 /**
- *
+ * Class RequestException
  */
 
 namespace CheckoutFinland\SDK\Exception;
 
+/**
+ * Class RequestException
+ *
+ * An abstraction for all request exceptions.
+ *
+ * @package CheckoutFinland\SDK\Exception
+ */
 abstract class RequestException extends \Exception {
 
     protected $responses = [

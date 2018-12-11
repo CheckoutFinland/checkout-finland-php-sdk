@@ -1,15 +1,15 @@
 <?php
 /**
- * Class Property
+ * Class PropertyException
  */
 
 namespace CheckoutFinland\SDK\Exception;
 
 /**
- * Class Property
+ * Class PropertyException
  *
  * Thrown for erroneous object properties.
  *
  * @package CheckoutFinland\SDK\Exception
  */
-class Property extends \Exception {}
+class PropertyException extends \Exception {}

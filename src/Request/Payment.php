@@ -5,8 +5,7 @@
 
 namespace CheckoutFinland\SDK\Request;
 
-use CheckoutFinland\SDK\Exception\MissingParameter;
-use CheckoutFinland\SDK\Exception;
+use CheckoutFinland\SDK\Exception\PropertyException;
 use CheckoutFinland\SDK\Model\Address;
 use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\Customer;
@@ -100,7 +99,7 @@ class Payment implements \JsonSerializable {
     /**
      * Validates with Respect\Validation library and throws exception for invalid objects
      *
-     * @throws Exception\Property
+     * @throws PropertyException
      */
     public function validate() {
         $props = get_object_vars( $this );
@@ -127,7 +126,7 @@ class Payment implements \JsonSerializable {
             }, $e->getMessages() );
 
             // Throw a property exception with all the errors.
-            throw new Exception\Property( join( ', ' , $messages ) );
+            throw new PropertyException( join( ', ' , $messages ) );
         }
     }
 

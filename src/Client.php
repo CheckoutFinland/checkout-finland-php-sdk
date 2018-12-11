@@ -138,8 +138,8 @@ class Client {
      *
      * @param Payment $payment A payment class instance.
      *
-     * @throws Exception\Property       An error is thrown if payment properties are invalid.
-     * @throws Exception\PaymentRequest An error is thrown for erroneous requests.
+     * @throws Exception\PropertyException       An error is thrown if payment properties are invalid.
+     * @throws Exception\PaymentRequestException An error is thrown for erroneous requests.
      */
     public function create_payment( Payment $payment ) {
         $payment->validate();
@@ -156,7 +156,7 @@ class Client {
         }
         catch ( \Exception $e ) {
             $code = $e->getCode();
-            throw new Exception\PaymentRequest( 'An error occurred creating the payment request.', $code );
+            throw new Exception\PaymentRequestException( 'An error occurred creating the payment request.', $code );
         }
     }
 }
