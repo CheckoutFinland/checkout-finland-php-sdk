@@ -18,7 +18,7 @@ trait PropertyBinder {
      *
      * @param \stdClass|array $props The properties.
      */
-    protected function bind_properties( $props ) {
+    public function bind_properties( $props ) {
         if ( ! empty( $props ) ) {
             if ( is_object( $props ) ) {
                 $props = get_object_vars( $props );

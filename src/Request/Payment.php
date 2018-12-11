@@ -5,12 +5,19 @@
 
 namespace CheckoutFinland\SDK\Request;
 
+use CheckoutFinland\SDK\Exception\MissingParameter;
+use CheckoutFinland\SDK\Exception;
 use CheckoutFinland\SDK\Model\Address;
 use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\Customer;
 use CheckoutFinland\SDK\Model\Item;
+use CheckoutFinland\SDK\Util\JsonSerializable;
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
 
-class Payment {
+class Payment implements \JsonSerializable {
+
+    use JsonSerializable;
 
     /**
      * Merchant unique identifier for the order.
@@ -91,6 +98,40 @@ class Payment {
     protected $callbackUrls;
 
     /**
+     * Validates with Respect\Validation library and throws exception for invalid objects
+     *
+     * @throws Exception\Property
+     */
+    public function validate() {
+        $props = get_object_vars( $this );
+
+        try {
+            v::key( 'amount', v::notEmpty()->intVal() )
+                ->key( 'reference', v::notEmpty()->alnum()->length( 1, 50 ) )
+                ->key( 'stamp', v::notEmpty()->alnum()->length( 1, 20 ) )
+                ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
+                ->key( 'language', v::oneOf(
+                    v::equals( 'FI' ),
+                    v::equals( 'SV' ),
+                    v::equals( 'EN' )
+                ) )
+                ->key( 'items', v::notEmpty( ) )
+                ->key( 'customer', v::notEmpty( ) )
+                ->key( 'redirectUrls', v::notEmpty( ) )
+                ->assert( $props );
+        }
+        catch ( NestedValidationException $e ) {
+            // Collect all errors
+            $messages = array_map( function( $message ) {
+                return $message;
+            }, $e->getMessages() );
+
+            // Throw a property exception with all the errors.
+            throw new Exception\Property( join( ', ' , $messages ) );
+        }
+    }
+
+    /**
      * Get stamp.
      *
      * @return string
@@ -104,10 +145,12 @@ class Payment {
 
     Set     .
      * @param string $stamp
+     * @return self Return the instance to enable chaining.
      */
-    public function setStamp( string $stamp ): void {
-
+    public function setStamp( string $stamp ) : Payment {
         $this->stamp = $stamp;
+
+        return $this;
     }
 
     /**
@@ -124,10 +167,13 @@ class Payment {
      * Set reference.
      *
      * @param string $reference
+     * @return self Return the instance to enable chaining.
      */
-    public function setReference( string $reference ): void {
+    public function setReference( string $reference ) : Payment {
 
         $this->reference = $reference;
+
+        return $this;
     }
 
     /**
@@ -145,10 +191,13 @@ class Payment {
     Set
     .
      * @param int $amount
+     * @return self Return the instance to enable chaining.
      */
-    public function setAmount( int $amount ): void {
+    public function setAmount( int $amount ) : Payment {
 
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -165,10 +214,13 @@ class Payment {
      * Set currency.
      *
      * @param string $currency
+     * @return self Return the instance to enable chaining.
      */
-    public function setCurrency( string $currency ): void {
+    public function setCurrency( string $currency ) : Payment {
 
         $this->currency = $currency;
+
+        return $this;
     }
 
     /**
@@ -185,10 +237,13 @@ class Payment {
      * Set language.
      *
      * @param string $language
+     * @return self Return the instance to enable chaining.
      */
-    public function setLanguage( string $language ): void {
+    public function setLanguage( string $language ) : Payment {
 
         $this->language = $language;
+
+        return $this;
     }
 
     /**
@@ -205,10 +260,13 @@ class Payment {
 
     Set     .
      * @param Item[] $items
+     * @return self Return the instance to enable chaining.
      */
-    public function setItems( array $items ): void {
+    public function setItems( array $items ) : Payment {
 
         $this->items = $items;
+
+        return $this;
     }
 
     /**
@@ -225,10 +283,13 @@ class Payment {
      * Set customer.
      *
      * @param Customer $customer
+     * @return self Return the instance to enable chaining.
      */
-    public function setCustomer( Customer $customer ): void {
+    public function setCustomer( Customer $customer ) : Payment {
 
         $this->customer = $customer;
+
+        return $this;
     }
 
     /**
@@ -245,10 +306,13 @@ class Payment {
      * Set deliveryAddress.
      *
      * @param Address $deliveryAddress
+     * @return self Return the instance to enable chaining.
      */
-    public function setDeliveryAddress( Address $deliveryAddress ): void {
+    public function setDeliveryAddress( Address $deliveryAddress ) : Payment {
 
         $this->deliveryAddress = $deliveryAddress;
+
+        return $this;
     }
 
     /**
@@ -265,10 +329,13 @@ class Payment {
      * Set invoicingAddress.
      *
      * @param Item[] $invoicingAddress
+     * @return self Return the instance to enable chaining.
      */
-    public function setInvoicingAddress( array $invoicingAddress ): void {
+    public function setInvoicingAddress( array $invoicingAddress ) : Payment {
 
         $this->invoicingAddress = $invoicingAddress;
+
+        return $this;
     }
 
     /**
@@ -285,10 +352,13 @@ class Payment {
      * Set redirectUrls.
      *
      * @param CallbackUrl $redirectUrls
+     * @return self Return the instance to enable chaining.
      */
-    public function setRedirectUrls( CallbackUrl $redirectUrls ): void {
+    public function setRedirectUrls( CallbackUrl $redirectUrls ) : Payment {
 
         $this->redirectUrls = $redirectUrls;
+
+        return $this;
     }
 
     /**
@@ -305,10 +375,13 @@ class Payment {
      * Set callbackUrls.
      *
      * @param CallbackUrl $callbackUrls
+     * @return self Return the instance to enable chaining.
      */
-    public function setCallbackUrls( CallbackUrl $callbackUrls ): void {
+    public function setCallbackUrls( CallbackUrl $callbackUrls ) : Payment {
 
         $this->callbackUrls = $callbackUrls;
+
+        return $this;
     }
 
 }

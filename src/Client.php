@@ -5,8 +5,14 @@
 
 namespace CheckoutFinland\SDK;
 
-use CheckoutFinland\SDK\Request\Payment;
-use Psr\Log\LoggerInterface;
+use \CheckoutFinland\SDK\Exception;
+use \CheckoutFinland\SDK\Request\Payment;
+use \GuzzleHttp\Psr7\Uri;
+use \GuzzleHttp\HandlerStack;
+use \GuzzleHttp\Middleware;
+use \GuzzleHttp\MessageFormatter;
+use \GuzzleHttp\Client as GuzzleHttpClient;
+use \Psr\Log\LoggerInterface;
 
 class Client {
 
@@ -94,7 +100,7 @@ class Client {
 
         $stack = $this->create_logger_stack( $args );
 
-        $this->http_client = new \GuzzleHttp\Client(
+        $this->http_client = new GuzzleHttpClient(
             [
                 'headers'  => [],
                 'base_uri' => self::API_ENPOINT,
@@ -110,24 +116,44 @@ class Client {
      *
      * @param array $args Passed client arguments.
      *
-     * @return \GuzzleHttp\HandlerStack
+     * @return HandlerStack
      */
     private function create_logger_stack( array $args ) {
         if ( empty( $args['logger'] ) ) {
-            return \GuzzleHttp\HandlerStack::create();
+            return HandlerStack::create();
         }
 
-        $stack = \GuzzleHttp\HandlerStack::create();
+        $stack = HandlerStack::create();
         $stack->push(
-            \GuzzleHttp\Middleware::log(
+            Middleware::log(
                 $args['logger'],
-                new \GuzzleHttp\MessageFormatter( $args['message_format'] ?? '{uri}: {req_body} - {res_body}' )
+                new MessageFormatter( $args['message_format'] ?? '{uri}: {req_body} - {res_body}' )
             )
         );
         return $stack;
     }
 
+    /**
+     * Create a payment request.
+     *
+     * @param Payment $payment A payment class instance.
+     *
+     * @throws Exception\PaymentRequest An error is thrown for erroneous requests.
+     */
     public function create_payment( Payment $payment ) {
+        try {
+            $uri = new Uri( '/payments' );
+            $response = $this->http_client->post( $uri, [ 'json' => $payment ] );
+            $body = (string) $response->getBody();
+            $decoded = json_decode( $body );
 
+            $payment_response = new Response\Payment();
+            $payment_response->bind_properties( $decoded );
+            $payment_response->setProviders( $decoded->providers ?? null );
+        }
+        catch ( \Exception $e ) {
+            $code = $e->getCode();
+            throw new Exception\PaymentRequest( 'An error occurred creating the payment request.', $code );
+        }
     }
 }
