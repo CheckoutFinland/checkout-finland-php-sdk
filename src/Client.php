@@ -138,14 +138,17 @@ class Client {
      *
      * @param Payment $payment A payment class instance.
      *
+     * @throws Exception\Property       An error is thrown if payment properties are invalid.
      * @throws Exception\PaymentRequest An error is thrown for erroneous requests.
      */
     public function create_payment( Payment $payment ) {
+        $payment->validate();
+
         try {
-            $uri = new Uri( '/payments' );
+            $uri      = new Uri( '/payments' );
             $response = $this->http_client->post( $uri, [ 'json' => $payment ] );
-            $body = (string) $response->getBody();
-            $decoded = json_decode( $body );
+            $body     = (string) $response->getBody();
+            $decoded  = json_decode( $body );
 
             $payment_response = new Response\Payment();
             $payment_response->bind_properties( $decoded );
