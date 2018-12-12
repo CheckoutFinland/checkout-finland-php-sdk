@@ -36,8 +36,7 @@ class Payment extends Response {
      *
      * @return string
      */
-    public function getTransactionId(): string {
-
+    public function getTransactionId() : string {
         return $this->transactionId;
     }
 
@@ -45,10 +44,12 @@ class Payment extends Response {
      * Set the transaction id.
      *
      * @param string $transactionId
+     * @return Payment Return self to enable chaining.
      */
-    public function setTransactionId( string $transactionId ): void {
-
+    public function setTransactionId( string $transactionId ) : Payment {
         $this->transactionId = $transactionId;
+
+        return $this;
     }
 
     /**
@@ -56,8 +57,7 @@ class Payment extends Response {
      *
      * @return string
      */
-    public function getHref(): string {
-
+    public function getHref() : string {
         return $this->href;
     }
 
@@ -65,10 +65,12 @@ class Payment extends Response {
      * Set the href.
      *
      * @param string $href
+     * @return Payment Return self to enable chaining.
      */
-    public function setHref( string $href ): void {
-
+    public function setHref( string $href ) : Payment {
         $this->href = $href;
+
+        return $this;
     }
 
     /**
@@ -76,7 +78,7 @@ class Payment extends Response {
      *
      * @return Provider[]
      */
-    public function getProviders(): array {
+    public function getProviders() : array {
 
         return $this->providers;
     }
@@ -88,11 +90,12 @@ class Payment extends Response {
      * or an array of stdClass instance. The latter will
      * be converted into provider class instances.
      *
-     * @param Provider[]|array $providers
+     * @param Provider[]|array $providers The providers.
+     * @return Payment Return self to enable chaining.
      */
-    public function setProviders( ?array $providers ): void {
+    public function setProviders( ?array $providers ) : Payment {
         if ( empty( $providers ) ) {
-            return;
+            return $this;
         }
 
         array_walk( $providers, function( $provider ) {
@@ -105,6 +108,7 @@ class Payment extends Response {
                 $this->providers[] = $provider;
             }
         } );
-    }
 
+        return $this;
+    }
 }

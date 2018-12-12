@@ -7,6 +7,7 @@ namespace CheckoutFinland\SDK;
 
 use \CheckoutFinland\SDK\Exception;
 use \CheckoutFinland\SDK\Request\Payment;
+use \CheckoutFinland\SDK\Response\Payment as PaymentResponse;
 use \GuzzleHttp\Psr7\Uri;
 use \GuzzleHttp\HandlerStack;
 use \GuzzleHttp\Middleware;
@@ -35,7 +36,7 @@ class Client {
      *
      * @return int
      */
-    public function getMerchantId(): int {
+    public function getMerchantId() : int {
 
         return $this->merchantId;
     }
@@ -43,10 +44,13 @@ class Client {
     /**
      * Set the merchant id.
      *
-     * @param int $merchantId
+     * @param int $merchantId The merchant id.
+     * @return Client Return self to enable chaining.
      */
-    public function setMerchantId( int $merchantId ): void {
+    public function setMerchantId( int $merchantId ) : Client {
         $this->merchantId = $merchantId;
+
+        return $this;
     }
 
     /**
@@ -54,7 +58,7 @@ class Client {
      *
      * @return string
      */
-    public function getSecretKey(): string {
+    public function getSecretKey() : string {
 
         return $this->secretKey;
     }
@@ -62,10 +66,13 @@ class Client {
     /**
      * Set the merchant secret key.
      *
-     * @param string $secretKey
+     * @param string $secretKey The secrect key.
+     * @return Client Return self to enable chaining.
      */
-    public function setSecretKey( string $secretKey ): void {
+    public function setSecretKey( string $secretKey ) : Client {
         $this->secretKey = $secretKey;
+
+        return $this;
     }
 
     /**
@@ -144,6 +151,7 @@ class Client {
      * Create a payment request.
      *
      * @param Payment $payment A payment class instance.
+     * @return PaymentResponse
      *
      * @throws Exception\PropertyException       An error is thrown if payment properties are invalid.
      * @throws Exception\PaymentRequestException An error is thrown for erroneous requests.
@@ -157,9 +165,11 @@ class Client {
             $body     = (string) $response->getBody();
             $decoded  = json_decode( $body );
 
-            $payment_response = new Response\Payment();
+            $payment_response = new PaymentResponse();
             $payment_response->bind_properties( $decoded );
             $payment_response->setProviders( $decoded->providers ?? null );
+
+            return $payment_response;
         }
         catch ( \Exception $e ) {
             $code = $e->getCode();
