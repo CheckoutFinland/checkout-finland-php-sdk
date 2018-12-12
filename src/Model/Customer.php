@@ -10,6 +10,7 @@ namespace CheckoutFinland\SDK\Model;
  *
  * The customer class defines the customer details object.
  *
+ * @see https://checkoutfinland.github.io/psp-api/#/?id=customer
  * @package CheckoutFinland\SDK\Model
  */
 class Customer {

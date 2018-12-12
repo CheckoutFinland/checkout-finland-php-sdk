@@ -10,6 +10,7 @@ namespace CheckoutFinland\SDK\Model;
  *
  * This class defines address details for a payment request.
  *
+ * @see https://checkoutfinland.github.io/psp-api/#/?id=address
  * @package CheckoutFinland\SDK\Model
  */
 class Address {

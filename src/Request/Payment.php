@@ -20,6 +20,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * This class is used to create a payment request object for
  * the CheckoutFinland\SDK\Client class.
  *
+ * @see https://checkoutfinland.github.io/psp-api/#/?id=create-request-body
  * @package CheckoutFinland\SDK\Request
  */
 class Payment implements \JsonSerializable {
