@@ -112,7 +112,7 @@ class Client {
         $this->setMerchantId( $merchantId );
         $this->setSecretKey( $secretKey );
 
-        $stack = $this->create_logger_stack( $args );
+        $stack = $this->createLoggerStack( $args );
 
         $this->http_client = new GuzzleHttpClient(
             [
@@ -132,7 +132,7 @@ class Client {
      *
      * @return HandlerStack
      */
-    private function create_logger_stack( array $args ) {
+    private function createLoggerStack( array $args ) {
         if ( empty( $args['logger'] ) ) {
             return HandlerStack::create();
         }
@@ -148,6 +148,65 @@ class Client {
     }
 
     /**
+     * Format request headers.
+     *
+     * @param string $method The request method. GET or POST.
+     *
+     * @return array
+     */
+    protected function getHeaders( string $method ) {
+        $headers = [
+            'checkout-account'   => $this->merchantId,
+            'checkout-algorithm' => 'sha256',
+            'checkout-method'    => strtoupper( $method ),
+            'checkout-nonce'     => uniqid( true ),
+            'checkout-timestamp' => date_format( date_create( '@'. time() ), 'c') . 'Z',
+            'content-type'       => 'application/json; charset=utf-8'
+        ];
+        return $headers;
+    }
+
+    /**
+     * Get a list of payment providers.
+     *
+     * @param int $amount Purchase amount in currency's minor unit.
+     * @return \stdClass
+     *
+     * @throws Exception\PaymentProvidersRequestException An error is thrown for erroneous requests.
+     */
+    public function getPaymentProviders( int $amount = null ) {
+        try {
+            $uri      = new Uri( '/merchants/payment-providers' );
+
+            $headers = $this->getHeaders( 'GET' );
+            $mac     = $this->calculateHmac( $headers );
+
+            // Set the MAC signature.
+            $headers['signature'] = $mac;
+            $request_params = [
+                'headers' => $headers,
+            ];
+
+            // Set the amount query parameter.
+            if ( $amount !== null ) {
+                $request_params['query'] = [
+                    'amount' => $amount
+                ];
+            }
+
+            $response = $this->http_client->get( $uri, $request_params );
+            $body     = (string) $response->getBody();
+            $decoded  = json_decode( $body );
+
+            return $decoded;
+        }
+        catch ( \Exception $e ) {
+            $code = $e->getCode();
+            throw new Exception\PaymentProvidersRequestException( 'An error occurred creating the payment request.', $code );
+        }
+    }
+
+    /**
      * Create a payment request.
      *
      * @param Payment $payment A payment class instance.
@@ -156,7 +215,7 @@ class Client {
      * @throws Exception\PropertyException       An error is thrown if payment properties are invalid.
      * @throws Exception\PaymentRequestException An error is thrown for erroneous requests.
      */
-    public function create_payment( Payment $payment ) {
+    public function createPayment( Payment $payment ) {
         $payment->validate();
 
         try {
@@ -175,5 +234,33 @@ class Client {
             $code = $e->getCode();
             throw new Exception\PaymentRequestException( 'An error occurred creating the payment request.', $code );
         }
+    }
+
+    /**
+     * Calculate Checkout HMAC
+     *
+     * @param array[string]|string  $params HTTP headers or query string
+     * @param string                $body HTTP request body, empty string for GET requests
+     * @return string SHA-256 HMAC
+     */
+    protected function calculateHmac( $params, string $body = '' ) {
+        // Keep only checkout- params, more relevant for response validation.
+        $includedKeys = array_filter( array_keys( $params ), function ( $key ) {
+            return preg_match( '/^checkout-/', $key );
+        });
+
+        // Keys must be sorted alphabetically
+        sort( $includedKeys, SORT_STRING );
+
+        $hmacPayload = array_map(
+            function ( $key ) use ( $params ) {
+                return join(':', [ $key, $params[ $key ] ]);
+            },
+            $includedKeys
+        );
+
+        array_push( $hmacPayload, $body );
+
+        return hash_hmac( 'sha256', join( "\n", $hmacPayload ) , $this->secretKey );
     }
 }

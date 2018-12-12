@@ -22,7 +22,6 @@ abstract class RequestException extends \Exception {
         '401' => [
             'text'        => 'Unauthorized',
             'description' => 'HMAC calculation failed or Merchant has no access to this feature.',
-
         ],
         '404' => [
             'text'        => 'Not Found',
