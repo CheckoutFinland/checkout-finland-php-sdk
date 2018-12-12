@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Class Payment
  */
 
 namespace CheckoutFinland\SDK\Request;
@@ -14,6 +14,14 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
+/**
+ * Class Payment
+ *
+ * This class is used to create a payment request object for
+ * the CheckoutFinland\SDK\Client class.
+ *
+ * @package CheckoutFinland\SDK\Request
+ */
 class Payment implements \JsonSerializable {
 
     use JsonSerializable;
@@ -256,8 +264,8 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-
-    Set     .
+     * Set items.
+     *
      * @param Item[] $items
      * @return self Return the instance to enable chaining.
      */

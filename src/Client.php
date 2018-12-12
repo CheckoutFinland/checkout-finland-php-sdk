@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Class Client
  */
 
 namespace CheckoutFinland\SDK;
@@ -14,6 +14,13 @@ use \GuzzleHttp\MessageFormatter;
 use \GuzzleHttp\Client as GuzzleHttpClient;
 use \Psr\Log\LoggerInterface;
 
+/**
+ * Class Client
+ *
+ * The client is the connector class for the API.
+ *
+ * @package CheckoutFinland\SDK
+ */
 class Client {
 
     /**
