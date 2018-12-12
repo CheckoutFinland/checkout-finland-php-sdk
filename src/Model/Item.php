@@ -132,7 +132,7 @@ class Item {
      *
      * @return int
      */
-    public function getUnitPrice(): int {
+    public function getUnitPrice(): ?int {
         return $this->unitPrice;
     }
 
@@ -153,7 +153,7 @@ class Item {
      *
      * @return int
      */
-    public function getUnits(): int {
+    public function getUnits(): ?int {
         return $this->units;
     }
 
@@ -174,7 +174,7 @@ class Item {
      *
      * @return int
      */
-    public function getVatPercentage(): int {
+    public function getVatPercentage(): ?int {
         return $this->vatPercentage;
     }
 
@@ -195,7 +195,7 @@ class Item {
      *
      * @return string
      */
-    public function getProductCode(): string {
+    public function getProductCode(): ?string {
         return $this->productCode;
     }
 
@@ -216,7 +216,7 @@ class Item {
      *
      * @return string
      */
-    public function getDeliveryDate(): string {
+    public function getDeliveryDate(): ?string {
         return $this->deliveryDate;
     }
 
@@ -237,7 +237,7 @@ class Item {
      *
      * @return string
      */
-    public function getDescription(): string {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
@@ -258,7 +258,7 @@ class Item {
      *
      * @return string
      */
-    public function getCategory(): string {
+    public function getCategory(): ?string {
         return $this->category;
     }
 
@@ -279,7 +279,7 @@ class Item {
      *
      * @return string
      */
-    public function getStamp(): string {
+    public function getStamp(): ?string {
         return $this->stamp;
     }
 
@@ -300,7 +300,7 @@ class Item {
      *
      * @return string
      */
-    public function getReference(): string {
+    public function getReference(): ?string {
         return $this->reference;
     }
 
@@ -321,7 +321,7 @@ class Item {
      *
      * @return string
      */
-    public function getMerchant(): string {
+    public function getMerchant(): ?string {
         return $this->merchant;
     }
 
@@ -342,7 +342,7 @@ class Item {
      *
      * @return Comission
      */
-    public function getCommission(): Comission {
+    public function getCommission(): ?Comission {
         return $this->commission;
     }
 

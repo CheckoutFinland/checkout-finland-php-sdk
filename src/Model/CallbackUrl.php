@@ -34,7 +34,7 @@ class CallbackUrl {
      *
      * @return string
      */
-    public function getSuccess(): string {
+    public function getSuccess(): ?string {
 
         return $this->success;
     }
@@ -56,7 +56,7 @@ class CallbackUrl {
      *
      * @return string
      */
-    public function getCancel(): string {
+    public function getCancel(): ?string {
 
         return $this->cancel;
     }

@@ -79,7 +79,7 @@ class Customer {
      *
      * @return string
      */
-    public function getEmail(): string {
+    public function getEmail(): ?string {
 
         return $this->email;
     }
@@ -102,7 +102,7 @@ class Customer {
      *
      * @return string
      */
-    public function getFirstName(): string {
+    public function getFirstName(): ?string {
 
         return $this->firstName;
     }
@@ -125,7 +125,7 @@ class Customer {
      *
      * @return string
      */
-    public function getLastName(): string {
+    public function getLastName(): ?string {
 
         return $this->lastName;
     }
@@ -148,7 +148,7 @@ class Customer {
      *
      * @return string
      */
-    public function getPhone(): string {
+    public function getPhone(): ?string {
 
         return $this->phone;
     }
@@ -171,7 +171,7 @@ class Customer {
      *
      * @return string
      */
-    public function getVatId(): string {
+    public function getVatId(): ?string {
 
         return $this->vatId;
     }

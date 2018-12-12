@@ -74,7 +74,7 @@ class Provider {
      *
      * @return string
      */
-    public function getUrl() : string {
+    public function getUrl() : ?string {
 
         return $this->url;
     }
@@ -96,7 +96,7 @@ class Provider {
      *
      * @return string
      */
-    public function getIcon() : string {
+    public function getIcon() : ?string {
 
         return $this->icon;
     }
@@ -118,7 +118,7 @@ class Provider {
      *
      * @return string
      */
-    public function getSvg() : string {
+    public function getSvg() : ?string {
 
         return $this->svg;
     }
@@ -140,7 +140,7 @@ class Provider {
      *
      * @return string
      */
-    public function getName() : string {
+    public function getName() : ?string {
 
         return $this->name;
     }
@@ -162,7 +162,7 @@ class Provider {
      *
      * @return string
      */
-    public function getGroup() : string {
+    public function getGroup() : ?string {
 
         return $this->group;
     }
@@ -184,7 +184,7 @@ class Provider {
      *
      * @return string
      */
-    public function getId() : string {
+    public function getId() : ?string {
 
         return $this->id;
     }
@@ -206,7 +206,7 @@ class Provider {
      *
      * @return array
      */
-    public function getParameters() : array {
+    public function getParameters() : ?array {
 
         return $this->parameters;
     }

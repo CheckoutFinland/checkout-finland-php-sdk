@@ -36,7 +36,7 @@ class Payment extends Response {
      *
      * @return string
      */
-    public function getTransactionId() : string {
+    public function getTransactionId() : ?string {
         return $this->transactionId;
     }
 
@@ -57,7 +57,7 @@ class Payment extends Response {
      *
      * @return string
      */
-    public function getHref() : string {
+    public function getHref() : ?string {
         return $this->href;
     }
 
@@ -78,7 +78,7 @@ class Payment extends Response {
      *
      * @return Provider[]
      */
-    public function getProviders() : array {
+    public function getProviders() : ?array {
 
         return $this->providers;
     }

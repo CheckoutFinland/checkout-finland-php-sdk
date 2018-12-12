@@ -36,7 +36,7 @@ class Client {
      *
      * @return int
      */
-    public function getMerchantId() : int {
+    public function getMerchantId() : ?int {
 
         return $this->merchantId;
     }
@@ -58,7 +58,7 @@ class Client {
      *
      * @return string
      */
-    public function getSecretKey() : string {
+    public function getSecretKey() : ?string {
 
         return $this->secretKey;
     }

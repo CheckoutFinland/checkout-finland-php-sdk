@@ -156,7 +156,7 @@ class Payment implements \JsonSerializable {
      *
      * @return string
      */
-    public function getStamp() : string {
+    public function getStamp() : ?string {
 
         return $this->stamp;
     }
@@ -178,7 +178,7 @@ class Payment implements \JsonSerializable {
      *
      * @return string
      */
-    public function getReference() : string {
+    public function getReference() : ?string {
 
         return $this->reference;
     }
@@ -201,7 +201,7 @@ class Payment implements \JsonSerializable {
      *
      * @return int
      */
-    public function getAmount() : int {
+    public function getAmount() : ?int {
 
         return $this->amount;
     }
@@ -224,7 +224,7 @@ class Payment implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCurrency() : string {
+    public function getCurrency() : ?string {
 
         return $this->currency;
     }
@@ -247,7 +247,7 @@ class Payment implements \JsonSerializable {
      *
      * @return string
      */
-    public function getLanguage() : string {
+    public function getLanguage() : ?string {
 
         return $this->language;
     }
@@ -270,7 +270,7 @@ class Payment implements \JsonSerializable {
      *
      * @return Item[]
      */
-    public function getItems() : array {
+    public function getItems() : ?array {
 
         return $this->items;
     }
@@ -293,7 +293,7 @@ class Payment implements \JsonSerializable {
      *
      * @return Customer
      */
-    public function getCustomer() : Customer {
+    public function getCustomer() : ?Customer {
 
         return $this->customer;
     }
@@ -316,7 +316,7 @@ class Payment implements \JsonSerializable {
      *
      * @return Address
      */
-    public function getDeliveryAddress() : Address {
+    public function getDeliveryAddress() : ?Address {
 
         return $this->deliveryAddress;
     }
@@ -339,7 +339,7 @@ class Payment implements \JsonSerializable {
      *
      * @return Address
      */
-    public function getInvoicingAddress() : Address {
+    public function getInvoicingAddress() : ?Address {
 
         return $this->invoicingAddress;
     }
@@ -362,7 +362,7 @@ class Payment implements \JsonSerializable {
      *
      * @return CallbackUrl
      */
-    public function getRedirectUrls() : CallbackUrl {
+    public function getRedirectUrls() : ?CallbackUrl {
 
         return $this->redirectUrls;
     }
@@ -385,7 +385,7 @@ class Payment implements \JsonSerializable {
      *
      * @return CallbackUrl
      */
-    public function getCallbackUrls() : CallbackUrl {
+    public function getCallbackUrls() : ?CallbackUrl {
 
         return $this->callbackUrls;
     }
