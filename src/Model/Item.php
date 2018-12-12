@@ -133,7 +133,6 @@ class Item {
      * @return int
      */
     public function getUnitPrice(): int {
-
         return $this->unitPrice;
     }
 
@@ -141,10 +140,12 @@ class Item {
      * Set the unit price.
      *
      * @param int $unitPrice
+     * @return Item Return self to enable chaining.
      */
-    public function setUnitPrice( int $unitPrice ): void {
-
+    public function setUnitPrice( int $unitPrice ) : Item {
         $this->unitPrice = $unitPrice;
+
+        return $this;
     }
 
     /**
@@ -153,7 +154,6 @@ class Item {
      * @return int
      */
     public function getUnits(): int {
-
         return $this->units;
     }
 
@@ -161,10 +161,12 @@ class Item {
      * Set the units.
      *
      * @param int $units
+     * @return Item Return self to enable chaining.
      */
-    public function setUnits( int $units ): void {
-
+    public function setUnits( int $units ) : Item {
         $this->units = $units;
+
+        return $this;
     }
 
     /**
@@ -173,7 +175,6 @@ class Item {
      * @return int
      */
     public function getVatPercentage(): int {
-
         return $this->vatPercentage;
     }
 
@@ -181,10 +182,12 @@ class Item {
      * Set the VAT percentage.
      *
      * @param int $vatPercentage
+     * @return Item Return self to enable chaining.
      */
-    public function setVatPercentage( int $vatPercentage ): void {
-
+    public function setVatPercentage( int $vatPercentage ) : Item {
         $this->vatPercentage = $vatPercentage;
+
+        return $this;
     }
 
     /**
@@ -193,7 +196,6 @@ class Item {
      * @return string
      */
     public function getProductCode(): string {
-
         return $this->productCode;
     }
 
@@ -201,10 +203,12 @@ class Item {
      * Set the product code.
      *
      * @param string $productCode
+     * @return Item Return self to enable chaining.
      */
-    public function setProductCode( string $productCode ): void {
-
+    public function setProductCode( string $productCode ) : Item {
         $this->productCode = $productCode;
+
+        return $this;
     }
 
     /**
@@ -213,7 +217,6 @@ class Item {
      * @return string
      */
     public function getDeliveryDate(): string {
-
         return $this->deliveryDate;
     }
 
@@ -221,10 +224,12 @@ class Item {
      * Set the delivery date.
      *
      * @param string $deliveryDate
+     * @return Item Return self to enable chaining.
      */
-    public function setDeliveryDate( string $deliveryDate ): void {
-
+    public function setDeliveryDate( string $deliveryDate ) : Item {
         $this->deliveryDate = $deliveryDate;
+
+        return $this;
     }
 
     /**
@@ -233,7 +238,6 @@ class Item {
      * @return string
      */
     public function getDescription(): string {
-
         return $this->description;
     }
 
@@ -241,10 +245,12 @@ class Item {
      * Set the description.
      *
      * @param string $description
+     * @return Item Return self to enable chaining.
      */
-    public function setDescription( string $description ): void {
-
+    public function setDescription( string $description ) : Item {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -253,7 +259,6 @@ class Item {
      * @return string
      */
     public function getCategory(): string {
-
         return $this->category;
     }
 
@@ -261,10 +266,12 @@ class Item {
      * Set the category.
      *
      * @param string $category
+     * @return Item Return self to enable chaining.
      */
-    public function setCategory( string $category ): void {
-
+    public function setCategory( string $category ) : Item {
         $this->category = $category;
+
+        return $this;
     }
 
     /**
@@ -273,7 +280,6 @@ class Item {
      * @return string
      */
     public function getStamp(): string {
-
         return $this->stamp;
     }
 
@@ -281,10 +287,12 @@ class Item {
      * Set the stamp.
      *
      * @param string $stamp
+     * @return Item Return self to enable chaining.
      */
-    public function setStamp( string $stamp ): void {
-
+    public function setStamp( string $stamp ) : Item {
         $this->stamp = $stamp;
+
+        return $this;
     }
 
     /**
@@ -293,7 +301,6 @@ class Item {
      * @return string
      */
     public function getReference(): string {
-
         return $this->reference;
     }
 
@@ -301,10 +308,12 @@ class Item {
      * Set the reference.
      *
      * @param string $reference
+     * @return Item Return self to enable chaining.
      */
-    public function setReference( string $reference ): void {
-
+    public function setReference( string $reference ) : Item {
         $this->reference = $reference;
+
+        return $this;
     }
 
     /**
@@ -313,7 +322,6 @@ class Item {
      * @return string
      */
     public function getMerchant(): string {
-
         return $this->merchant;
     }
 
@@ -321,10 +329,12 @@ class Item {
      * Set the merchant.
      *
      * @param string $merchant
+     * @return Item Return self to enable chaining.
      */
-    public function setMerchant( string $merchant ): void {
-
+    public function setMerchant( string $merchant ) : Item {
         $this->merchant = $merchant;
+
+        return $this;
     }
 
     /**
@@ -333,7 +343,6 @@ class Item {
      * @return Comission
      */
     public function getCommission(): Comission {
-
         return $this->commission;
     }
 
@@ -341,9 +350,11 @@ class Item {
      * Set the commission.
      *
      * @param Comission $commission
+     * @return Item Return self to enable chaining.
      */
-    public function setCommission( Comission $commission ): void {
-
+    public function setCommission( Comission $commission ) : Item {
         $this->commission = $commission;
+
+        return $this;
     }
 }
