@@ -181,9 +181,8 @@ class Client {
             $headers = $this->getHeaders( 'GET' );
             $mac     = $this->calculateHmac( $headers );
 
-            // Set the MAC signature.
             $headers['signature'] = $mac;
-            $request_params = [
+            $request_params       = [
                 'headers' => $headers,
             ];
 
@@ -220,7 +219,17 @@ class Client {
 
         try {
             $uri      = new Uri( '/payments' );
-            $response = $this->http_client->post( $uri, [ 'json' => $payment ] );
+
+            $headers = $this->getHeaders( 'POST' );
+            $body    = $body = json_encode( $payment, JSON_UNESCAPED_SLASHES );
+            $mac     = $this->calculateHmac( $headers, $body );
+
+            $headers['signature'] = $mac;
+
+            $response = $this->http_client->post( $uri, [
+                'headers' => $headers,
+                'body'    => $body
+            ] );
             $body     = (string) $response->getBody();
             $decoded  = json_decode( $body );
 
