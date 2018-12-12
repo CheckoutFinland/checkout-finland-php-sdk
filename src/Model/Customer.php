@@ -5,6 +5,11 @@
 
 namespace CheckoutFinland\SDK\Model;
 
+use CheckoutFinland\SDK\Util\NestedValidationExceptionHandler;
+use CheckoutFinland\SDK\Exception\PropertyException;
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
+
 /**
  * Class Customer
  *
@@ -14,6 +19,25 @@ namespace CheckoutFinland\SDK\Model;
  * @package CheckoutFinland\SDK\Model
  */
 class Customer {
+
+    use NestedValidationExceptionHandler;
+
+    /**
+     * Validates with Respect\Validation library and throws exception for invalid objects
+     *
+     * @throws PropertyException
+     */
+    public function validate() {
+        $props = get_object_vars( $this );
+
+        try {
+            v::key( 'email', v::notEmpty()->email() )
+            ->assert( $props );
+        }
+        catch ( NestedValidationException $e ) {
+            $this->handle_nested_validation_exception( $e );
+        }
+    }
 
     /**
      * The customer email.

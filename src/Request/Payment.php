@@ -11,6 +11,7 @@ use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\Customer;
 use CheckoutFinland\SDK\Model\Item;
 use CheckoutFinland\SDK\Util\JsonSerializable;
+use CheckoutFinland\SDK\Util\NestedValidationExceptionHandler;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -26,6 +27,49 @@ use Respect\Validation\Exceptions\NestedValidationException;
 class Payment implements \JsonSerializable {
 
     use JsonSerializable;
+    use NestedValidationExceptionHandler;
+
+    /**
+     * Validates with Respect\Validation library and throws exception for invalid objects
+     *
+     * @throws PropertyException
+     */
+    public function validate() {
+        $props = get_object_vars( $this );
+
+        try {
+            v::key( 'stamp', v::notEmpty() )
+             ->key( 'reference', v::notEmpty() )
+             ->key( 'amount', v::notEmpty()->intVal() )
+             ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
+             ->key( 'language', v::oneOf(
+                 v::equals( 'FI' ),
+                 v::equals( 'SV' ),
+                 v::equals( 'EN' )
+             ) )
+             ->key( 'items', v::notEmpty()->arrayType() )
+             ->key( 'customer', v::notEmpty() )
+             ->key( 'redirectUrls', v::notEmpty() )
+             ->assert( $props );
+
+            // Validate items.
+            array_walk( $this->items, function( Item $item ) {
+                $item->validate();
+            } );
+            $this->customer->validate();
+
+            // Validate address values.
+            if ( ! empty( $this->deliveryAddress ) ) {
+                $this->deliveryAddress->validate();
+            }
+            if ( ! empty( $this->invoicingAddress ) ) {
+                $this->invoicingAddress->validate();
+            }
+        }
+        catch ( NestedValidationException $e ) {
+            $this->handle_nested_validation_exception( $e );
+        }
+    }
 
     /**
      * Merchant unique identifier for the order.
@@ -87,7 +131,7 @@ class Payment implements \JsonSerializable {
     /**
      * Invoicing address.
      *
-     * @var Item[]
+     * @var Address
      */
     protected $invoicingAddress;
 
@@ -106,52 +150,18 @@ class Payment implements \JsonSerializable {
     protected $callbackUrls;
 
     /**
-     * Validates with Respect\Validation library and throws exception for invalid objects
-     *
-     * @throws PropertyException
-     */
-    public function validate() {
-        $props = get_object_vars( $this );
-
-        try {
-            v::key( 'amount', v::notEmpty()->intVal() )
-                ->key( 'reference', v::notEmpty()->alnum()->length( 1, 50 ) )
-                ->key( 'stamp', v::notEmpty()->alnum()->length( 1, 20 ) )
-                ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
-                ->key( 'language', v::oneOf(
-                    v::equals( 'FI' ),
-                    v::equals( 'SV' ),
-                    v::equals( 'EN' )
-                ) )
-                ->key( 'items', v::notEmpty( ) )
-                ->key( 'customer', v::notEmpty( ) )
-                ->key( 'redirectUrls', v::notEmpty( ) )
-                ->assert( $props );
-        }
-        catch ( NestedValidationException $e ) {
-            // Collect all errors
-            $messages = array_map( function( $message ) {
-                return $message;
-            }, $e->getMessages() );
-
-            // Throw a property exception with all the errors.
-            throw new PropertyException( join( ', ' , $messages ) );
-        }
-    }
-
-    /**
-     * Get stamp.
+     * Get the stamp.
      *
      * @return string
      */
-    public function getStamp(): string {
+    public function getStamp() : string {
 
         return $this->stamp;
     }
 
     /**
-
-    Set     .
+     * Set the stamp.
+     *
      * @param string $stamp
      * @return self Return the instance to enable chaining.
      */
@@ -162,17 +172,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get reference.
+     * Get the reference.
      *
      * @return string
      */
-    public function getReference(): string {
+    public function getReference() : string {
 
         return $this->reference;
     }
 
     /**
-     * Set reference.
+     * Set the reference.
      *
      * @param string $reference
      * @return self Return the instance to enable chaining.
@@ -185,19 +195,18 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get amount.
+     * Get the amount.
      *
      * @return int
      */
-    public function getAmount(): int {
+    public function getAmount() : int {
 
         return $this->amount;
     }
 
     /**
-
-    Set
-    .
+     * Set the amount.
+     *
      * @param int $amount
      * @return self Return the instance to enable chaining.
      */
@@ -213,7 +222,7 @@ class Payment implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCurrency(): string {
+    public function getCurrency() : string {
 
         return $this->currency;
     }
@@ -232,17 +241,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get language.
+     * Get the language.
      *
      * @return string
      */
-    public function getLanguage(): string {
+    public function getLanguage() : string {
 
         return $this->language;
     }
 
     /**
-     * Set language.
+     * Set the language.
      *
      * @param string $language
      * @return self Return the instance to enable chaining.
@@ -255,17 +264,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get items.
+     * Get the items.
      *
      * @return Item[]
      */
-    public function getItems(): array {
+    public function getItems() : array {
 
         return $this->items;
     }
 
     /**
-     * Set items.
+     * Set the items.
      *
      * @param Item[] $items
      * @return self Return the instance to enable chaining.
@@ -278,17 +287,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get customer.
+     * Get the customer.
      *
      * @return Customer
      */
-    public function getCustomer(): Customer {
+    public function getCustomer() : Customer {
 
         return $this->customer;
     }
 
     /**
-     * Set customer.
+     * Set the customer.
      *
      * @param Customer $customer
      * @return self Return the instance to enable chaining.
@@ -301,17 +310,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get deliveryAddress.
+     * Get the delivery address.
      *
      * @return Address
      */
-    public function getDeliveryAddress(): Address {
+    public function getDeliveryAddress() : Address {
 
         return $this->deliveryAddress;
     }
 
     /**
-     * Set deliveryAddress.
+     * Set the delivery address.
      *
      * @param Address $deliveryAddress
      * @return self Return the instance to enable chaining.
@@ -324,22 +333,22 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get invoicingAddress.
+     * Get the invoicing address.
      *
-     * @return Item[]
+     * @return Address
      */
-    public function getInvoicingAddress(): array {
+    public function getInvoicingAddress() : Address {
 
         return $this->invoicingAddress;
     }
 
     /**
-     * Set invoicingAddress.
+     * Set the invoicing address.
      *
-     * @param Item[] $invoicingAddress
+     * @param Address $invoicingAddress
      * @return self Return the instance to enable chaining.
      */
-    public function setInvoicingAddress( array $invoicingAddress ) : Payment {
+    public function setInvoicingAddress( Address $invoicingAddress ) : Payment {
 
         $this->invoicingAddress = $invoicingAddress;
 
@@ -347,17 +356,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get redirectUrls.
+     * Get the redirect urls.
      *
      * @return CallbackUrl
      */
-    public function getRedirectUrls(): CallbackUrl {
+    public function getRedirectUrls() : CallbackUrl {
 
         return $this->redirectUrls;
     }
 
     /**
-     * Set redirectUrls.
+     * Set the redirect urls.
      *
      * @param CallbackUrl $redirectUrls
      * @return self Return the instance to enable chaining.
@@ -370,17 +379,17 @@ class Payment implements \JsonSerializable {
     }
 
     /**
-     * Get callbackUrls.
+     * Get callback urls.
      *
      * @return CallbackUrl
      */
-    public function getCallbackUrls(): CallbackUrl {
+    public function getCallbackUrls() : CallbackUrl {
 
         return $this->callbackUrls;
     }
 
     /**
-     * Set callbackUrls.
+     * Set callback urls.
      *
      * @param CallbackUrl $callbackUrls
      * @return self Return the instance to enable chaining.
