@@ -64,10 +64,13 @@ class Address {
      * Set the sttreet address.
      *
      * @param string $streetAddress
+     *
+     * @return Address Return self to enable chaining.
      */
-    public function setStreetAddress( string $streetAddress ): void {
-
+    public function setStreetAddress( string $streetAddress ) : Address {
         $this->streetAddress = $streetAddress;
+
+        return $this;
     }
 
     /**
@@ -84,10 +87,13 @@ class Address {
      * Set the tostal code.
      *
      * @param string $postalCode
+     *
+     * @return Address Return self to enable chaining.
      */
-    public function setPostalCode( string $postalCode ): void {
-
+    public function setPostalCode( string $postalCode ) : Address {
         $this->postalCode = $postalCode;
+
+        return $this;
     }
 
     /**
@@ -104,10 +110,13 @@ class Address {
      * Set the city.
      *
      * @param string $city
+     *
+     * @return Address Return self to enable chaining.
      */
-    public function setCity( string $city ): void {
-
+    public function setCity( string $city ) : Address {
         $this->city = $city;
+
+        return $this;
     }
 
     /**
@@ -124,10 +133,13 @@ class Address {
      * Set the county.
      *
      * @param string $county
+     *
+     * @return Address Return self to enable chaining.
      */
-    public function setCounty( string $county ): void {
-
+    public function setCounty( string $county ) : Address {
         $this->county = $county;
+
+        return $this;
     }
 
     /**
@@ -144,10 +156,13 @@ class Address {
      * Set the country.
      *
      * @param string $country
+     *
+     * @return Address Return self to enable chaining.
      */
-    public function setCountry( string $country ): void {
-
+    public function setCountry( string $country ) : Address {
         $this->country = $country;
+
+        return $this;
     }
 
 }

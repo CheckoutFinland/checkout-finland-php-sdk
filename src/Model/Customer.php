@@ -64,10 +64,13 @@ class Customer {
      * Set email.
      *
      * @param string $email
+     *
+     * @return self Return the instance to enable chaining.
      */
-    public function setEmail( string $email ): void {
-
+    public function setEmail( string $email ) : Customer {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -84,10 +87,13 @@ class Customer {
      * Set first name.
      *
      * @param string $firstName
+     *
+     * @return self Return the instance to enable chaining.
      */
-    public function setFirstName( string $firstName ): void {
-
+    public function setFirstName( string $firstName ) : Customer {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -104,10 +110,13 @@ class Customer {
      * Set last name.
      *
      * @param string $lastName
+     *
+     * @return self Return the instance to enable chaining.
      */
-    public function setLastName( string $lastName ): void {
-
+    public function setLastName( string $lastName ) : Customer {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -124,10 +133,13 @@ class Customer {
      * Set phone.
      *
      * @param string $phone
+     *
+     * @return self Return the instance to enable chaining.
      */
-    public function setPhone( string $phone ): void {
-
+    public function setPhone( string $phone ) : Customer {
         $this->phone = $phone;
+
+        return $this;
     }
 
     /**
@@ -144,10 +156,13 @@ class Customer {
      * Set VAT id.
      *
      * @param string $vatId
+     *
+     * @return self Return the instance to enable chaining.
      */
-    public function setVatId( string $vatId ): void {
-
+    public function setVatId( string $vatId ) : Customer {
         $this->vatId = $vatId;
+
+        return $this;
     }
 
 }
