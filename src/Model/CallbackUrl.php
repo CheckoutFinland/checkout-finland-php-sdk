@@ -43,10 +43,12 @@ class CallbackUrl {
      * Set the success url.
      *
      * @param string $success
+     * @return CallbackUrl Return self to enable chaining.
      */
-    public function setSuccess( string $success ): void {
-
+    public function setSuccess( ?string $success ): CallbackUrl {
         $this->success = $success;
+
+        return $this;
     }
 
     /**
@@ -63,10 +65,12 @@ class CallbackUrl {
      * Set the cancellation url.
      *
      * @param string $cancel
+     * @return CallbackUrl Return self to enable chaining.
      */
-    public function setCancel( string $cancel ): void {
-
+    public function setCancel( ?string $cancel ): CallbackUrl {
         $this->cancel = $cancel;
+
+        return $this;
     }
 
 }

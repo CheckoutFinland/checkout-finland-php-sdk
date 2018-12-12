@@ -1,12 +1,21 @@
 <?php
 /**
- *
+ * Class Provider
  */
 
 namespace CheckoutFinland\SDK\Model;
 
 use CheckoutFinland\SDK\Util\PropertyBinder;
 
+/**
+ * Class Provider
+ *
+ * The payment request will get a response object
+ * containing an array of providers.
+ *
+ * @see https://checkoutfinland.github.io/psp-api/#/examples?id=response
+ * @package CheckoutFinland\SDK\Model
+ */
 class Provider {
 
     use PropertyBinder;
@@ -65,7 +74,7 @@ class Provider {
      *
      * @return string
      */
-    public function getUrl(): string {
+    public function getUrl() : string {
 
         return $this->url;
     }
@@ -74,10 +83,12 @@ class Provider {
      * The setter for the url.
      *
      * @param string $url
+     * @return Provider Return self to enable chaining.
      */
-    public function setUrl( string $url ): void {
-
+    public function setUrl( ?string $url ) : Provider {
         $this->url = $url;
+
+        return $this;
     }
 
     /**
@@ -85,7 +96,7 @@ class Provider {
      *
      * @return string
      */
-    public function getIcon(): string {
+    public function getIcon() : string {
 
         return $this->icon;
     }
@@ -94,10 +105,12 @@ class Provider {
      * The setter for the icon.
      *
      * @param string $icon
+     * @return Provider Return self to enable chaining.
      */
-    public function setIcon( string $icon ): void {
-
+    public function setIcon( ?string $icon ) : Provider {
         $this->icon = $icon;
+
+        return $this;
     }
 
     /**
@@ -105,7 +118,7 @@ class Provider {
      *
      * @return string
      */
-    public function getSvg(): string {
+    public function getSvg() : string {
 
         return $this->svg;
     }
@@ -114,10 +127,12 @@ class Provider {
      * The setter for the svg.
      *
      * @param string $svg
+     * @return Provider Return self to enable chaining.
      */
-    public function setSvg( string $svg ): void {
-
+    public function setSvg( ?string $svg ) : Provider {
         $this->svg = $svg;
+
+        return $this;
     }
 
     /**
@@ -125,7 +140,7 @@ class Provider {
      *
      * @return string
      */
-    public function getName(): string {
+    public function getName() : string {
 
         return $this->name;
     }
@@ -134,10 +149,12 @@ class Provider {
      * The setter for the name.
      *
      * @param string $name
+     * @return Provider Return self to enable chaining.
      */
-    public function setName( string $name ): void {
-
+    public function setName( ?string $name ) : Provider {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -145,7 +162,7 @@ class Provider {
      *
      * @return string
      */
-    public function getGroup(): string {
+    public function getGroup() : string {
 
         return $this->group;
     }
@@ -154,10 +171,12 @@ class Provider {
      * The setter for the group.
      *
      * @param string $group
+     * @return Provider Return self to enable chaining.
      */
-    public function setGroup( string $group ): void {
-
+    public function setGroup( ?string $group ) : Provider {
         $this->group = $group;
+
+        return $this;
     }
 
     /**
@@ -165,7 +184,7 @@ class Provider {
      *
      * @return string
      */
-    public function getId(): string {
+    public function getId() : string {
 
         return $this->id;
     }
@@ -174,10 +193,12 @@ class Provider {
      * The setter for the id.
      *
      * @param string $id
+     * @return Provider Return self to enable chaining.
      */
-    public function setId( string $id ): void {
-
+    public function setId( ?string $id ) : Provider {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -185,7 +206,7 @@ class Provider {
      *
      * @return array
      */
-    public function getParameters(): array {
+    public function getParameters() : array {
 
         return $this->parameters;
     }
@@ -194,9 +215,11 @@ class Provider {
      * The setter for the parameters.
      *
      * @param array $parameters
+     * @return Provider Return self to enable chaining.
      */
-    public function setParameters( array $parameters ): void {
-
+    public function setParameters( ?array $parameters ) : Provider {
         $this->parameters = $parameters;
+
+        return $this;
     }
 }

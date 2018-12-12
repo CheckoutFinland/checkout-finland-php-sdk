@@ -1,10 +1,13 @@
 <?php
 /**
- *
+ * TODO: To be implemented.
  */
 
 namespace CheckoutFinland\SDK\Model;
 
-class Comission {
-
-}
+/**
+ * Class Comission
+ *
+ * @package CheckoutFinland\SDK\Model
+ */
+class Comission {}

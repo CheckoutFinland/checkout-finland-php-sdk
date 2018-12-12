@@ -89,9 +89,9 @@ class Customer {
      *
      * @param string $email
      *
-     * @return self Return the instance to enable chaining.
+     * @return self Return self to enable chaining.
      */
-    public function setEmail( string $email ) : Customer {
+    public function setEmail( ?string $email ) : Customer {
         $this->email = $email;
 
         return $this;
@@ -112,9 +112,9 @@ class Customer {
      *
      * @param string $firstName
      *
-     * @return self Return the instance to enable chaining.
+     * @return self Return self to enable chaining.
      */
-    public function setFirstName( string $firstName ) : Customer {
+    public function setFirstName( ?string $firstName ) : Customer {
         $this->firstName = $firstName;
 
         return $this;
@@ -135,9 +135,9 @@ class Customer {
      *
      * @param string $lastName
      *
-     * @return self Return the instance to enable chaining.
+     * @return self Return self to enable chaining.
      */
-    public function setLastName( string $lastName ) : Customer {
+    public function setLastName( ?string $lastName ) : Customer {
         $this->lastName = $lastName;
 
         return $this;
@@ -158,9 +158,9 @@ class Customer {
      *
      * @param string $phone
      *
-     * @return self Return the instance to enable chaining.
+     * @return self Return self to enable chaining.
      */
-    public function setPhone( string $phone ) : Customer {
+    public function setPhone( ?string $phone ) : Customer {
         $this->phone = $phone;
 
         return $this;
@@ -181,9 +181,9 @@ class Customer {
      *
      * @param string $vatId
      *
-     * @return self Return the instance to enable chaining.
+     * @return self Return self to enable chaining.
      */
-    public function setVatId( string $vatId ) : Customer {
+    public function setVatId( ?string $vatId ) : Customer {
         $this->vatId = $vatId;
 
         return $this;

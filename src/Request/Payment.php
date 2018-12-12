@@ -52,13 +52,15 @@ class Payment implements \JsonSerializable {
              ->key( 'redirectUrls', v::notEmpty() )
              ->assert( $props );
 
-            // Validate items.
+            // Validate the items.
             array_walk( $this->items, function( Item $item ) {
                 $item->validate();
             } );
+
+            // Validate the customer.
             $this->customer->validate();
 
-            // Validate address values.
+            // Validate the address values.
             if ( ! empty( $this->deliveryAddress ) ) {
                 $this->deliveryAddress->validate();
             }
@@ -163,9 +165,9 @@ class Payment implements \JsonSerializable {
      * Set the stamp.
      *
      * @param string $stamp
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setStamp( string $stamp ) : Payment {
+    public function setStamp( ?string $stamp ) : Payment {
         $this->stamp = $stamp;
 
         return $this;
@@ -185,9 +187,9 @@ class Payment implements \JsonSerializable {
      * Set the reference.
      *
      * @param string $reference
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setReference( string $reference ) : Payment {
+    public function setReference( ?string $reference ) : Payment {
 
         $this->reference = $reference;
 
@@ -208,9 +210,9 @@ class Payment implements \JsonSerializable {
      * Set the amount.
      *
      * @param int $amount
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setAmount( int $amount ) : Payment {
+    public function setAmount( ?int $amount ) : Payment {
 
         $this->amount = $amount;
 
@@ -231,9 +233,9 @@ class Payment implements \JsonSerializable {
      * Set currency.
      *
      * @param string $currency
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setCurrency( string $currency ) : Payment {
+    public function setCurrency( ?string $currency ) : Payment {
 
         $this->currency = $currency;
 
@@ -254,9 +256,9 @@ class Payment implements \JsonSerializable {
      * Set the language.
      *
      * @param string $language
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setLanguage( string $language ) : Payment {
+    public function setLanguage( ?string $language ) : Payment {
 
         $this->language = $language;
 
@@ -277,9 +279,9 @@ class Payment implements \JsonSerializable {
      * Set the items.
      *
      * @param Item[] $items
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setItems( array $items ) : Payment {
+    public function setItems( ?array $items ) : Payment {
 
         $this->items = $items;
 
@@ -300,9 +302,9 @@ class Payment implements \JsonSerializable {
      * Set the customer.
      *
      * @param Customer $customer
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setCustomer( Customer $customer ) : Payment {
+    public function setCustomer( ?Customer $customer ) : Payment {
 
         $this->customer = $customer;
 
@@ -323,9 +325,9 @@ class Payment implements \JsonSerializable {
      * Set the delivery address.
      *
      * @param Address $deliveryAddress
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setDeliveryAddress( Address $deliveryAddress ) : Payment {
+    public function setDeliveryAddress( ?Address $deliveryAddress ) : Payment {
 
         $this->deliveryAddress = $deliveryAddress;
 
@@ -346,9 +348,9 @@ class Payment implements \JsonSerializable {
      * Set the invoicing address.
      *
      * @param Address $invoicingAddress
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setInvoicingAddress( Address $invoicingAddress ) : Payment {
+    public function setInvoicingAddress( ?Address $invoicingAddress ) : Payment {
 
         $this->invoicingAddress = $invoicingAddress;
 
@@ -369,9 +371,9 @@ class Payment implements \JsonSerializable {
      * Set the redirect urls.
      *
      * @param CallbackUrl $redirectUrls
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setRedirectUrls( CallbackUrl $redirectUrls ) : Payment {
+    public function setRedirectUrls( ?CallbackUrl $redirectUrls ) : Payment {
 
         $this->redirectUrls = $redirectUrls;
 
@@ -392,9 +394,9 @@ class Payment implements \JsonSerializable {
      * Set callback urls.
      *
      * @param CallbackUrl $callbackUrls
-     * @return self Return the instance to enable chaining.
+     * @return Payment Return self to enable chaining.
      */
-    public function setCallbackUrls( CallbackUrl $callbackUrls ) : Payment {
+    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : Payment {
 
         $this->callbackUrls = $callbackUrls;
 

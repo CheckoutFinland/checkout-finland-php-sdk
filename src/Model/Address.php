@@ -94,7 +94,7 @@ class Address {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setStreetAddress( string $streetAddress ) : Address {
+    public function setStreetAddress( ?string $streetAddress ) : Address {
         $this->streetAddress = $streetAddress;
 
         return $this;
@@ -117,7 +117,7 @@ class Address {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setPostalCode( string $postalCode ) : Address {
+    public function setPostalCode( ?string $postalCode ) : Address {
         $this->postalCode = $postalCode;
 
         return $this;
@@ -140,7 +140,7 @@ class Address {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCity( string $city ) : Address {
+    public function setCity( ?string $city ) : Address {
         $this->city = $city;
 
         return $this;
@@ -163,7 +163,7 @@ class Address {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCounty( string $county ) : Address {
+    public function setCounty( ?string $county ) : Address {
         $this->county = $county;
 
         return $this;
@@ -186,7 +186,7 @@ class Address {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCountry( string $country ) : Address {
+    public function setCountry( ?string $country ) : Address {
         $this->country = $country;
 
         return $this;

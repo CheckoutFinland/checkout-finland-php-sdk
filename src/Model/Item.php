@@ -142,7 +142,7 @@ class Item {
      * @param int $unitPrice
      * @return Item Return self to enable chaining.
      */
-    public function setUnitPrice( int $unitPrice ) : Item {
+    public function setUnitPrice( ?int $unitPrice ) : Item {
         $this->unitPrice = $unitPrice;
 
         return $this;
@@ -163,7 +163,7 @@ class Item {
      * @param int $units
      * @return Item Return self to enable chaining.
      */
-    public function setUnits( int $units ) : Item {
+    public function setUnits( ?int $units ) : Item {
         $this->units = $units;
 
         return $this;
@@ -184,7 +184,7 @@ class Item {
      * @param int $vatPercentage
      * @return Item Return self to enable chaining.
      */
-    public function setVatPercentage( int $vatPercentage ) : Item {
+    public function setVatPercentage( ?int $vatPercentage ) : Item {
         $this->vatPercentage = $vatPercentage;
 
         return $this;
@@ -205,7 +205,7 @@ class Item {
      * @param string $productCode
      * @return Item Return self to enable chaining.
      */
-    public function setProductCode( string $productCode ) : Item {
+    public function setProductCode( ?string $productCode ) : Item {
         $this->productCode = $productCode;
 
         return $this;
@@ -226,7 +226,7 @@ class Item {
      * @param string $deliveryDate
      * @return Item Return self to enable chaining.
      */
-    public function setDeliveryDate( string $deliveryDate ) : Item {
+    public function setDeliveryDate( ?string $deliveryDate ) : Item {
         $this->deliveryDate = $deliveryDate;
 
         return $this;
@@ -247,7 +247,7 @@ class Item {
      * @param string $description
      * @return Item Return self to enable chaining.
      */
-    public function setDescription( string $description ) : Item {
+    public function setDescription( ?string $description ) : Item {
         $this->description = $description;
 
         return $this;
@@ -268,7 +268,7 @@ class Item {
      * @param string $category
      * @return Item Return self to enable chaining.
      */
-    public function setCategory( string $category ) : Item {
+    public function setCategory( ?string $category ) : Item {
         $this->category = $category;
 
         return $this;
@@ -289,7 +289,7 @@ class Item {
      * @param string $stamp
      * @return Item Return self to enable chaining.
      */
-    public function setStamp( string $stamp ) : Item {
+    public function setStamp( ?string $stamp ) : Item {
         $this->stamp = $stamp;
 
         return $this;
@@ -310,7 +310,7 @@ class Item {
      * @param string $reference
      * @return Item Return self to enable chaining.
      */
-    public function setReference( string $reference ) : Item {
+    public function setReference( ?string $reference ) : Item {
         $this->reference = $reference;
 
         return $this;
@@ -331,7 +331,7 @@ class Item {
      * @param string $merchant
      * @return Item Return self to enable chaining.
      */
-    public function setMerchant( string $merchant ) : Item {
+    public function setMerchant( ?string $merchant ) : Item {
         $this->merchant = $merchant;
 
         return $this;
@@ -352,7 +352,7 @@ class Item {
      * @param Comission $commission
      * @return Item Return self to enable chaining.
      */
-    public function setCommission( Comission $commission ) : Item {
+    public function setCommission( ?Comission $commission ) : Item {
         $this->commission = $commission;
 
         return $this;
