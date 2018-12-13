@@ -275,7 +275,7 @@ class Payment implements \JsonSerializable {
      */
     public function setItems( ?array $items ) : Payment {
 
-        $this->items = $items;
+        $this->items = array_values( $items );
 
         return $this;
     }
