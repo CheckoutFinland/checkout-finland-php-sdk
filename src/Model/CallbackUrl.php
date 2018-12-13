@@ -5,6 +5,9 @@
 
 namespace CheckoutFinland\SDK\Model;
 
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
+
 /**
  * Class CallbackUrl
  *
@@ -14,6 +17,19 @@ namespace CheckoutFinland\SDK\Model;
  * @package CheckoutFinland\SDK\Model
  */
 class CallbackUrl {
+
+    /**
+     * Validates with Respect\Validation library and throws an exception for invalid objects
+     *
+     * @throws NestedValidationException Thrown when the assert() fails.
+     */
+    public function validate() {
+        $props = get_object_vars( $this );
+
+        v::key( 'success', v::notEmpty() )
+        ->key( 'cancel', v::notEmpty() )
+        ->assert( $props );
+    }
 
     /**
      * The success url.

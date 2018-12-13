@@ -5,16 +5,20 @@
 
 namespace CheckoutFinland\SDK;
 
-use \CheckoutFinland\SDK\Exception;
 use CheckoutFinland\SDK\Model\Provider;
-use \CheckoutFinland\SDK\Request\Payment;
-use \CheckoutFinland\SDK\Response\Payment as PaymentResponse;
-use \GuzzleHttp\Psr7\Uri;
-use \GuzzleHttp\HandlerStack;
-use \GuzzleHttp\Middleware;
-use \GuzzleHttp\MessageFormatter;
-use \GuzzleHttp\Client as GuzzleHttpClient;
-use \Psr\Log\LoggerInterface;
+use CheckoutFinland\SDK\Request\Payment;
+use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Client as GuzzleHttpClient;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use CheckoutFinland\SDK\Exception\PaymentRequestException;
+use CheckoutFinland\SDK\Exception\PaymentProvidersRequestException;
+use CheckoutFinland\SDK\Exception\HmacException;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class Client
@@ -173,11 +177,12 @@ class Client {
      * @param int $amount Purchase amount in currency's minor unit.
      * @return Provider[]
      *
-     * @throws Exception\PaymentProvidersRequestException An error is thrown for erroneous requests.
+     * @throws HmacException                    Thrown if HMAC calculation fails for responses.
+     * @throws PaymentProvidersRequestException Thrown for erroneous requests.
      */
     public function getPaymentProviders( int $amount = null ) {
         try {
-            $uri      = new Uri( '/merchants/payment-providers' );
+            $uri = new Uri( '/merchants/payment-providers' );
 
             $headers = $this->getHeaders( 'GET' );
             $mac     = $this->calculateHmac( $headers );
@@ -196,6 +201,7 @@ class Client {
 
             $response = $this->http_client->get( $uri, $request_params );
             $body     = (string) $response->getBody();
+            $this->evaluateHmac( $response, $body );
             $decoded  = json_decode( $body );
 
             $providers = array_map( function( $provider_data ) {
@@ -204,9 +210,12 @@ class Client {
 
             return $providers;
         }
+        catch ( HmacException $e ) {
+            throw $e;
+        }
         catch ( \Exception $e ) {
             $code = $e->getCode();
-            throw new Exception\PaymentProvidersRequestException( 'An error occurred while loading the payment provider list.', $code );
+            throw new PaymentProvidersRequestException( 'An error occurred while loading the payment provider list.', $code );
         }
     }
 
@@ -216,8 +225,9 @@ class Client {
      * @param Payment $payment A payment class instance.
      * @return PaymentResponse
      *
-     * @throws Exception\PropertyException       An error is thrown if payment properties are invalid.
-     * @throws Exception\PaymentRequestException An error is thrown for erroneous requests.
+     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws HmacException             Thrown if HMAC calculation fails for responses.
+     * @throws PaymentRequestException   Thrown for erroneous requests.
      */
     public function createPayment( Payment $payment ) {
         $payment->validate();
@@ -226,7 +236,7 @@ class Client {
             $uri      = new Uri( '/payments' );
 
             $headers = $this->getHeaders( 'POST' );
-            $body    = $body = json_encode( $payment, JSON_UNESCAPED_SLASHES );
+            $body    = json_encode( $payment, JSON_UNESCAPED_SLASHES );
             $mac     = $this->calculateHmac( $headers, $body );
 
             $headers['signature'] = $mac;
@@ -236,17 +246,22 @@ class Client {
                 'body'    => $body
             ] );
             $body     = (string) $response->getBody();
-            $decoded  = json_decode( $body );
 
+            $this->evaluateHmac( $response, $body );
+
+            $decoded          = json_decode( $body );
             $payment_response = new PaymentResponse();
             $payment_response->bind_properties( $decoded );
             $payment_response->setProviders( $decoded->providers ?? null );
 
             return $payment_response;
         }
+        catch ( HmacException $e ) {
+            throw $e;
+        }
         catch ( \Exception $e ) {
             $code = $e->getCode();
-            throw new Exception\PaymentRequestException( 'An error occurred creating the payment request.', $code );
+            throw new PaymentRequestException( 'An error occurred creating the payment request.', $code );
         }
     }
 
@@ -268,7 +283,10 @@ class Client {
 
         $hmacPayload = array_map(
             function ( $key ) use ( $params ) {
-                return join(':', [ $key, $params[ $key ] ]);
+                // Responses have headers in an array.
+                $param = is_array( $params[ $key ] ) ? $params[ $key ][0] : $params[ $key ];
+
+                return join( ':', [ $key, $param ] );
             },
             $includedKeys
         );
@@ -276,5 +294,22 @@ class Client {
         array_push( $hmacPayload, $body );
 
         return hash_hmac( 'sha256', join( "\n", $hmacPayload ) , $this->secretKey );
+    }
+
+    /**
+     * Evaluate a response signature validity.
+     *
+     * @param ResponseInterface $response The response object.
+     * @param string            $body     The responsy body string.
+     *
+     * @throws
+     */
+    protected function evaluateHmac( ResponseInterface $response, string $body = '' ) {
+        $signature = $response->getHeader('signature')[0] ?? '';
+        $hmac      = $this->calculateHmac( $response->getHeaders(), $body );
+
+        if ( $hmac !== $signature ) {
+            throw new HmacException( 'HMAC calculation failed.' );
+        }
     }
 }
