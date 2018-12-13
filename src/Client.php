@@ -250,10 +250,10 @@ class Client {
             $this->evaluateHmac( $response, $body );
 
             $decoded          = json_decode( $body );
-            $payment_response = new PaymentResponse();
-            $payment_response->setTransactionId( $decoded->transactionId ?? null );
-            $payment_response->setHref( $decoded->href ?? null );
-            $payment_response->setProviders( $decoded->providers ?? null );
+            $payment_response = ( new PaymentResponse() )
+            ->setTransactionId( $decoded->transactionId ?? null )
+            ->setHref( $decoded->href ?? null )
+            ->setProviders( $decoded->providers ?? null );
 
             return $payment_response;
         }
