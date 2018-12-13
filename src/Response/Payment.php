@@ -98,6 +98,9 @@ class Payment extends Response {
             return $this;
         }
 
+        // Ensure the providers are empty at first.
+        $this->providers = [];
+
         array_walk( $providers, function( $provider ) {
             if ( ! $provider instanceof  Provider ) {
                 $instance = new Provider();
