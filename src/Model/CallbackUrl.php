@@ -5,6 +5,8 @@
 
 namespace CheckoutFinland\SDK\Model;
 
+use CheckoutFinland\SDK\Util\JsonSerializable;
+
 /**
  * Class CallbackUrl
  *
@@ -13,7 +15,9 @@ namespace CheckoutFinland\SDK\Model;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=callbackurl
  * @package CheckoutFinland\SDK\Model
  */
-class CallbackUrl {
+class CallbackUrl implements \JsonSerializable {
+
+    use JsonSerializable;
 
     /**
      * The success url.

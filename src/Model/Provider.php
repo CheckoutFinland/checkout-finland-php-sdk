@@ -6,6 +6,7 @@
 namespace CheckoutFinland\SDK\Model;
 
 use CheckoutFinland\SDK\Util\PropertyBinder;
+use CheckoutFinland\SDK\Util\JsonSerializable;
 
 /**
  * Class Provider
@@ -16,8 +17,9 @@ use CheckoutFinland\SDK\Util\PropertyBinder;
  * @see https://checkoutfinland.github.io/psp-api/#/examples?id=response
  * @package CheckoutFinland\SDK\Model
  */
-class Provider {
+class Provider implements \JsonSerializable {
 
+    use JsonSerializable;
     use PropertyBinder;
 
     /**

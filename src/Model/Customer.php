@@ -9,6 +9,7 @@ use CheckoutFinland\SDK\Util\NestedValidationExceptionHandler;
 use CheckoutFinland\SDK\Exception\PropertyException;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
+use CheckoutFinland\SDK\Util\JsonSerializable;
 
 /**
  * Class Customer
@@ -18,7 +19,9 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=customer
  * @package CheckoutFinland\SDK\Model
  */
-class Customer {
+class Customer implements \JsonSerializable {
+
+    use JsonSerializable;
 
     use NestedValidationExceptionHandler;
 
