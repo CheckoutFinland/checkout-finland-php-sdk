@@ -8,12 +8,12 @@ namespace CheckoutFinland\SDK;
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Request\Payment;
 use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
+use CheckoutFinland\SDK\Util\Signature;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Client as GuzzleHttpClient;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use CheckoutFinland\SDK\Exception\PaymentRequestException;
 use CheckoutFinland\SDK\Exception\PaymentProvidersRequestException;
@@ -189,6 +189,7 @@ class Client {
             $headers = $this->getHeaders( 'GET' );
             $mac     = $this->calculateHmac( $headers );
 
+            // Sign the request.
             $headers['signature'] = $mac;
             $request_params       = [
                 'headers' => $headers,
@@ -203,9 +204,13 @@ class Client {
 
             $response = $this->http_client->get( $uri, $request_params );
             $body     = (string) $response->getBody();
-            $this->evaluateHmac( $response, $body );
-            $decoded  = json_decode( $body );
 
+            // Validate the signature.
+            $headers = $this->reduce_headers( $response->getHeaders() );
+            $this->validateHmac( $headers, $body );
+
+            // Instantiate providers.
+            $decoded   = json_decode( $body );
             $providers = array_map( function( $provider_data ) {
                 return ( new Provider() )->bind_properties( $provider_data );
             }, $decoded );
@@ -249,7 +254,9 @@ class Client {
             ] );
             $body     = (string) $response->getBody();
 
-            $this->evaluateHmac( $response, $body );
+            // Handle header data and validate HMAC.
+            $headers = $this->reduce_headers( $response->getHeaders() );
+            $this->validateHmac( $headers, $body );
 
             $decoded          = json_decode( $body );
             $payment_response = ( new PaymentResponse() )
@@ -269,50 +276,43 @@ class Client {
     }
 
     /**
-     * Calculate Checkout HMAC
+     * The PSR message interface defines headers as
+     * an associative array where every header key has
+     * an array of values. This method reduces the values to one.
      *
-     * @param array[string]|string  $params HTTP headers or query string
-     * @param string                $body HTTP request body, empty string for GET requests
-     * @return string SHA-256 HMAC
+     * @param array[][] $headers The respose headers.
+     *
+     * @return array
      */
-    protected function calculateHmac( $params, string $body = '' ) {
-        // Keep only checkout- params, more relevant for response validation.
-        $includedKeys = array_filter( array_keys( $params ), function ( $key ) {
-            return preg_match( '/^checkout-/', $key );
-        });
-
-        // Keys must be sorted alphabetically
-        sort( $includedKeys, SORT_STRING );
-
-        $hmacPayload = array_map(
-            function ( $key ) use ( $params ) {
-                // Responses have headers in an array.
-                $param = is_array( $params[ $key ] ) ? $params[ $key ][0] : $params[ $key ];
-
-                return join( ':', [ $key, $param ] );
-            },
-            $includedKeys
-        );
-
-        array_push( $hmacPayload, $body );
-
-        return hash_hmac( 'sha256', join( "\n", $hmacPayload ) , $this->secretKey );
+    protected function reduce_headers( array $headers = [] ) {
+        return array_map( function( $value ) {
+            return $value[0] ?? $value;
+        }, $headers );
     }
 
     /**
-     * Evaluate a response signature validity.
+     * A proxy for the Signature class' static method
+     * to be used via a client instance.
      *
-     * @param ResponseInterface $response The response object.
-     * @param string            $body     The responsy body string.
-     *
-     * @throws
+     * @param array  $params The parameters.
+     * @param string $body   The body.
+     * @return string SHA-256 HMAC
      */
-    protected function evaluateHmac( ResponseInterface $response, string $body = '' ) {
-        $signature = $response->getHeader('signature')[0] ?? '';
-        $hmac      = $this->calculateHmac( $response->getHeaders(), $body );
+    protected function calculateHmac( array $params = [], string $body = '' ) {
+        return Signature::calculateHmac( $params, $body, $this->secretKey );
+    }
 
-        if ( $hmac !== $signature ) {
-            throw new HmacException( 'HMAC calculation failed.' );
-        }
+    /**
+     * A proxy for the Signature class' static method
+     * to be used via a client instance.
+     *
+     * @param array  $response  The response parameters.
+     * @param string $body      The response body.
+     * @param string $signature The response signature key.
+     *
+     * @throws HmacException
+     */
+    protected function validateHmac( array $response = [], string $body = '', string $signature = '' ) {
+        Signature::validateHmac( $response, $body, $signature, $this->secretKey );
     }
 }
