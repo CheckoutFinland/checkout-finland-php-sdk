@@ -5,8 +5,6 @@
 
 namespace CheckoutFinland\SDK\Model;
 
-use CheckoutFinland\SDK\Util\NestedValidationExceptionHandler;
-use CheckoutFinland\SDK\Exception\PropertyException;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 use CheckoutFinland\SDK\Util\JsonSerializable;
@@ -23,26 +21,19 @@ class Address implements \JsonSerializable {
 
     use JsonSerializable;
 
-    use NestedValidationExceptionHandler;
-
     /**
      * Validates with Respect\Validation library and throws exception for invalid objects
      *
-     * @throws PropertyException
+     * @throws NestedValidationException Thrown when the assert() fails.
      */
     public function validate() {
         $props = get_object_vars( $this );
 
-        try {
-            v::key( 'streetAddress', v::notEmpty() )
-             ->key( 'postalCode', v::notEmpty() )
-             ->key( 'city', v::notEmpty() )
-             ->key( 'country', v::notEmpty() )
-             ->assert( $props );
-        }
-        catch ( NestedValidationException $e ) {
-            $this->handle_nested_validation_exception( $e );
-        }
+        v::key( 'streetAddress', v::notEmpty() )
+        ->key( 'postalCode', v::notEmpty() )
+        ->key( 'city', v::notEmpty() )
+        ->key( 'country', v::notEmpty() )
+        ->assert( $props );
     }
 
     /**

@@ -18,7 +18,7 @@ trait JsonSerializable {
      * @return \stdClass
      */
     public function jsonSerialize() {
-        $vars = get_object_vars($this);
+        $vars = get_object_vars( $this );
 
         return json_encode( $vars );
     }

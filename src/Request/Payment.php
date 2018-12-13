@@ -5,13 +5,11 @@
 
 namespace CheckoutFinland\SDK\Request;
 
-use CheckoutFinland\SDK\Exception\PropertyException;
 use CheckoutFinland\SDK\Model\Address;
 use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\Customer;
 use CheckoutFinland\SDK\Model\Item;
 use CheckoutFinland\SDK\Util\JsonSerializable;
-use CheckoutFinland\SDK\Util\NestedValidationExceptionHandler;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -27,49 +25,43 @@ use Respect\Validation\Exceptions\NestedValidationException;
 class Payment implements \JsonSerializable {
 
     use JsonSerializable;
-    use NestedValidationExceptionHandler;
 
     /**
-     * Validates with Respect\Validation library and throws exception for invalid objects
+     * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws PropertyException
+     * @throws NestedValidationException Thrown when the assert() fails.
      */
     public function validate() {
         $props = get_object_vars( $this );
 
-        try {
-            v::key( 'stamp', v::notEmpty() )
-             ->key( 'reference', v::notEmpty() )
-             ->key( 'amount', v::notEmpty()->intVal() )
-             ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
-             ->key( 'language', v::oneOf(
-                 v::equals( 'FI' ),
-                 v::equals( 'SV' ),
-                 v::equals( 'EN' )
-             ) )
-             ->key( 'items', v::notEmpty()->arrayType() )
-             ->key( 'customer', v::notEmpty() )
-             ->key( 'redirectUrls', v::notEmpty() )
-             ->assert( $props );
+        v::key( 'stamp', v::notEmpty() )
+        ->key( 'reference', v::notEmpty() )
+        ->key( 'amount', v::notEmpty()->intVal() )
+        ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
+        ->key( 'language', v::oneOf(
+            v::equals( 'FI' ),
+            v::equals( 'SV' ),
+            v::equals( 'EN' )
+        ) )
+        ->key( 'items', v::notEmpty()->arrayType() )
+        ->key( 'customer', v::notEmpty() )
+        ->key( 'redirectUrls', v::notEmpty() )
+        ->assert( $props );
 
-            // Validate the items.
-            array_walk( $this->items, function( Item $item ) {
-                $item->validate();
-            } );
+        // Validate the items.
+        array_walk( $this->items, function( Item $item ) {
+            $item->validate();
+        } );
 
-            // Validate the customer.
-            $this->customer->validate();
+        // Validate the customer.
+        $this->customer->validate();
 
-            // Validate the address values.
-            if ( ! empty( $this->deliveryAddress ) ) {
-                $this->deliveryAddress->validate();
-            }
-            if ( ! empty( $this->invoicingAddress ) ) {
-                $this->invoicingAddress->validate();
-            }
+        // Validate the address values.
+        if ( ! empty( $this->deliveryAddress ) ) {
+            $this->deliveryAddress->validate();
         }
-        catch ( NestedValidationException $e ) {
-            $this->handle_nested_validation_exception( $e );
+        if ( ! empty( $this->invoicingAddress ) ) {
+            $this->invoicingAddress->validate();
         }
     }
 

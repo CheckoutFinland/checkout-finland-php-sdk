@@ -17,6 +17,7 @@ trait PropertyBinder {
      * Binds the passed properties to a class instance.
      *
      * @param \stdClass|array $props The properties.
+     * @return self Return self to enable chaining.
      */
     public function bind_properties( $props ) {
         if ( ! empty( $props ) ) {
@@ -29,6 +30,8 @@ trait PropertyBinder {
                 }
             } );
         }
+
+        return $this;
     }
 
 }

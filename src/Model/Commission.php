@@ -6,8 +6,8 @@
 namespace CheckoutFinland\SDK\Model;
 
 /**
- * Class Comission
+ * Class Commission
  *
  * @package CheckoutFinland\SDK\Model
  */
-class Comission {}
+class Commission {}

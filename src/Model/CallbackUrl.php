@@ -6,6 +6,8 @@
 namespace CheckoutFinland\SDK\Model;
 
 use CheckoutFinland\SDK\Util\JsonSerializable;
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class CallbackUrl
@@ -18,6 +20,19 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
 class CallbackUrl implements \JsonSerializable {
 
     use JsonSerializable;
+
+    /**
+     * Validates with Respect\Validation library and throws an exception for invalid objects
+     *
+     * @throws NestedValidationException Thrown when the assert() fails.
+     */
+    public function validate() {
+        $props = get_object_vars( $this );
+
+        v::key( 'success', v::notEmpty() )
+        ->key( 'cancel', v::notEmpty() )
+        ->assert( $props );
+    }
 
     /**
      * The success url.
