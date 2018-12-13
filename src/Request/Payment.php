@@ -39,7 +39,7 @@ class Payment implements \JsonSerializable {
             if ( $item === null ) {
                 return $carry;
             }
-            return $item->getUnitPrice() + $carry;
+            return $item->getUnitPrice() * $item->getUnits() + $carry;
         } );
 
         v::key( 'stamp', v::notEmpty() )
