@@ -312,7 +312,7 @@ class Client {
      *
      * @throws HmacException
      */
-    protected function validateHmac( array $response = [], string $body = '', string $signature = '' ) {
+    public function validateHmac( array $response = [], string $body = '', string $signature = '' ) {
         Signature::validateHmac( $response, $body, $signature, $this->secretKey );
     }
 }
