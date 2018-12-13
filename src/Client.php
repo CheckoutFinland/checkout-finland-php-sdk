@@ -160,12 +160,14 @@ class Client {
      * @return array
      */
     protected function getHeaders( string $method ) {
+        $datetime = new \DateTime();
+
         $headers = [
             'checkout-account'   => $this->merchantId,
             'checkout-algorithm' => 'sha256',
             'checkout-method'    => strtoupper( $method ),
             'checkout-nonce'     => uniqid( true ),
-            'checkout-timestamp' => date_format( date_create( '@'. time() ), 'c') . 'Z',
+            'checkout-timestamp' => $datetime->format( 'Y-m-d\TH:i:s.u\Z' ),
             'content-type'       => 'application/json; charset=utf-8'
         ];
         return $headers;
