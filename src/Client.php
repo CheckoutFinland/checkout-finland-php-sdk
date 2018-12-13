@@ -207,7 +207,7 @@ class Client {
 
             // Validate the signature.
             $headers = $this->reduce_headers( $response->getHeaders() );
-            $this->validateHmac( $headers, $body );
+            $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
 
             // Instantiate providers.
             $decoded   = json_decode( $body );
@@ -256,7 +256,7 @@ class Client {
 
             // Handle header data and validate HMAC.
             $headers = $this->reduce_headers( $response->getHeaders() );
-            $this->validateHmac( $headers, $body );
+            $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
 
             $decoded          = json_decode( $body );
             $payment_response = ( new PaymentResponse() )
