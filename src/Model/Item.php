@@ -7,6 +7,7 @@ namespace CheckoutFinland\SDK\Model;
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
+use CheckoutFinland\SDK\Util\JsonSerializable;
 
 /**
  * Class Item
@@ -16,7 +17,9 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=item
  * @package CheckoutFinland\SDK\Model
  */
-class Item {
+class Item implements \JsonSerializable {
+
+    use JsonSerializable;
 
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects

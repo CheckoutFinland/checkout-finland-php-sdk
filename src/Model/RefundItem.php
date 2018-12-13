@@ -5,6 +5,10 @@
 
 namespace CheckoutFinland\SDK\Model;
 
-class RefundItem {
+use CheckoutFinland\SDK\Util\JsonSerializable;
+
+class RefundItem implements \JsonSerializable {
+
+    use JsonSerializable;
 
 }
