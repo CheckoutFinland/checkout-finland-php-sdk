@@ -34,9 +34,17 @@ class Payment implements \JsonSerializable {
     public function validate() {
         $props = get_object_vars( $this );
 
+        // Count the total amount of the payment.
+        $items_total = array_reduce( $this->getItems(), function( $carry = 0, ?Item $item = null ) {
+            if ( $item === null ) {
+                return $carry;
+            }
+            return $item->getUnitPrice() + $carry;
+        } );
+
         v::key( 'stamp', v::notEmpty() )
         ->key( 'reference', v::notEmpty() )
-        ->key( 'amount', v::notEmpty()->intVal() )
+        ->key( 'amount', v::notEmpty()->intVal()->equals( $items_total ) )
         ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
         ->key( 'language', v::oneOf(
             v::equals( 'FI' ),

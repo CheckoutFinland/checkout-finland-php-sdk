@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * Class Payment
  */
 
 namespace CheckoutFinland\SDK\Response;
@@ -8,6 +8,13 @@ namespace CheckoutFinland\SDK\Response;
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Response;
 
+/**
+ * Class Payment
+ *
+ * Represents a response object of payment creation.
+ *
+ * @package CheckoutFinland\SDK\Response
+ */
 class Payment extends Response {
 
     /**
