@@ -6,6 +6,7 @@
 namespace CheckoutFinland\SDK;
 
 use \CheckoutFinland\SDK\Exception;
+use CheckoutFinland\SDK\Model\Provider;
 use \CheckoutFinland\SDK\Request\Payment;
 use \CheckoutFinland\SDK\Response\Payment as PaymentResponse;
 use \GuzzleHttp\Psr7\Uri;
@@ -170,7 +171,7 @@ class Client {
      * Get a list of payment providers.
      *
      * @param int $amount Purchase amount in currency's minor unit.
-     * @return \stdClass
+     * @return Provider[]
      *
      * @throws Exception\PaymentProvidersRequestException An error is thrown for erroneous requests.
      */
@@ -197,11 +198,15 @@ class Client {
             $body     = (string) $response->getBody();
             $decoded  = json_decode( $body );
 
-            return $decoded;
+            $providers = array_map( function( $provider_data ) {
+                return ( new Provider() )->bind_properties( $provider_data );
+            }, $decoded );
+
+            return $providers;
         }
         catch ( \Exception $e ) {
             $code = $e->getCode();
-            throw new Exception\PaymentProvidersRequestException( 'An error occurred creating the payment request.', $code );
+            throw new Exception\PaymentProvidersRequestException( 'An error occurred while loading the payment provider list.', $code );
         }
     }
 
