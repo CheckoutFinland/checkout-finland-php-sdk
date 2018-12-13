@@ -251,7 +251,8 @@ class Client {
 
             $decoded          = json_decode( $body );
             $payment_response = new PaymentResponse();
-            $payment_response->bind_properties( $decoded );
+            $payment_response->setTransactionId( $decoded->transactionId ?? null );
+            $payment_response->setHref( $decoded->href ?? null );
             $payment_response->setProviders( $decoded->providers ?? null );
 
             return $payment_response;
