@@ -97,7 +97,7 @@ class Client {
     /**
      * The Checkout Finland API endpoint.
      */
-    const API_ENPOINT = 'https://api.checkout.fi';
+    const API_ENDPOINT = 'https://api.checkout.fi';
 
     /**
      * Client constructor.
@@ -122,7 +122,7 @@ class Client {
         $this->http_client = new GuzzleHttpClient(
             [
                 'headers'  => [],
-                'base_uri' => self::API_ENPOINT,
+                'base_uri' => self::API_ENDPOINT,
                 'timeout'  => $args['timeout'] ?? 5,
                 'handler'  => $stack,
             ]
