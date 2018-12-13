@@ -14,6 +14,11 @@ namespace CheckoutFinland\SDK\Exception;
  */
 abstract class RequestException extends \Exception {
 
+    /**
+     * The error code texts.
+     *
+     * @var array
+     */
     protected $responses = [
         '400' => [
             'text'        => 'Bad Request',

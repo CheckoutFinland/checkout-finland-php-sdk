@@ -7,6 +7,7 @@ namespace CheckoutFinland\SDK;
 
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Request\Payment;
+use CheckoutFinland\SDK\Request\Refund;
 use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
 use CheckoutFinland\SDK\Util\Signature;
 use GuzzleHttp\Psr7\Uri;
@@ -14,8 +15,10 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use CheckoutFinland\SDK\Exception\PaymentRequestException;
+use CheckoutFinland\SDK\Exception\RefundRequestException;
 use CheckoutFinland\SDK\Exception\PaymentProvidersRequestException;
 use CheckoutFinland\SDK\Exception\HmacException;
 use Respect\Validation\Exceptions\NestedValidationException;
@@ -155,11 +158,13 @@ class Client {
     /**
      * Format request headers.
      *
-     * @param string $method The request method. GET or POST.
+     * @param string $method         The request method. GET or POST.
+     * @param string $transactionId  Checkout transaction ID when accessing single transaction
+     *                               not required for a new payment request.
      *
      * @return array
      */
-    protected function getHeaders( string $method ) {
+    protected function getHeaders( string $method, string $transactionId = null ) {
         $datetime = new \DateTime();
 
         $headers = [
@@ -170,6 +175,11 @@ class Client {
             'checkout-timestamp' => $datetime->format( 'Y-m-d\TH:i:s.u\Z' ),
             'content-type'       => 'application/json; charset=utf-8'
         ];
+
+        if ( ! empty( $transactionId) ) {
+            $headers['checkout-transaction-id'] = $transactionId;
+        }
+
         return $headers;
     }
 
@@ -240,29 +250,21 @@ class Client {
         $payment->validate();
 
         try {
-            $uri      = new Uri( '/payments' );
+            $uri = new Uri( '/payments' );
 
-            $headers = $this->getHeaders( 'POST' );
-            $body    = json_encode( $payment, JSON_UNESCAPED_SLASHES );
-            $mac     = $this->calculateHmac( $headers, $body );
-
-            $headers['signature'] = $mac;
-
-            $response = $this->http_client->post( $uri, [
-                'headers' => $headers,
-                'body'    => $body
-            ] );
-            $body     = (string) $response->getBody();
-
-            // Handle header data and validate HMAC.
-            $headers = $this->reduce_headers( $response->getHeaders() );
-            $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
-
-            $decoded          = json_decode( $body );
-            $payment_response = ( new PaymentResponse() )
-            ->setTransactionId( $decoded->transactionId ?? null )
-            ->setHref( $decoded->href ?? null )
-            ->setProviders( $decoded->providers ?? null );
+            $payment_response = $this->post( $uri, $payment,
+                /**
+                 * Create the response instance.
+                 *
+                 * @param mixed $decoded The decoded body.
+                 * @return PaymentResponse
+                 */
+                function( $decoded ) {
+                    return ( new PaymentResponse() )
+                        ->setTransactionId( $decoded->transactionId ?? null )
+                        ->setHref( $decoded->href ?? null )
+                        ->setProviders( $decoded->providers ?? null );
+            } );
 
             return $payment_response;
         }
@@ -273,6 +275,73 @@ class Client {
             $code = $e->getCode();
             throw new PaymentRequestException( 'An error occurred creating the payment request.', $code );
         }
+    }
+
+    /**
+     * Refunds a payment by transaction ID.
+     *
+     * @see https://checkoutfinland.github.io/psp-api/#/?id=refund
+     *
+     * @param Refund $refund        A refund instance.
+     * @param string $transactionID The transaction id.
+     *
+     * @throws HmacException
+     * @throws RefundRequestException
+     */
+    public function refund( Refund $refund, string $transactionID = '' ) {
+        $refund->validate();
+
+        try {
+            $uri = new Uri( '/payments/' . $transactionID . '/refund' );
+
+            // This will throw an error if the refund is not created.
+            $this->post( $uri, $refund, null, $transactionID );
+        }
+        catch ( HmacException $e ) {
+            throw $e;
+        }
+        catch ( \Exception $e ) {
+            $code = $e->getCode();
+            throw new RefundRequestException( 'An error occurred creating the refund request.', $code );
+        }
+    }
+
+    /**
+     * A wrapper for post requests.
+     *
+     * @param Uri               $uri            The uri for the request.
+     * @param \JsonSerializable $data           The request payload.
+     * @param callable          $callback       The callback method to run for the decoded response.
+     *                                          If left empty, the response is returned.
+     * @param string            $transactionId  Checkout transaction ID when accessing single transaction
+     *                                          not required for a new payment request.
+     *
+     * @return mixed|ResponseInterface Callback return value or the response object.
+     * @throws HmacException
+     */
+    protected function post( Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null ) {
+        $headers = $this->getHeaders( 'POST', $transactionId );
+        $body    = json_encode( $data, JSON_UNESCAPED_SLASHES );
+        $mac     = $this->calculateHmac( $headers, $body );
+
+        $headers['signature'] = $mac;
+
+        $response = $this->http_client->post( $uri, [
+            'headers' => $headers,
+            'body'    => $body
+        ] );
+        $body     = (string) $response->getBody();
+
+        // Handle header data and validate HMAC.
+        $headers = $this->reduce_headers( $response->getHeaders() );
+        $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
+
+        if ( $callback ) {
+            $decoded = json_decode( $body );
+            return call_user_func( $callback, $decoded );
+        }
+
+        return $response;
     }
 
     /**
