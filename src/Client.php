@@ -8,8 +8,9 @@ namespace CheckoutFinland\SDK;
 use CheckoutFinland\SDK\Exception\ValidationException;
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Request\Payment;
-use CheckoutFinland\SDK\Request\Refund;
+use CheckoutFinland\SDK\Request\RefundRequest;
 use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
+use CheckoutFinland\SDK\Response\RefundResponse;
 use CheckoutFinland\SDK\Util\Signature;
 use CheckoutFinland\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -269,25 +270,41 @@ class Client {
      *
      * @see https://checkoutfinland.github.io/psp-api/#/?id=refund
      *
-     * @param Refund $refund        A refund instance.
-     * @param string $transactionID The transaction id.
+     * @param RefundRequest $refund        A refund instance.
+     * @param string        $transactionID The transaction id.
      *
+     * @return RefundResponse Returns a refund response after successful refunds.
      * @throws HmacException        Thrown if HMAC calculation fails for responses.
      * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException  Thrown if payment validation fails.
      */
-    public function refund( Refund $refund, string $transactionID = '' ) {
+    public function refund( RefundRequest $refund, string $transactionID = '' ) : RefundResponse {
         $this->validateRequestItem( $refund );
 
         try {
             $uri = new Uri( '/payments/' . $transactionID . '/refund' );
 
             // This will throw an error if the refund is not created.
-            $this->post( $uri, $refund, null, $transactionID );
+            $refund_response = $this->post( $uri, $refund,
+                /**
+                 * Create the response instance.
+                 *
+                 * @param mixed $decoded The decoded body.
+                 * @return RefundResponse
+                 */
+                 function( $decoded ) {
+                     return ( new RefundResponse() )
+                         ->setProvider( $decoded->provider ?? null )
+                         ->setStatus( $decoded->status ?? null )
+                         ->setTransactionId( $decoded->transactionId ?? null );
+                 }
+            , $transactionID );
         }
         catch ( HmacException $e ) {
             throw $e;
         }
+
+        return $refund_response;
     }
 
     /**

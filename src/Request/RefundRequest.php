@@ -19,7 +19,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Request
  */
-class Refund implements \JsonSerializable, RequestInterface {
+class RefundRequest implements \JsonSerializable, RequestInterface {
 
     use JsonSerializable;
 
@@ -46,6 +46,7 @@ class Refund implements \JsonSerializable, RequestInterface {
             } );
         }
         else {
+            // If no items are set, fallback to prevent validation errors.
             $items_total = $this->amount;
         }
 
@@ -53,7 +54,9 @@ class Refund implements \JsonSerializable, RequestInterface {
         ->assert( $props );
 
         // Validate the callback urls.
-        $this->callbackUrls->validate();
+        if ( ! empty( $this->callbackUrls ) ) {
+            $this->callbackUrls->validate();
+        }
     }
 
     /**
@@ -93,9 +96,9 @@ class Refund implements \JsonSerializable, RequestInterface {
      *
      * @param int $amount
      *
-     * @return Refund Return self to enable chaining.
+     * @return RefundRequest Return self to enable chaining.
      */
-    public function setAmount( ?int $amount ) : Refund {
+    public function setAmount( ?int $amount ) : RefundRequest {
         $this->amount = $amount;
 
         return $this;
@@ -115,9 +118,9 @@ class Refund implements \JsonSerializable, RequestInterface {
      *
      * @param RefundItem[] $items The
      *
-     * @return Refund Return self to enable chaining.
+     * @return RefundRequest Return self to enable chaining.
      */
-    public function setItems( ?array $items ) : Refund {
+    public function setItems( ?array $items ) : RefundRequest {
         $this->items = $items;
 
         return $this;
@@ -137,9 +140,9 @@ class Refund implements \JsonSerializable, RequestInterface {
      *
      * @param CallbackUrl $callbackUrls The callback url instance holding success and cancel urls.
      *
-     * @return Refund Return self to enable chaining.
+     * @return RefundRequest Return self to enable chaining.
      */
-    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : Refund {
+    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : RefundRequest {
         $this->callbackUrls = $callbackUrls;
 
         return $this;
