@@ -54,9 +54,7 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
         ->assert( $props );
 
         // Validate the callback urls.
-        if ( ! empty( $this->callbackUrls ) ) {
-            $this->callbackUrls->validate();
-        }
+        $this->callbackUrls->validate();
     }
 
     /**

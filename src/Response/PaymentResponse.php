@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Payment
+ * Class PaymentResponse
  */
 
 namespace CheckoutFinland\SDK\Response;
@@ -9,13 +9,13 @@ use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Interfaces\ResponseInterface;
 
 /**
- * Class Payment
+ * Class PaymentResponse
  *
  * Represents a response object of payment creation.
  *
  * @package CheckoutFinland\SDK\Response
  */
-class Payment implements ResponseInterface {
+class PaymentResponse implements ResponseInterface {
 
     /**
      * The transaction id.
@@ -51,9 +51,10 @@ class Payment implements ResponseInterface {
      * Set the transaction id.
      *
      * @param string $transactionId
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentResponse Return self to enable chaining.
      */
-    public function setTransactionId( string $transactionId ) : Payment {
+    public function setTransactionId( string $transactionId ) : PaymentResponse {
         $this->transactionId = $transactionId;
 
         return $this;
@@ -72,9 +73,10 @@ class Payment implements ResponseInterface {
      * Set the href.
      *
      * @param string $href
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentResponse Return self to enable chaining.
      */
-    public function setHref( string $href ) : Payment {
+    public function setHref( string $href ) : PaymentResponse {
         $this->href = $href;
 
         return $this;
@@ -93,14 +95,15 @@ class Payment implements ResponseInterface {
     /**
      * Set the providers.
      *
-     * The parameter can be an arrya of Provider objects
+     * The parameter can be an array of Provider objects
      * or an array of stdClass instance. The latter will
      * be converted into provider class instances.
      *
      * @param Provider[]|array $providers The providers.
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentResponse Return self to enable chaining.
      */
-    public function setProviders( ?array $providers ) : Payment {
+    public function setProviders( ?array $providers ) : PaymentResponse {
         if ( empty( $providers ) ) {
             return $this;
         }

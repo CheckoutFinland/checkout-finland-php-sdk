@@ -7,9 +7,9 @@ namespace CheckoutFinland\SDK;
 
 use CheckoutFinland\SDK\Exception\ValidationException;
 use CheckoutFinland\SDK\Model\Provider;
-use CheckoutFinland\SDK\Request\Payment;
+use CheckoutFinland\SDK\Request\PaymentRequest;
 use CheckoutFinland\SDK\Request\RefundRequest;
-use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
+use CheckoutFinland\SDK\Response\PaymentResponse as PaymentResponse;
 use CheckoutFinland\SDK\Response\RefundResponse;
 use CheckoutFinland\SDK\Util\Signature;
 use CheckoutFinland\SDK\Interfaces\RequestInterface;
@@ -236,14 +236,14 @@ class Client {
     /**
      * Create a payment request.
      *
-     * @param Payment $payment A payment class instance.
-     * @return PaymentResponse
+     * @param PaymentRequest $payment A payment class instance.
      *
+     * @return PaymentResponse
      * @throws HmacException        Thrown if HMAC calculation fails for responses.
      * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException  Thrown if payment validation fails.
      */
-    public function createPayment( Payment $payment ) {
+    public function createPayment( PaymentRequest $payment ) {
         $this->validateRequestItem( $payment );
 
         $uri = new Uri( '/payments' );

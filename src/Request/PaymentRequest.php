@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Payment
+ * Class PaymentRequest
  */
 
 namespace CheckoutFinland\SDK\Request;
@@ -15,7 +15,7 @@ use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
- * Class Payment
+ * Class PaymentRequest
  *
  * This class is used to create a payment request object for
  * the CheckoutFinland\SDK\Client class.
@@ -23,7 +23,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=create-request-body
  * @package CheckoutFinland\SDK\Request
  */
-class Payment implements \JsonSerializable, RequestInterface {
+class PaymentRequest implements \JsonSerializable, RequestInterface {
 
     use JsonSerializable;
 
@@ -166,9 +166,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the stamp.
      *
      * @param string $stamp
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setStamp( ?string $stamp ) : Payment {
+    public function setStamp( ?string $stamp ): PaymentRequest {
         $this->stamp = $stamp;
 
         return $this;
@@ -188,9 +189,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the reference.
      *
      * @param string $reference
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setReference( ?string $reference ) : Payment {
+    public function setReference( ?string $reference ): PaymentRequest {
 
         $this->reference = $reference;
 
@@ -211,9 +213,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the amount.
      *
      * @param int $amount
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setAmount( ?int $amount ) : Payment {
+    public function setAmount( ?int $amount ) : PaymentRequest {
 
         $this->amount = $amount;
 
@@ -234,9 +237,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set currency.
      *
      * @param string $currency
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCurrency( ?string $currency ) : Payment {
+    public function setCurrency( ?string $currency ) : PaymentRequest {
 
         $this->currency = $currency;
 
@@ -257,9 +261,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the language.
      *
      * @param string $language
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setLanguage( ?string $language ) : Payment {
+    public function setLanguage( ?string $language ) : PaymentRequest {
 
         $this->language = $language;
 
@@ -280,9 +285,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the items.
      *
      * @param Item[] $items
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setItems( ?array $items ) : Payment {
+    public function setItems( ?array $items ) : PaymentRequest {
 
         $this->items = array_values( $items );
 
@@ -303,9 +309,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the customer.
      *
      * @param Customer $customer
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCustomer( ?Customer $customer ) : Payment {
+    public function setCustomer( ?Customer $customer ) : PaymentRequest {
 
         $this->customer = $customer;
 
@@ -326,9 +333,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the delivery address.
      *
      * @param Address $deliveryAddress
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setDeliveryAddress( ?Address $deliveryAddress ) : Payment {
+    public function setDeliveryAddress( ?Address $deliveryAddress ) : PaymentRequest {
 
         $this->deliveryAddress = $deliveryAddress;
 
@@ -349,9 +357,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the invoicing address.
      *
      * @param Address $invoicingAddress
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setInvoicingAddress( ?Address $invoicingAddress ) : Payment {
+    public function setInvoicingAddress( ?Address $invoicingAddress ) : PaymentRequest {
 
         $this->invoicingAddress = $invoicingAddress;
 
@@ -372,9 +381,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set the redirect urls.
      *
      * @param CallbackUrl $redirectUrls
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setRedirectUrls( ?CallbackUrl $redirectUrls ) : Payment {
+    public function setRedirectUrls( ?CallbackUrl $redirectUrls ) : PaymentRequest {
 
         $this->redirectUrls = $redirectUrls;
 
@@ -395,9 +405,10 @@ class Payment implements \JsonSerializable, RequestInterface {
      * Set callback urls.
      *
      * @param CallbackUrl $callbackUrls
-     * @return Payment Return self to enable chaining.
+     *
+     * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : Payment {
+    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : PaymentRequest {
 
         $this->callbackUrls = $callbackUrls;
 
