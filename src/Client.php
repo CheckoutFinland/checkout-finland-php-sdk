@@ -5,11 +5,14 @@
 
 namespace CheckoutFinland\SDK;
 
+use CheckoutFinland\SDK\Exception\ValidationException;
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Request\Payment;
 use CheckoutFinland\SDK\Request\Refund;
 use CheckoutFinland\SDK\Response\Payment as PaymentResponse;
 use CheckoutFinland\SDK\Util\Signature;
+use CheckoutFinland\SDK\Interfaces\RequestInterface;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -17,9 +20,6 @@ use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use CheckoutFinland\SDK\Exception\PaymentRequestException;
-use CheckoutFinland\SDK\Exception\RefundRequestException;
-use CheckoutFinland\SDK\Exception\PaymentProvidersRequestException;
 use CheckoutFinland\SDK\Exception\HmacException;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -189,8 +189,8 @@ class Client {
      * @param int $amount Purchase amount in currency's minor unit.
      * @return Provider[]
      *
-     * @throws HmacException                    Thrown if HMAC calculation fails for responses.
-     * @throws PaymentProvidersRequestException Thrown for erroneous requests.
+     * @throws HmacException       Thrown if HMAC calculation fails for responses.
+     * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
      */
     public function getPaymentProviders( int $amount = null ) {
         try {
@@ -216,7 +216,7 @@ class Client {
             $body     = (string) $response->getBody();
 
             // Validate the signature.
-            $headers = $this->reduce_headers( $response->getHeaders() );
+            $headers = $this->reduceHeaders( $response->getHeaders() );
             $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
 
             // Instantiate providers.
@@ -230,10 +230,6 @@ class Client {
         catch ( HmacException $e ) {
             throw $e;
         }
-        catch ( \Exception $e ) {
-            $code = $e->getCode();
-            throw new PaymentProvidersRequestException( 'An error occurred while loading the payment provider list.', $code );
-        }
     }
 
     /**
@@ -242,39 +238,30 @@ class Client {
      * @param Payment $payment A payment class instance.
      * @return PaymentResponse
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
-     * @throws HmacException             Thrown if HMAC calculation fails for responses.
-     * @throws PaymentRequestException   Thrown for erroneous requests.
+     * @throws HmacException        Thrown if HMAC calculation fails for responses.
+     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException  Thrown if payment validation fails.
      */
     public function createPayment( Payment $payment ) {
-        $payment->validate();
+        $this->validateRequestItem( $payment );
 
-        try {
-            $uri = new Uri( '/payments' );
+        $uri = new Uri( '/payments' );
 
-            $payment_response = $this->post( $uri, $payment,
-                /**
-                 * Create the response instance.
-                 *
-                 * @param mixed $decoded The decoded body.
-                 * @return PaymentResponse
-                 */
-                function( $decoded ) {
-                    return ( new PaymentResponse() )
-                        ->setTransactionId( $decoded->transactionId ?? null )
-                        ->setHref( $decoded->href ?? null )
-                        ->setProviders( $decoded->providers ?? null );
-            } );
+        $payment_response = $this->post( $uri, $payment,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return PaymentResponse
+             */
+            function( $decoded ) {
+                return ( new PaymentResponse() )
+                    ->setTransactionId( $decoded->transactionId ?? null )
+                    ->setHref( $decoded->href ?? null )
+                    ->setProviders( $decoded->providers ?? null );
+        } );
 
-            return $payment_response;
-        }
-        catch ( HmacException $e ) {
-            throw $e;
-        }
-        catch ( \Exception $e ) {
-            $code = $e->getCode();
-            throw new PaymentRequestException( 'An error occurred creating the payment request.', $code );
-        }
+        return $payment_response;
     }
 
     /**
@@ -285,11 +272,12 @@ class Client {
      * @param Refund $refund        A refund instance.
      * @param string $transactionID The transaction id.
      *
-     * @throws HmacException
-     * @throws RefundRequestException
+     * @throws HmacException        Thrown if HMAC calculation fails for responses.
+     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException  Thrown if payment validation fails.
      */
     public function refund( Refund $refund, string $transactionID = '' ) {
-        $refund->validate();
+        $this->validateRequestItem( $refund );
 
         try {
             $uri = new Uri( '/payments/' . $transactionID . '/refund' );
@@ -299,10 +287,6 @@ class Client {
         }
         catch ( HmacException $e ) {
             throw $e;
-        }
-        catch ( \Exception $e ) {
-            $code = $e->getCode();
-            throw new RefundRequestException( 'An error occurred creating the refund request.', $code );
         }
     }
 
@@ -333,7 +317,7 @@ class Client {
         $body     = (string) $response->getBody();
 
         // Handle header data and validate HMAC.
-        $headers = $this->reduce_headers( $response->getHeaders() );
+        $headers = $this->reduceHeaders( $response->getHeaders() );
         $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
 
         if ( $callback ) {
@@ -345,6 +329,32 @@ class Client {
     }
 
     /**
+     * Validate a request item.
+     *
+     * Handle the Respect\Validation nested exception by
+     * wrapping the messages into a validation exception.
+     * The original Respect\Validation exceptions is accessible
+     * by calling $e->getPrevious() for the thrown exception.
+     *
+     * @param RequestInterface $item A request instance.
+     *
+     * @throws ValidationException
+     */
+    protected function validateRequestItem( ?RequestInterface $item ) {
+        if ( method_exists( $item, 'validate' ) ) {
+            try {
+                $item->validate();
+            }
+            catch ( NestedValidationException $e ) {
+                $message  = $e->getMainMessage();
+                $messages = $e->getMessages();
+                throw ( new ValidationException( $message, $e->getCode(), $e ) )
+                    ->setMessages( $messages );
+            }
+        }
+    }
+
+    /**
      * The PSR message interface defines headers as
      * an associative array where every header key has
      * an array of values. This method reduces the values to one.
@@ -353,11 +363,12 @@ class Client {
      *
      * @return array
      */
-    protected function reduce_headers( array $headers = [] ) {
+    protected function reduceHeaders( array $headers = [] ) {
         return array_map( function( $value ) {
             return $value[0] ?? $value;
         }, $headers );
     }
+
 
     /**
      * A proxy for the Signature class' static method

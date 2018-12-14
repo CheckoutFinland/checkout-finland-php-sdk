@@ -6,7 +6,7 @@
 namespace CheckoutFinland\SDK\Response;
 
 use CheckoutFinland\SDK\Model\Provider;
-use CheckoutFinland\SDK\Response;
+use CheckoutFinland\SDK\Interfaces\ResponseInterface;
 
 /**
  * Class Payment
@@ -15,7 +15,7 @@ use CheckoutFinland\SDK\Response;
  *
  * @package CheckoutFinland\SDK\Response
  */
-class Payment extends Response {
+class Payment implements ResponseInterface {
 
     /**
      * The transaction id.

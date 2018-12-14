@@ -15,48 +15,36 @@ namespace CheckoutFinland\SDK\Exception;
 abstract class RequestException extends \Exception {
 
     /**
-     * The error code texts.
+     * The previous throwable used for the exception chaining.
      *
-     * @var array
+     * @var \Throwable $previous
      */
-    protected $responses = [
-        '400' => [
-            'text'        => 'Bad Request',
-            'description' => 'The request was unacceptable, probably due to missing a required parameter.',
-        ],
-        '401' => [
-            'text'        => 'Unauthorized',
-            'description' => 'HMAC calculation failed or Merchant has no access to this feature.',
-        ],
-        '404' => [
-            'text'        => 'Not Found',
-            'description' => 'The requested resource doesn\'t exist.',
-        ],
-        '422' => [
-            'text'        => 'Unprocessable Entity',
-            'description' => 'The requested method is not supported.',
-        ],
-    ];
+    protected $previous;
 
     /**
      * Override the constructor to define more
      * specific errors for API transactions.
      *
-     * @param null            $message  Exception message.
-     * @param int             $code     User defined exception code.
-     * @param \Exception|null $previous Previous exception.
+     * @param null       $message  Exception message.
+     * @param int        $code     User defined exception code.
+     * @param \Throwable $previous Previous exception.
      */
-    public function __construct( $message = null, $code = 0, \Exception $previous = null ) {
-        $this->message   = $message;
-        $this->code      = $code;
-        $this->$previous = $previous;
+    public function __construct( $message = null, $code = 0, \Throwable $previous = null ) {
+        $this->message  = $message;
+        $this->code     = $code;
+        $this->previous = $previous;
+    }
 
-        // If the code matches predefined codes,
-        // format the message accordingly.
-        $response = $this->responses[ $this->code ] ?? null;
+    /**
+     * Set the previous exception.
+     *
+     * @param \Throwable $previous
+     *
+     * @return RequestException Return self to enable chaining.
+     */
+    public function setPrevious( ?\Throwable $previous ): RequestException {
+        $this->previous = $previous;
 
-        if ( $response ) {
-            $this->message = $response['text'] . ' - ' . $response['description'];
-        }
+        return $this;
     }
 }

@@ -71,7 +71,7 @@ class Signature {
         $hmac = static::calculateHmac( $params, $body, $secretKey );
 
         if ( $hmac !== $signature ) {
-            throw new HmacException( 'HMAC signature is invalid.' );
+            throw new HmacException( 'HMAC signature is invalid.', 401 );
         }
     }
 

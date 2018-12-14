@@ -5,6 +5,7 @@
 
 namespace CheckoutFinland\SDK\Request;
 
+use CheckoutFinland\SDK\Interfaces\RequestInterface;
 use CheckoutFinland\SDK\Model\Address;
 use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\Customer;
@@ -22,7 +23,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=create-request-body
  * @package CheckoutFinland\SDK\Request
  */
-class Payment implements \JsonSerializable {
+class Payment implements \JsonSerializable, RequestInterface {
 
     use JsonSerializable;
 

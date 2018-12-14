@@ -5,6 +5,7 @@
 
 namespace CheckoutFinland\SDK\Request;
 
+use CheckoutFinland\SDK\Interfaces\RequestInterface;
 use CheckoutFinland\SDK\Model\CallbackUrl;
 use CheckoutFinland\SDK\Model\RefundItem;
 use CheckoutFinland\SDK\Util\JsonSerializable;
@@ -18,7 +19,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Request
  */
-class Refund extends Request implements \JsonSerializable {
+class Refund implements \JsonSerializable, RequestInterface {
 
     use JsonSerializable;
 
