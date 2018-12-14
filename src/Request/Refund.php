@@ -18,7 +18,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Request
  */
-class Refund implements \JsonSerializable {
+class Refund extends Request implements \JsonSerializable {
 
     use JsonSerializable;
 
@@ -30,21 +30,26 @@ class Refund implements \JsonSerializable {
     public function validate() {
         $props = get_object_vars( $this );
 
-        // Count the total amount of the payment.
-        $items_total = array_reduce( $this->getItems(), function( $carry = 0, ?RefundItem $item = null ) {
-            if ( $item === null ) {
-                return $carry;
-            }
-            return $item->getAmount() + $carry;
-        } );
+        if ( ! empty( $this->items ) ) {
+            // Count the total amount of the payment.
+            $items_total = array_reduce( $this->items, function( $carry = 0, ?RefundItem $item = null ) {
+                if ( $item === null ) {
+                    return $carry;
+                }
+                return $item->getAmount() + $carry;
+            } );
+
+            // Validate items.
+            array_walk( $this->items, function( RefundItem $item ) {
+                $item->validate();
+            } );
+        }
+        else {
+            $items_total = $this->amount;
+        }
 
         v::key( 'amount', v::notEmpty()->intVal()->equals( $items_total ) )
         ->assert( $props );
-
-        // Validate the items.
-        array_walk( $this->items, function( RefundItem $item ) {
-            $item->validate();
-        } );
 
         // Validate the callback urls.
         $this->callbackUrls->validate();
