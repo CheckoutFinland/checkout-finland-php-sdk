@@ -108,7 +108,7 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      * @return RefundItem[]
      */
     public function getItems() : array {
-        return $this->items;
+        return $this->items ?? [];
     }
 
     /**

@@ -9,8 +9,10 @@ use CheckoutFinland\SDK\Exception\ValidationException;
 use CheckoutFinland\SDK\Model\Provider;
 use CheckoutFinland\SDK\Request\PaymentRequest;
 use CheckoutFinland\SDK\Request\RefundRequest;
-use CheckoutFinland\SDK\Response\PaymentResponse as PaymentResponse;
+use CheckoutFinland\SDK\Request\EmailRefundRequest;
+use CheckoutFinland\SDK\Response\PaymentResponse;
 use CheckoutFinland\SDK\Response\RefundResponse;
+use CheckoutFinland\SDK\Response\EmailRefundResponse;
 use CheckoutFinland\SDK\Util\Signature;
 use CheckoutFinland\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -294,6 +296,48 @@ class Client {
                  */
                  function( $decoded ) {
                      return ( new RefundResponse() )
+                         ->setProvider( $decoded->provider ?? null )
+                         ->setStatus( $decoded->status ?? null )
+                         ->setTransactionId( $decoded->transactionId ?? null );
+                 }
+            , $transactionID );
+        }
+        catch ( HmacException $e ) {
+            throw $e;
+        }
+
+        return $refund_response;
+    }
+
+    /**
+     * Refunds a payment by transaction ID as an email refund.
+     *
+     * @see https://checkoutfinland.github.io/psp-api/#/?id=email-refund
+     *
+     * @param EmailRefundRequest $refund        An email refund instance.
+     * @param string             $transactionID The transaction id.
+     *
+     * @return EmailRefundResponse Returns a refund response after successful refunds.
+     * @throws HmacException       Thrown if HMAC calculation fails for responses.
+     * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function emailRefund( EmailRefundRequest $refund, string $transactionID = '' ) : EmailRefundResponse {
+        $this->validateRequestItem( $refund );
+
+        try {
+            $uri = new Uri( '/payments/' . $transactionID . '/refund/email' );
+
+            // This will throw an error if the refund is not created.
+            $refund_response = $this->post( $uri, $refund,
+                /**
+                 * Create the response instance.
+                 *
+                 * @param mixed $decoded The decoded body.
+                 * @return EmailRefundResponse
+                 */
+                 function( $decoded ) {
+                     return ( new EmailRefundResponse() )
                          ->setProvider( $decoded->provider ?? null )
                          ->setStatus( $decoded->status ?? null )
                          ->setTransactionId( $decoded->transactionId ?? null );
