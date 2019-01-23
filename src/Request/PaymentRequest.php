@@ -23,7 +23,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=create-request-body
  * @package CheckoutFinland\SDK\Request
  */
-class PaymentRequest implements \JsonSerializable, RequestInterface {
+class PaymentRequest implements \JsonSerializable, RequestInterface
+{
 
     use JsonSerializable;
 
@@ -32,44 +33,45 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
         // Count the total amount of the payment.
-        $items_total = array_reduce( $this->getItems(), function( $carry = 0, ?Item $item = null ) {
-            if ( $item === null ) {
+        $items_total = array_reduce($this->getItems(), function ($carry = 0, ?Item $item = null) {
+            if ($item === null) {
                 return $carry;
             }
             return $item->getUnitPrice() * $item->getUnits() + $carry;
-        } );
+        });
 
-        v::key( 'stamp', v::notEmpty() )
-        ->key( 'reference', v::notEmpty() )
-        ->key( 'amount', v::notEmpty()->intVal()->equals( $items_total ) )
-        ->key( 'currency', v::notEmpty()->equals( 'EUR' ) )
-        ->key( 'language', v::oneOf(
-            v::equals( 'FI' ),
-            v::equals( 'SV' ),
-            v::equals( 'EN' )
-        ) )
-        ->key( 'items', v::notEmpty()->arrayType() )
-        ->key( 'customer', v::notEmpty() )
-        ->key( 'redirectUrls', v::notEmpty() )
-        ->assert( $props );
+        v::key('stamp', v::notEmpty())
+        ->key('reference', v::notEmpty())
+        ->key('amount', v::notEmpty()->intVal()->equals($items_total))
+        ->key('currency', v::notEmpty()->equals('EUR'))
+        ->key('language', v::oneOf(
+            v::equals('FI'),
+            v::equals('SV'),
+            v::equals('EN')
+        ))
+        ->key('items', v::notEmpty()->arrayType())
+        ->key('customer', v::notEmpty())
+        ->key('redirectUrls', v::notEmpty())
+        ->assert($props);
 
         // Validate the items.
-        array_walk( $this->items, function( Item $item ) {
+        array_walk($this->items, function (Item $item) {
             $item->validate();
-        } );
+        });
 
         // Validate the customer.
         $this->customer->validate();
 
         // Validate the address values.
-        if ( ! empty( $this->deliveryAddress ) ) {
+        if (! empty($this->deliveryAddress)) {
             $this->deliveryAddress->validate();
         }
-        if ( ! empty( $this->invoicingAddress ) ) {
+        if (! empty($this->invoicingAddress)) {
             $this->invoicingAddress->validate();
         }
     }
@@ -157,7 +159,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return string
      */
-    public function getStamp() : ?string {
+    public function getStamp() : ?string
+    {
 
         return $this->stamp;
     }
@@ -169,7 +172,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setStamp( ?string $stamp ): PaymentRequest {
+    public function setStamp(?string $stamp): PaymentRequest
+    {
         $this->stamp = $stamp;
 
         return $this;
@@ -180,7 +184,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return string
      */
-    public function getReference() : ?string {
+    public function getReference() : ?string
+    {
 
         return $this->reference;
     }
@@ -192,7 +197,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setReference( ?string $reference ): PaymentRequest {
+    public function setReference(?string $reference): PaymentRequest
+    {
 
         $this->reference = $reference;
 
@@ -204,7 +210,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return int
      */
-    public function getAmount() : ?int {
+    public function getAmount() : ?int
+    {
 
         return $this->amount;
     }
@@ -216,7 +223,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setAmount( ?int $amount ) : PaymentRequest {
+    public function setAmount(?int $amount) : PaymentRequest
+    {
 
         $this->amount = $amount;
 
@@ -228,7 +236,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return string
      */
-    public function getCurrency() : ?string {
+    public function getCurrency() : ?string
+    {
 
         return $this->currency;
     }
@@ -240,7 +249,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCurrency( ?string $currency ) : PaymentRequest {
+    public function setCurrency(?string $currency) : PaymentRequest
+    {
 
         $this->currency = $currency;
 
@@ -252,7 +262,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return string
      */
-    public function getLanguage() : ?string {
+    public function getLanguage() : ?string
+    {
 
         return $this->language;
     }
@@ -264,7 +275,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setLanguage( ?string $language ) : PaymentRequest {
+    public function setLanguage(?string $language) : PaymentRequest
+    {
 
         $this->language = $language;
 
@@ -276,7 +288,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return Item[]
      */
-    public function getItems() : ?array {
+    public function getItems() : ?array
+    {
 
         return $this->items;
     }
@@ -288,9 +301,10 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setItems( ?array $items ) : PaymentRequest {
+    public function setItems(?array $items) : PaymentRequest
+    {
 
-        $this->items = array_values( $items );
+        $this->items = array_values($items);
 
         return $this;
     }
@@ -300,7 +314,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return Customer
      */
-    public function getCustomer() : ?Customer {
+    public function getCustomer() : ?Customer
+    {
 
         return $this->customer;
     }
@@ -312,7 +327,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCustomer( ?Customer $customer ) : PaymentRequest {
+    public function setCustomer(?Customer $customer) : PaymentRequest
+    {
 
         $this->customer = $customer;
 
@@ -324,7 +340,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return Address
      */
-    public function getDeliveryAddress() : ?Address {
+    public function getDeliveryAddress() : ?Address
+    {
 
         return $this->deliveryAddress;
     }
@@ -336,7 +353,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setDeliveryAddress( ?Address $deliveryAddress ) : PaymentRequest {
+    public function setDeliveryAddress(?Address $deliveryAddress) : PaymentRequest
+    {
 
         $this->deliveryAddress = $deliveryAddress;
 
@@ -348,7 +366,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return Address
      */
-    public function getInvoicingAddress() : ?Address {
+    public function getInvoicingAddress() : ?Address
+    {
 
         return $this->invoicingAddress;
     }
@@ -360,7 +379,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setInvoicingAddress( ?Address $invoicingAddress ) : PaymentRequest {
+    public function setInvoicingAddress(?Address $invoicingAddress) : PaymentRequest
+    {
 
         $this->invoicingAddress = $invoicingAddress;
 
@@ -372,7 +392,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return CallbackUrl
      */
-    public function getRedirectUrls() : ?CallbackUrl {
+    public function getRedirectUrls() : ?CallbackUrl
+    {
 
         return $this->redirectUrls;
     }
@@ -384,7 +405,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setRedirectUrls( ?CallbackUrl $redirectUrls ) : PaymentRequest {
+    public function setRedirectUrls(?CallbackUrl $redirectUrls) : PaymentRequest
+    {
 
         $this->redirectUrls = $redirectUrls;
 
@@ -396,7 +418,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return CallbackUrl
      */
-    public function getCallbackUrls() : ?CallbackUrl {
+    public function getCallbackUrls() : ?CallbackUrl
+    {
 
         return $this->callbackUrls;
     }
@@ -408,11 +431,11 @@ class PaymentRequest implements \JsonSerializable, RequestInterface {
      *
      * @return PaymentRequest Return self to enable chaining.
      */
-    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : PaymentRequest {
+    public function setCallbackUrls(?CallbackUrl $callbackUrls) : PaymentRequest
+    {
 
         $this->callbackUrls = $callbackUrls;
 
         return $this;
     }
-
 }

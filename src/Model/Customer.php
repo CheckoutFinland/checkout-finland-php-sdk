@@ -17,7 +17,8 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=customer
  * @package CheckoutFinland\SDK\Model
  */
-class Customer implements \JsonSerializable {
+class Customer implements \JsonSerializable
+{
 
     use JsonSerializable;
 
@@ -26,11 +27,12 @@ class Customer implements \JsonSerializable {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        v::key( 'email', v::notEmpty()->email() )
-        ->assert( $props );
+        v::key('email', v::notEmpty()->email())
+        ->assert($props);
     }
 
     /**
@@ -73,7 +75,8 @@ class Customer implements \JsonSerializable {
      *
      * @return string
      */
-    public function getEmail(): ?string {
+    public function getEmail(): ?string
+    {
 
         return $this->email;
     }
@@ -85,7 +88,8 @@ class Customer implements \JsonSerializable {
      *
      * @return self Return self to enable chaining.
      */
-    public function setEmail( ?string $email ) : Customer {
+    public function setEmail(?string $email) : Customer
+    {
         $this->email = $email;
 
         return $this;
@@ -96,7 +100,8 @@ class Customer implements \JsonSerializable {
      *
      * @return string
      */
-    public function getFirstName(): ?string {
+    public function getFirstName(): ?string
+    {
 
         return $this->firstName;
     }
@@ -108,7 +113,8 @@ class Customer implements \JsonSerializable {
      *
      * @return self Return self to enable chaining.
      */
-    public function setFirstName( ?string $firstName ) : Customer {
+    public function setFirstName(?string $firstName) : Customer
+    {
         $this->firstName = $firstName;
 
         return $this;
@@ -119,7 +125,8 @@ class Customer implements \JsonSerializable {
      *
      * @return string
      */
-    public function getLastName(): ?string {
+    public function getLastName(): ?string
+    {
 
         return $this->lastName;
     }
@@ -131,7 +138,8 @@ class Customer implements \JsonSerializable {
      *
      * @return self Return self to enable chaining.
      */
-    public function setLastName( ?string $lastName ) : Customer {
+    public function setLastName(?string $lastName) : Customer
+    {
         $this->lastName = $lastName;
 
         return $this;
@@ -142,7 +150,8 @@ class Customer implements \JsonSerializable {
      *
      * @return string
      */
-    public function getPhone(): ?string {
+    public function getPhone(): ?string
+    {
 
         return $this->phone;
     }
@@ -154,7 +163,8 @@ class Customer implements \JsonSerializable {
      *
      * @return self Return self to enable chaining.
      */
-    public function setPhone( ?string $phone ) : Customer {
+    public function setPhone(?string $phone) : Customer
+    {
         $this->phone = $phone;
 
         return $this;
@@ -165,7 +175,8 @@ class Customer implements \JsonSerializable {
      *
      * @return string
      */
-    public function getVatId(): ?string {
+    public function getVatId(): ?string
+    {
 
         return $this->vatId;
     }
@@ -177,10 +188,10 @@ class Customer implements \JsonSerializable {
      *
      * @return self Return self to enable chaining.
      */
-    public function setVatId( ?string $vatId ) : Customer {
+    public function setVatId(?string $vatId) : Customer
+    {
         $this->vatId = $vatId;
 
         return $this;
     }
-
 }

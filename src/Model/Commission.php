@@ -10,4 +10,7 @@ namespace CheckoutFinland\SDK\Model;
  *
  * @package CheckoutFinland\SDK\Model
  */
-class Commission {}
+class Commission
+{
+
+}

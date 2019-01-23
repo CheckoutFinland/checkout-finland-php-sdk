@@ -12,7 +12,8 @@ use CheckoutFinland\SDK\Interfaces\ResponseInterface;
  *
  * @package CheckoutFinland\SDK\Response
  */
-class RefundResponse implements ResponseInterface {
+class RefundResponse implements ResponseInterface
+{
 
     /**
      * The provider id.
@@ -40,7 +41,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return string
      */
-    public function getProvider(): string {
+    public function getProvider(): string
+    {
 
         return $this->provider;
     }
@@ -52,7 +54,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return RefundResponse Return self to enable chaining.
      */
-    public function setProvider( ?string $provider ): RefundResponse {
+    public function setProvider(?string $provider): RefundResponse
+    {
 
         $this->provider = $provider;
 
@@ -64,7 +67,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return string
      */
-    public function getStatus(): string {
+    public function getStatus(): string
+    {
 
         return $this->status;
     }
@@ -76,7 +80,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return RefundResponse Return self to enable chaining.
      */
-    public function setStatus( ?string $status ): RefundResponse {
+    public function setStatus(?string $status): RefundResponse
+    {
 
         $this->status = $status;
 
@@ -88,7 +93,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return string
      */
-    public function getTransactionId(): string {
+    public function getTransactionId(): string
+    {
 
         return $this->transactionId;
     }
@@ -100,7 +106,8 @@ class RefundResponse implements ResponseInterface {
      *
      * @return RefundResponse Return self to enable chaining.
      */
-    public function setTransactionId( ?string $transactionId ): RefundResponse {
+    public function setTransactionId(?string $transactionId): RefundResponse
+    {
 
         $this->transactionId = $transactionId;
 

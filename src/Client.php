@@ -33,7 +33,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK
  */
-class Client {
+class Client
+{
 
     /**
      * The merchant id.
@@ -47,7 +48,8 @@ class Client {
      *
      * @return int
      */
-    public function getMerchantId() : ?int {
+    public function getMerchantId() : ?int
+    {
 
         return $this->merchantId;
     }
@@ -58,7 +60,8 @@ class Client {
      * @param int $merchantId The merchant id.
      * @return Client Return self to enable chaining.
      */
-    public function setMerchantId( int $merchantId ) : Client {
+    public function setMerchantId(int $merchantId) : Client
+    {
         $this->merchantId = $merchantId;
 
         return $this;
@@ -69,7 +72,8 @@ class Client {
      *
      * @return string
      */
-    public function getSecretKey() : ?string {
+    public function getSecretKey() : ?string
+    {
 
         return $this->secretKey;
     }
@@ -80,7 +84,8 @@ class Client {
      * @param string $secretKey The secrect key.
      * @return Client Return self to enable chaining.
      */
-    public function setSecretKey( string $secretKey ) : Client {
+    public function setSecretKey(string $secretKey) : Client
+    {
         $this->secretKey = $secretKey;
 
         return $this;
@@ -119,11 +124,12 @@ class Client {
      *      @type string          $message_format   The format for logger messages.
      *                                              See: https://github.com/guzzle/guzzle/blob/master/src/MessageFormatter.php#L9
      */
-    public function __construct( int $merchantId, string $secretKey, $args = [] ) {
-        $this->setMerchantId( $merchantId );
-        $this->setSecretKey( $secretKey );
+    public function __construct(int $merchantId, string $secretKey, $args = [])
+    {
+        $this->setMerchantId($merchantId);
+        $this->setSecretKey($secretKey);
 
-        $stack = $this->createLoggerStack( $args );
+        $stack = $this->createLoggerStack($args);
 
         $this->http_client = new GuzzleHttpClient(
             [
@@ -143,8 +149,9 @@ class Client {
      *
      * @return HandlerStack
      */
-    private function createLoggerStack( array $args ) {
-        if ( empty( $args['logger'] ) ) {
+    private function createLoggerStack(array $args)
+    {
+        if (empty($args['logger'])) {
             return HandlerStack::create();
         }
 
@@ -152,7 +159,7 @@ class Client {
         $stack->push(
             Middleware::log(
                 $args['logger'],
-                new MessageFormatter( $args['message_format'] ?? '{uri}: {req_body} - {res_body}' )
+                new MessageFormatter($args['message_format'] ?? '{uri}: {req_body} - {res_body}')
             )
         );
         return $stack;
@@ -167,19 +174,20 @@ class Client {
      *
      * @return array
      */
-    protected function getHeaders( string $method, string $transactionId = null ) {
+    protected function getHeaders(string $method, string $transactionId = null)
+    {
         $datetime = new \DateTime();
 
         $headers = [
             'checkout-account'   => $this->merchantId,
             'checkout-algorithm' => 'sha256',
-            'checkout-method'    => strtoupper( $method ),
-            'checkout-nonce'     => uniqid( true ),
-            'checkout-timestamp' => $datetime->format( 'Y-m-d\TH:i:s.u\Z' ),
+            'checkout-method'    => strtoupper($method),
+            'checkout-nonce'     => uniqid(true),
+            'checkout-timestamp' => $datetime->format('Y-m-d\TH:i:s.u\Z'),
             'content-type'       => 'application/json; charset=utf-8'
         ];
 
-        if ( ! empty( $transactionId) ) {
+        if (! empty($transactionId)) {
             $headers['checkout-transaction-id'] = $transactionId;
         }
 
@@ -195,12 +203,13 @@ class Client {
      * @throws HmacException       Thrown if HMAC calculation fails for responses.
      * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
      */
-    public function getPaymentProviders( int $amount = null ) {
+    public function getPaymentProviders(int $amount = null)
+    {
         try {
-            $uri = new Uri( '/merchants/payment-providers' );
+            $uri = new Uri('/merchants/payment-providers');
 
-            $headers = $this->getHeaders( 'GET' );
-            $mac     = $this->calculateHmac( $headers );
+            $headers = $this->getHeaders('GET');
+            $mac     = $this->calculateHmac($headers);
 
             // Sign the request.
             $headers['signature'] = $mac;
@@ -209,28 +218,27 @@ class Client {
             ];
 
             // Set the amount query parameter.
-            if ( $amount !== null ) {
+            if ($amount !== null) {
                 $request_params['query'] = [
                     'amount' => $amount
                 ];
             }
 
-            $response = $this->http_client->get( $uri, $request_params );
+            $response = $this->http_client->get($uri, $request_params);
             $body     = (string) $response->getBody();
 
             // Validate the signature.
-            $headers = $this->reduceHeaders( $response->getHeaders() );
-            $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
+            $headers = $this->reduceHeaders($response->getHeaders());
+            $this->validateHmac($headers, $body, $headers['signature'] ?? '');
 
             // Instantiate providers.
-            $decoded   = json_decode( $body );
-            $providers = array_map( function( $provider_data ) {
-                return ( new Provider() )->bind_properties( $provider_data );
-            }, $decoded );
+            $decoded   = json_decode($body);
+            $providers = array_map(function ($provider_data) {
+                return ( new Provider() )->bindProperties($provider_data);
+            }, $decoded);
 
             return $providers;
-        }
-        catch ( HmacException $e ) {
+        } catch (HmacException $e) {
             throw $e;
         }
     }
@@ -245,24 +253,28 @@ class Client {
      * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException  Thrown if payment validation fails.
      */
-    public function createPayment( PaymentRequest $payment ) {
-        $this->validateRequestItem( $payment );
+    public function createPayment(PaymentRequest $payment)
+    {
+        $this->validateRequestItem($payment);
 
-        $uri = new Uri( '/payments' );
+        $uri = new Uri('/payments');
 
-        $payment_response = $this->post( $uri, $payment,
+        $payment_response = $this->post(
+            $uri,
+            $payment,
             /**
              * Create the response instance.
              *
              * @param mixed $decoded The decoded body.
              * @return PaymentResponse
              */
-            function( $decoded ) {
+            function ($decoded) {
                 return ( new PaymentResponse() )
-                    ->setTransactionId( $decoded->transactionId ?? null )
-                    ->setHref( $decoded->href ?? null )
-                    ->setProviders( $decoded->providers ?? null );
-        } );
+                    ->setTransactionId($decoded->transactionId ?? null)
+                    ->setHref($decoded->href ?? null)
+                    ->setProviders($decoded->providers ?? null);
+            }
+        );
 
         return $payment_response;
     }
@@ -280,29 +292,32 @@ class Client {
      * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException  Thrown if payment validation fails.
      */
-    public function refund( RefundRequest $refund, string $transactionID = '' ) : RefundResponse {
-        $this->validateRequestItem( $refund );
+    public function refund(RefundRequest $refund, string $transactionID = '') : RefundResponse
+    {
+        $this->validateRequestItem($refund);
 
         try {
-            $uri = new Uri( '/payments/' . $transactionID . '/refund' );
+            $uri = new Uri('/payments/' . $transactionID . '/refund');
 
             // This will throw an error if the refund is not created.
-            $refund_response = $this->post( $uri, $refund,
+            $refund_response = $this->post(
+                $uri,
+                $refund,
                 /**
                  * Create the response instance.
                  *
                  * @param mixed $decoded The decoded body.
                  * @return RefundResponse
                  */
-                 function( $decoded ) {
-                     return ( new RefundResponse() )
-                         ->setProvider( $decoded->provider ?? null )
-                         ->setStatus( $decoded->status ?? null )
-                         ->setTransactionId( $decoded->transactionId ?? null );
-                 }
-            , $transactionID );
-        }
-        catch ( HmacException $e ) {
+                    function ($decoded) {
+                        return ( new RefundResponse() )
+                         ->setProvider($decoded->provider ?? null)
+                         ->setStatus($decoded->status ?? null)
+                         ->setTransactionId($decoded->transactionId ?? null);
+                    },
+                $transactionID
+            );
+        } catch (HmacException $e) {
             throw $e;
         }
 
@@ -322,29 +337,32 @@ class Client {
      * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException Thrown if payment validation fails.
      */
-    public function emailRefund( EmailRefundRequest $refund, string $transactionID = '' ) : EmailRefundResponse {
-        $this->validateRequestItem( $refund );
+    public function emailRefund(EmailRefundRequest $refund, string $transactionID = '') : EmailRefundResponse
+    {
+        $this->validateRequestItem($refund);
 
         try {
-            $uri = new Uri( '/payments/' . $transactionID . '/refund/email' );
+            $uri = new Uri('/payments/' . $transactionID . '/refund/email');
 
             // This will throw an error if the refund is not created.
-            $refund_response = $this->post( $uri, $refund,
+            $refund_response = $this->post(
+                $uri,
+                $refund,
                 /**
                  * Create the response instance.
                  *
                  * @param mixed $decoded The decoded body.
                  * @return EmailRefundResponse
                  */
-                 function( $decoded ) {
-                     return ( new EmailRefundResponse() )
-                         ->setProvider( $decoded->provider ?? null )
-                         ->setStatus( $decoded->status ?? null )
-                         ->setTransactionId( $decoded->transactionId ?? null );
-                 }
-            , $transactionID );
-        }
-        catch ( HmacException $e ) {
+                    function ($decoded) {
+                        return ( new EmailRefundResponse() )
+                         ->setProvider($decoded->provider ?? null)
+                         ->setStatus($decoded->status ?? null)
+                         ->setTransactionId($decoded->transactionId ?? null);
+                    },
+                $transactionID
+            );
+        } catch (HmacException $e) {
             throw $e;
         }
 
@@ -364,26 +382,27 @@ class Client {
      * @return mixed|ResponseInterface Callback return value or the response object.
      * @throws HmacException
      */
-    protected function post( Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null ) {
-        $headers = $this->getHeaders( 'POST', $transactionId );
-        $body    = json_encode( $data, JSON_UNESCAPED_SLASHES );
-        $mac     = $this->calculateHmac( $headers, $body );
+    protected function post(Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null)
+    {
+        $headers = $this->getHeaders('POST', $transactionId);
+        $body    = json_encode($data, JSON_UNESCAPED_SLASHES);
+        $mac     = $this->calculateHmac($headers, $body);
 
         $headers['signature'] = $mac;
 
-        $response = $this->http_client->post( $uri, [
+        $response = $this->http_client->post($uri, [
             'headers' => $headers,
             'body'    => $body
-        ] );
+        ]);
         $body     = (string) $response->getBody();
 
         // Handle header data and validate HMAC.
-        $headers = $this->reduceHeaders( $response->getHeaders() );
-        $this->validateHmac( $headers, $body, $headers['signature'] ?? '' );
+        $headers = $this->reduceHeaders($response->getHeaders());
+        $this->validateHmac($headers, $body, $headers['signature'] ?? '');
 
-        if ( $callback ) {
-            $decoded = json_decode( $body );
-            return call_user_func( $callback, $decoded );
+        if ($callback) {
+            $decoded = json_decode($body);
+            return call_user_func($callback, $decoded);
         }
 
         return $response;
@@ -401,16 +420,16 @@ class Client {
      *
      * @throws ValidationException
      */
-    protected function validateRequestItem( ?RequestInterface $item ) {
-        if ( method_exists( $item, 'validate' ) ) {
+    protected function validateRequestItem(?RequestInterface $item)
+    {
+        if (method_exists($item, 'validate')) {
             try {
                 $item->validate();
-            }
-            catch ( NestedValidationException $e ) {
+            } catch (NestedValidationException $e) {
                 $message  = $e->getMainMessage();
                 $messages = $e->getMessages();
-                throw ( new ValidationException( $message, $e->getCode(), $e ) )
-                    ->setMessages( $messages );
+                throw ( new ValidationException($message, $e->getCode(), $e) )
+                    ->setMessages($messages);
             }
         }
     }
@@ -424,10 +443,11 @@ class Client {
      *
      * @return array
      */
-    protected function reduceHeaders( array $headers = [] ) {
-        return array_map( function( $value ) {
+    protected function reduceHeaders(array $headers = [])
+    {
+        return array_map(function ($value) {
             return $value[0] ?? $value;
-        }, $headers );
+        }, $headers);
     }
 
 
@@ -439,8 +459,9 @@ class Client {
      * @param string $body   The body.
      * @return string SHA-256 HMAC
      */
-    protected function calculateHmac( array $params = [], string $body = '' ) {
-        return Signature::calculateHmac( $params, $body, $this->secretKey );
+    protected function calculateHmac(array $params = [], string $body = '')
+    {
+        return Signature::calculateHmac($params, $body, $this->secretKey);
     }
 
     /**
@@ -453,7 +474,8 @@ class Client {
      *
      * @throws HmacException
      */
-    public function validateHmac( array $response = [], string $body = '', string $signature = '' ) {
-        Signature::validateHmac( $response, $body, $signature, $this->secretKey );
+    public function validateHmac(array $response = [], string $body = '', string $signature = '')
+    {
+        Signature::validateHmac($response, $body, $signature, $this->secretKey);
     }
 }

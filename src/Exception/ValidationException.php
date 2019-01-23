@@ -17,7 +17,8 @@ use Throwable;
  *
  * @package CheckoutFinland\SDK\Exception
  */
-class ValidationException extends \Exception {
+class ValidationException extends \Exception
+{
 
     /**
      * Holds the previous NestedValidationException instance.
@@ -39,7 +40,8 @@ class ValidationException extends \Exception {
      * @param array $messages The error messages.
      * @return ValidationException Return self to enable chaining.
      */
-    public function setMessages( array $messages = [] ) : ValidationException {
+    public function setMessages(array $messages = []) : ValidationException
+    {
         $this->messages = $messages;
 
         return $this;
@@ -50,8 +52,8 @@ class ValidationException extends \Exception {
      *
      * @return array
      */
-    public function getMessages() : array {
+    public function getMessages() : array
+    {
         return $this->messages;
     }
-
 }

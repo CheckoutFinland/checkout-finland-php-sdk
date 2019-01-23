@@ -10,4 +10,6 @@ namespace CheckoutFinland\SDK\Response;
  *
  * @package CheckoutFinland\SDK\Response
  */
-class EmailRefundResponse extends RefundResponse {}
+class EmailRefundResponse extends RefundResponse
+{
+}

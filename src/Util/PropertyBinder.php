@@ -11,7 +11,8 @@ namespace CheckoutFinland\SDK\Util;
  * This trait enables binding class properties
  * with an array or object of key-value pairs.
  */
-trait PropertyBinder {
+trait PropertyBinder
+{
 
     /**
      * Binds the passed properties to a class instance.
@@ -19,19 +20,19 @@ trait PropertyBinder {
      * @param \stdClass|array $props The properties.
      * @return self Return self to enable chaining.
      */
-    public function bind_properties( $props ) {
-        if ( ! empty( $props ) ) {
-            if ( is_object( $props ) ) {
-                $props = get_object_vars( $props );
+    public function bindProperties($props)
+    {
+        if (! empty($props)) {
+            if (is_object($props)) {
+                $props = get_object_vars($props);
             }
-            array_walk( $props, function( $value, $key ) {
-                if ( property_exists( $this, $key ) ) {
+            array_walk($props, function ($value, $key) {
+                if (property_exists($this, $key)) {
                     $this->{$key} = $value;
                 }
-            } );
+            });
         }
 
         return $this;
     }
-
 }

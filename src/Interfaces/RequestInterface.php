@@ -12,4 +12,7 @@ namespace CheckoutFinland\SDK\Interfaces;
  *
  * @package CheckoutFinland\SDK
  */
-interface RequestInterface {}
+interface RequestInterface
+{
+
+}

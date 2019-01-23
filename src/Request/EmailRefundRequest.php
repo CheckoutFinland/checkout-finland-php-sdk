@@ -19,7 +19,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Request
  */
-class EmailRefundRequest extends RefundRequest {
+class EmailRefundRequest extends RefundRequest
+{
 
     /**
      * Email to which the refund message will be sent.
@@ -33,10 +34,11 @@ class EmailRefundRequest extends RefundRequest {
      *
      * @throws NestedValidationException Thrown when the validate() fails.
      */
-    public function validate() {
+    public function validate()
+    {
         parent::validate();
 
-        v::notEmpty()->email()->validate( $this->email );
+        v::notEmpty()->email()->validate($this->email);
     }
 
     /**
@@ -44,7 +46,8 @@ class EmailRefundRequest extends RefundRequest {
      *
      * @return string
      */
-    public function getEmail() : string {
+    public function getEmail() : string
+    {
         return $this->email;
     }
 
@@ -55,7 +58,8 @@ class EmailRefundRequest extends RefundRequest {
      *
      * @return EmailRefundRequest Return self to enable chaining.
      */
-    public function setEmail( ?string $email ) : EmailRefundRequest {
+    public function setEmail(?string $email) : EmailRefundRequest
+    {
         $this->email = $email;
 
         return $this;

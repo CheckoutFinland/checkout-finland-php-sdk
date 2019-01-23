@@ -17,7 +17,8 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=address
  * @package CheckoutFinland\SDK\Model
  */
-class Address implements \JsonSerializable {
+class Address implements \JsonSerializable
+{
 
     use JsonSerializable;
 
@@ -26,14 +27,15 @@ class Address implements \JsonSerializable {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        v::key( 'streetAddress', v::notEmpty() )
-        ->key( 'postalCode', v::notEmpty() )
-        ->key( 'city', v::notEmpty() )
-        ->key( 'country', v::notEmpty() )
-        ->assert( $props );
+        v::key('streetAddress', v::notEmpty())
+        ->key('postalCode', v::notEmpty())
+        ->key('city', v::notEmpty())
+        ->key('country', v::notEmpty())
+        ->assert($props);
     }
 
     /**
@@ -76,7 +78,8 @@ class Address implements \JsonSerializable {
      *
      * @return string
      */
-    public function getStreetAddress(): ?string {
+    public function getStreetAddress(): ?string
+    {
 
         return $this->streetAddress;
     }
@@ -88,7 +91,8 @@ class Address implements \JsonSerializable {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setStreetAddress( ?string $streetAddress ) : Address {
+    public function setStreetAddress(?string $streetAddress) : Address
+    {
         $this->streetAddress = $streetAddress;
 
         return $this;
@@ -99,7 +103,8 @@ class Address implements \JsonSerializable {
      *
      * @return string
      */
-    public function getPostalCode(): ?string {
+    public function getPostalCode(): ?string
+    {
 
         return $this->postalCode;
     }
@@ -111,7 +116,8 @@ class Address implements \JsonSerializable {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setPostalCode( ?string $postalCode ) : Address {
+    public function setPostalCode(?string $postalCode) : Address
+    {
         $this->postalCode = $postalCode;
 
         return $this;
@@ -122,7 +128,8 @@ class Address implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCity(): ?string {
+    public function getCity(): ?string
+    {
 
         return $this->city;
     }
@@ -134,7 +141,8 @@ class Address implements \JsonSerializable {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCity( ?string $city ) : Address {
+    public function setCity(?string $city) : Address
+    {
         $this->city = $city;
 
         return $this;
@@ -145,7 +153,8 @@ class Address implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCounty(): ?string {
+    public function getCounty(): ?string
+    {
 
         return $this->county;
     }
@@ -157,7 +166,8 @@ class Address implements \JsonSerializable {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCounty( ?string $county ) : Address {
+    public function setCounty(?string $county) : Address
+    {
         $this->county = $county;
 
         return $this;
@@ -168,7 +178,8 @@ class Address implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCountry(): ?string {
+    public function getCountry(): ?string
+    {
 
         return $this->country;
     }
@@ -180,10 +191,10 @@ class Address implements \JsonSerializable {
      *
      * @return Address Return self to enable chaining.
      */
-    public function setCountry( ?string $country ) : Address {
+    public function setCountry(?string $country) : Address
+    {
         $this->country = $country;
 
         return $this;
     }
-
 }

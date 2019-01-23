@@ -14,7 +14,8 @@ use CheckoutFinland\SDK\Exception\HmacException;
  *
  * @package CheckoutFinland\SDK\Util
  */
-class Signature {
+class Signature
+{
 
     /**
      * Calculate Checkout HMAC
@@ -29,28 +30,29 @@ class Signature {
      * @param string                $secretKey The merchant secret key.
      * @return string SHA-256 HMAC
      */
-    public static function calculateHmac( array $params = [], string $body = '', string $secretKey = '' ) {
+    public static function calculateHmac(array $params = [], string $body = '', string $secretKey = '')
+    {
         // Keep only checkout- params, more relevant for response validation.
-        $includedKeys = array_filter( array_keys( $params ), function ( $key ) {
-            return preg_match( '/^checkout-/', $key );
+        $includedKeys = array_filter(array_keys($params), function ($key) {
+            return preg_match('/^checkout-/', $key);
         });
 
         // Keys must be sorted alphabetically
-        sort( $includedKeys, SORT_STRING );
+        sort($includedKeys, SORT_STRING);
 
         $hmacPayload = array_map(
-            function ( $key ) use ( $params ) {
+            function ($key) use ($params) {
                 // Responses have headers in an array.
-                $param = is_array( $params[ $key ] ) ? $params[ $key ][0] : $params[ $key ];
+                $param = is_array($params[ $key ]) ? $params[ $key ][0] : $params[ $key ];
 
-                return join( ':', [ $key, $param ] );
+                return join(':', [ $key, $param ]);
             },
             $includedKeys
         );
 
-        array_push( $hmacPayload, $body );
+        array_push($hmacPayload, $body);
 
-        return hash_hmac( 'sha256', join( "\n", $hmacPayload ) , $secretKey );
+        return hash_hmac('sha256', join("\n", $hmacPayload), $secretKey);
     }
 
     /**
@@ -67,12 +69,16 @@ class Signature {
      *
      * @throws HmacException
      */
-    public static function validateHmac( array $params = [], string $body = '', string $signature = '', string $secretKey = '' ) {
-        $hmac = static::calculateHmac( $params, $body, $secretKey );
+    public static function validateHmac(
+        array $params = [],
+        string $body = '',
+        string $signature = '',
+        string $secretKey = ''
+    ) {
+        $hmac = static::calculateHmac($params, $body, $secretKey);
 
-        if ( $hmac !== $signature ) {
-            throw new HmacException( 'HMAC signature is invalid.', 401 );
+        if ($hmac !== $signature) {
+            throw new HmacException('HMAC signature is invalid.', 401);
         }
     }
-
 }

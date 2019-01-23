@@ -19,7 +19,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Request
  */
-class RefundRequest implements \JsonSerializable, RequestInterface {
+class RefundRequest implements \JsonSerializable, RequestInterface
+{
 
     use JsonSerializable;
 
@@ -28,30 +29,30 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        if ( ! empty( $this->items ) ) {
+        if (! empty($this->items)) {
             // Count the total amount of the payment.
-            $items_total = array_reduce( $this->items, function( $carry = 0, ?RefundItem $item = null ) {
-                if ( $item === null ) {
+            $items_total = array_reduce($this->items, function ($carry = 0, ?RefundItem $item = null) {
+                if ($item === null) {
                     return $carry;
                 }
                 return $item->getAmount() + $carry;
-            } );
+            });
 
             // Validate items.
-            array_walk( $this->items, function( RefundItem $item ) {
+            array_walk($this->items, function (RefundItem $item) {
                 $item->validate();
-            } );
-        }
-        else {
+            });
+        } else {
             // If no items are set, fallback to prevent validation errors.
             $items_total = $this->amount;
         }
 
-        v::key( 'amount', v::notEmpty()->intVal()->equals( $items_total ) )
-        ->assert( $props );
+        v::key('amount', v::notEmpty()->intVal()->equals($items_total))
+        ->assert($props);
 
         // Validate the callback urls.
         $this->callbackUrls->validate();
@@ -85,7 +86,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return int
      */
-    public function getAmount() : int {
+    public function getAmount() : int
+    {
         return $this->amount;
     }
 
@@ -96,7 +98,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return RefundRequest Return self to enable chaining.
      */
-    public function setAmount( ?int $amount ) : RefundRequest {
+    public function setAmount(?int $amount) : RefundRequest
+    {
         $this->amount = $amount;
 
         return $this;
@@ -107,7 +110,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return RefundItem[]
      */
-    public function getItems() : array {
+    public function getItems() : array
+    {
         return $this->items ?? [];
     }
 
@@ -118,7 +122,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return RefundRequest Return self to enable chaining.
      */
-    public function setItems( ?array $items ) : RefundRequest {
+    public function setItems(?array $items) : RefundRequest
+    {
         $this->items = $items;
 
         return $this;
@@ -129,7 +134,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return CallbackUrl
      */
-    public function getCallbackUrls() : CallbackUrl {
+    public function getCallbackUrls() : CallbackUrl
+    {
         return $this->callbackUrls;
     }
 
@@ -140,7 +146,8 @@ class RefundRequest implements \JsonSerializable, RequestInterface {
      *
      * @return RefundRequest Return self to enable chaining.
      */
-    public function setCallbackUrls( ?CallbackUrl $callbackUrls ) : RefundRequest {
+    public function setCallbackUrls(?CallbackUrl $callbackUrls) : RefundRequest
+    {
         $this->callbackUrls = $callbackUrls;
 
         return $this;

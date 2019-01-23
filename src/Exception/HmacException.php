@@ -12,4 +12,7 @@ namespace CheckoutFinland\SDK\Exception;
  *
  * @package CheckoutFinland\SDK\Exception
  */
-class HmacException extends \Exception {}
+class HmacException extends \Exception
+{
+
+}

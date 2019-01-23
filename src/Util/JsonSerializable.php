@@ -8,7 +8,8 @@ namespace CheckoutFinland\SDK\Util;
 /**
  * Trait JsonSerializable
  */
-trait JsonSerializable {
+trait JsonSerializable
+{
 
     /**
      * Implements the json serialize method and
@@ -17,10 +18,10 @@ trait JsonSerializable {
      *
      * @return \stdClass
      */
-    public function jsonSerialize() {
-        return array_filter( get_object_vars( $this ), function( $item ) {
+    public function jsonSerialize()
+    {
+        return array_filter(get_object_vars($this), function ($item) {
             return $item !== null;
         });
     }
-
 }

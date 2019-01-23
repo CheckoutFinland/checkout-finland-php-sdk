@@ -16,7 +16,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @package CheckoutFinland\SDK\Model
  */
-class RefundItem implements \JsonSerializable {
+class RefundItem implements \JsonSerializable
+{
 
     use JsonSerializable;
 
@@ -25,11 +26,12 @@ class RefundItem implements \JsonSerializable {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        v::key( 'amount', v::notEmpty()->intVal() )
-         ->assert( $props );
+        v::key('amount', v::notEmpty()->intVal())
+         ->assert($props);
     }
 
     /**
@@ -51,7 +53,8 @@ class RefundItem implements \JsonSerializable {
      *
      * @return int
      */
-    public function getAmount() : int {
+    public function getAmount() : int
+    {
         return $this->amount;
     }
 
@@ -61,7 +64,8 @@ class RefundItem implements \JsonSerializable {
      * @param int $amount The amount.
      * @return RefundItem Return self to enable chaining.
      */
-    public function setAmount(? int $amount ) : RefundItem {
+    public function setAmount(? int $amount) : RefundItem
+    {
         $this->amount = $amount;
 
         return $this;
@@ -72,7 +76,8 @@ class RefundItem implements \JsonSerializable {
      *
      * @return string
      */
-    public function getStamp() : string {
+    public function getStamp() : string
+    {
         return $this->stamp;
     }
 
@@ -82,10 +87,10 @@ class RefundItem implements \JsonSerializable {
      * @param string $stamp The stamp.
      * @return RefundItem Return self to enable chaining.
      */
-    public function setStamp( ?string $stamp ) : RefundItem {
+    public function setStamp(?string $stamp) : RefundItem
+    {
         $this->stamp = $stamp;
 
         return $this;
     }
-
 }

@@ -17,7 +17,8 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=item
  * @package CheckoutFinland\SDK\Model
  */
-class Item implements \JsonSerializable {
+class Item implements \JsonSerializable
+{
 
     use JsonSerializable;
 
@@ -26,15 +27,16 @@ class Item implements \JsonSerializable {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        v::key( 'unitPrice', v::notEmpty()->intVal() )
-        ->key( 'units', v::notEmpty()->intVal() )
-        ->key( 'vatPercentage', v::notEmpty()->intVal() )
-        ->key( 'productCode', v::notEmpty() )
-        ->key( 'deliveryDate', v::notEmpty() )
-        ->assert( $props );
+        v::key('unitPrice', v::notEmpty()->intVal())
+        ->key('units', v::notEmpty()->intVal())
+        ->key('vatPercentage', v::notEmpty()->intVal())
+        ->key('productCode', v::notEmpty())
+        ->key('deliveryDate', v::notEmpty())
+        ->assert($props);
     }
 
     /**
@@ -126,7 +128,8 @@ class Item implements \JsonSerializable {
      *
      * @return int
      */
-    public function getUnitPrice(): ?int {
+    public function getUnitPrice(): ?int
+    {
         return $this->unitPrice;
     }
 
@@ -136,7 +139,8 @@ class Item implements \JsonSerializable {
      * @param int $unitPrice
      * @return Item Return self to enable chaining.
      */
-    public function setUnitPrice( ?int $unitPrice ) : Item {
+    public function setUnitPrice(?int $unitPrice) : Item
+    {
         $this->unitPrice = $unitPrice;
 
         return $this;
@@ -147,7 +151,8 @@ class Item implements \JsonSerializable {
      *
      * @return int
      */
-    public function getUnits(): ?int {
+    public function getUnits(): ?int
+    {
         return $this->units;
     }
 
@@ -157,7 +162,8 @@ class Item implements \JsonSerializable {
      * @param int $units
      * @return Item Return self to enable chaining.
      */
-    public function setUnits( ?int $units ) : Item {
+    public function setUnits(?int $units) : Item
+    {
         $this->units = $units;
 
         return $this;
@@ -168,7 +174,8 @@ class Item implements \JsonSerializable {
      *
      * @return int
      */
-    public function getVatPercentage(): ?int {
+    public function getVatPercentage(): ?int
+    {
         return $this->vatPercentage;
     }
 
@@ -178,7 +185,8 @@ class Item implements \JsonSerializable {
      * @param int $vatPercentage
      * @return Item Return self to enable chaining.
      */
-    public function setVatPercentage( ?int $vatPercentage ) : Item {
+    public function setVatPercentage(?int $vatPercentage) : Item
+    {
         $this->vatPercentage = $vatPercentage;
 
         return $this;
@@ -189,7 +197,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getProductCode(): ?string {
+    public function getProductCode(): ?string
+    {
         return $this->productCode;
     }
 
@@ -199,7 +208,8 @@ class Item implements \JsonSerializable {
      * @param string $productCode
      * @return Item Return self to enable chaining.
      */
-    public function setProductCode( ?string $productCode ) : Item {
+    public function setProductCode(?string $productCode) : Item
+    {
         $this->productCode = $productCode;
 
         return $this;
@@ -210,7 +220,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getDeliveryDate(): ?string {
+    public function getDeliveryDate(): ?string
+    {
         return $this->deliveryDate;
     }
 
@@ -220,7 +231,8 @@ class Item implements \JsonSerializable {
      * @param string $deliveryDate
      * @return Item Return self to enable chaining.
      */
-    public function setDeliveryDate( ?string $deliveryDate ) : Item {
+    public function setDeliveryDate(?string $deliveryDate) : Item
+    {
         $this->deliveryDate = $deliveryDate;
 
         return $this;
@@ -231,7 +243,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return $this->description;
     }
 
@@ -241,7 +254,8 @@ class Item implements \JsonSerializable {
      * @param string $description
      * @return Item Return self to enable chaining.
      */
-    public function setDescription( ?string $description ) : Item {
+    public function setDescription(?string $description) : Item
+    {
         $this->description = $description;
 
         return $this;
@@ -252,7 +266,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCategory(): ?string {
+    public function getCategory(): ?string
+    {
         return $this->category;
     }
 
@@ -262,7 +277,8 @@ class Item implements \JsonSerializable {
      * @param string $category
      * @return Item Return self to enable chaining.
      */
-    public function setCategory( ?string $category ) : Item {
+    public function setCategory(?string $category) : Item
+    {
         $this->category = $category;
 
         return $this;
@@ -273,7 +289,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getStamp(): ?string {
+    public function getStamp(): ?string
+    {
         return $this->stamp;
     }
 
@@ -283,7 +300,8 @@ class Item implements \JsonSerializable {
      * @param string $stamp
      * @return Item Return self to enable chaining.
      */
-    public function setStamp( ?string $stamp ) : Item {
+    public function setStamp(?string $stamp) : Item
+    {
         $this->stamp = $stamp;
 
         return $this;
@@ -294,7 +312,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getReference(): ?string {
+    public function getReference(): ?string
+    {
         return $this->reference;
     }
 
@@ -304,7 +323,8 @@ class Item implements \JsonSerializable {
      * @param string $reference
      * @return Item Return self to enable chaining.
      */
-    public function setReference( ?string $reference ) : Item {
+    public function setReference(?string $reference) : Item
+    {
         $this->reference = $reference;
 
         return $this;
@@ -315,7 +335,8 @@ class Item implements \JsonSerializable {
      *
      * @return string
      */
-    public function getMerchant(): ?string {
+    public function getMerchant(): ?string
+    {
         return $this->merchant;
     }
 
@@ -325,7 +346,8 @@ class Item implements \JsonSerializable {
      * @param string $merchant
      * @return Item Return self to enable chaining.
      */
-    public function setMerchant( ?string $merchant ) : Item {
+    public function setMerchant(?string $merchant) : Item
+    {
         $this->merchant = $merchant;
 
         return $this;
@@ -336,7 +358,8 @@ class Item implements \JsonSerializable {
      *
      * @return Comission
      */
-    public function getCommission(): ?Comission {
+    public function getCommission(): ?Comission
+    {
         return $this->commission;
     }
 
@@ -346,7 +369,8 @@ class Item implements \JsonSerializable {
      * @param Comission $commission
      * @return Item Return self to enable chaining.
      */
-    public function setCommission( ?Comission $commission ) : Item {
+    public function setCommission(?Comission $commission) : Item
+    {
         $this->commission = $commission;
 
         return $this;

@@ -17,7 +17,8 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=callbackurl
  * @package CheckoutFinland\SDK\Model
  */
-class CallbackUrl implements \JsonSerializable {
+class CallbackUrl implements \JsonSerializable
+{
 
     use JsonSerializable;
 
@@ -26,12 +27,13 @@ class CallbackUrl implements \JsonSerializable {
      *
      * @throws NestedValidationException Thrown when the assert() fails.
      */
-    public function validate() {
-        $props = get_object_vars( $this );
+    public function validate()
+    {
+        $props = get_object_vars($this);
 
-        v::key( 'success', v::notEmpty() )
-        ->key( 'cancel', v::notEmpty() )
-        ->assert( $props );
+        v::key('success', v::notEmpty())
+        ->key('cancel', v::notEmpty())
+        ->assert($props);
     }
 
     /**
@@ -53,7 +55,8 @@ class CallbackUrl implements \JsonSerializable {
      *
      * @return string
      */
-    public function getSuccess(): ?string {
+    public function getSuccess(): ?string
+    {
 
         return $this->success;
     }
@@ -64,7 +67,8 @@ class CallbackUrl implements \JsonSerializable {
      * @param string $success
      * @return CallbackUrl Return self to enable chaining.
      */
-    public function setSuccess( ?string $success ): CallbackUrl {
+    public function setSuccess(?string $success): CallbackUrl
+    {
         $this->success = $success;
 
         return $this;
@@ -75,7 +79,8 @@ class CallbackUrl implements \JsonSerializable {
      *
      * @return string
      */
-    public function getCancel(): ?string {
+    public function getCancel(): ?string
+    {
 
         return $this->cancel;
     }
@@ -86,10 +91,10 @@ class CallbackUrl implements \JsonSerializable {
      * @param string $cancel
      * @return CallbackUrl Return self to enable chaining.
      */
-    public function setCancel( ?string $cancel ): CallbackUrl {
+    public function setCancel(?string $cancel): CallbackUrl
+    {
         $this->cancel = $cancel;
 
         return $this;
     }
-
 }
