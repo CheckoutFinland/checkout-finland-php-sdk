@@ -205,42 +205,38 @@ class Client
      */
     public function getPaymentProviders(int $amount = null)
     {
-        try {
-            $uri = new Uri('/merchants/payment-providers');
+        $uri = new Uri('/merchants/payment-providers');
 
-            $headers = $this->getHeaders('GET');
-            $mac     = $this->calculateHmac($headers);
+        $headers = $this->getHeaders('GET');
+        $mac     = $this->calculateHmac($headers);
 
-            // Sign the request.
-            $headers['signature'] = $mac;
-            $request_params       = [
-                'headers' => $headers,
+        // Sign the request.
+        $headers['signature'] = $mac;
+        $request_params       = [
+            'headers' => $headers,
+        ];
+
+        // Set the amount query parameter.
+        if ($amount !== null) {
+            $request_params['query'] = [
+                'amount' => $amount
             ];
-
-            // Set the amount query parameter.
-            if ($amount !== null) {
-                $request_params['query'] = [
-                    'amount' => $amount
-                ];
-            }
-
-            $response = $this->http_client->get($uri, $request_params);
-            $body     = (string) $response->getBody();
-
-            // Validate the signature.
-            $headers = $this->reduceHeaders($response->getHeaders());
-            $this->validateHmac($headers, $body, $headers['signature'] ?? '');
-
-            // Instantiate providers.
-            $decoded   = json_decode($body);
-            $providers = array_map(function ($provider_data) {
-                return ( new Provider() )->bindProperties($provider_data);
-            }, $decoded);
-
-            return $providers;
-        } catch (HmacException $e) {
-            throw $e;
         }
+
+        $response = $this->http_client->get($uri, $request_params);
+        $body     = (string) $response->getBody();
+
+        // Validate the signature.
+        $headers = $this->reduceHeaders($response->getHeaders());
+        $this->validateHmac($headers, $body, $headers['signature'] ?? '');
+
+        // Instantiate providers.
+        $decoded   = json_decode($body);
+        $providers = array_map(function ($provider_data) {
+            return ( new Provider() )->bindProperties($provider_data);
+        }, $decoded);
+
+        return $providers;
     }
 
     /**
