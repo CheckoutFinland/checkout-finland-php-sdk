@@ -31,9 +31,9 @@ class Item implements \JsonSerializable
     {
         $props = get_object_vars($this);
 
-        v::key('unitPrice', v::notEmpty()->intVal())
-        ->key('units', v::notEmpty()->intVal())
-        ->key('vatPercentage', v::notEmpty()->intVal())
+        v::key('unitPrice', v::intType())
+        ->key('units', v::intType())
+        ->key('vatPercentage', v::intType())
         ->key('productCode', v::notEmpty())
         ->key('deliveryDate', v::notEmpty())
         ->assert($props);
