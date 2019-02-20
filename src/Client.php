@@ -135,7 +135,7 @@ class Client
             [
                 'headers'  => [],
                 'base_uri' => self::API_ENDPOINT,
-                'timeout'  => $args['timeout'] ?? 5,
+                'timeout'  => $args['timeout'] ?? 10,
                 'handler'  => $stack,
             ]
         );
