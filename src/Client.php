@@ -99,6 +99,13 @@ class Client
     protected $secretKey;
 
     /**
+     * Plugin version for the API.
+     *
+     * @var string
+     */
+    protected $cofPluginVersion;
+
+    /**
      * The Guzzle HTTP client.
      *
      * @var \GuzzleHttp\Client
@@ -139,6 +146,8 @@ class Client
                 'handler'  => $stack,
             ]
         );
+
+        $this->cofPluginVersion = $args['cofPluginVersion'] ?? 'php-sdk-default';
     }
 
     /**
@@ -184,7 +193,8 @@ class Client
             'checkout-method'    => strtoupper($method),
             'checkout-nonce'     => uniqid(true),
             'checkout-timestamp' => $datetime->format('Y-m-d\TH:i:s.u\Z'),
-            'content-type'       => 'application/json; charset=utf-8'
+            'cof-plugin-version' => $this->cofPluginVersion,
+            'content-type'       => 'application/json; charset=utf-8',
         ];
 
         if (! empty($transactionId)) {
