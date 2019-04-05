@@ -21,7 +21,6 @@
     "license": "MIT",
     "require": {
         "php": "^7.1",
-        "composer/installers": "^1.6.0",
         "guzzlehttp/guzzle": "^6.3.3",
         "respect/validation": "^1.1.29"
     },
