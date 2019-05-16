@@ -36,6 +36,7 @@ class Item implements \JsonSerializable
         ->key('vatPercentage', v::intType())
         ->key('productCode', v::notEmpty())
         ->key('deliveryDate', v::notEmpty())
+        ->key('description', v::stringType()->length(null,1000))
         ->assert($props);
     }
 
