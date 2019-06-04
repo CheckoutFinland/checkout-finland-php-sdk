@@ -1,5 +1,5 @@
 {
-    "name": "checkoutfinland/php-sdk",
+    "name": "checkoutfinland/sdk",
     "description": "PHP SDK for using Checkout Finland's PSP API",
     "authors": [
         {
