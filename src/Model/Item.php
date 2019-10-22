@@ -3,11 +3,11 @@
  * Class Item
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class Item
@@ -15,7 +15,7 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * This class defines payment item details.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=item
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class Item implements \JsonSerializable
 {

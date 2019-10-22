@@ -3,12 +3,12 @@
  * TODO: To be implemented.
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
 /**
  * Class Commission
  *
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class Commission
 {

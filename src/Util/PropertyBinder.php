@@ -3,7 +3,7 @@
  * Trait PropertyBinder
  */
 
-namespace CheckoutFinland\SDK\Util;
+namespace OpMerchantServices\SDK\Util;
 
 /**
  * Trait PropertyBinder

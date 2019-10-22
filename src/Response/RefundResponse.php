@@ -3,14 +3,14 @@
  * Class RefundResponse
  */
 
-namespace CheckoutFinland\SDK\Response;
+namespace OpMerchantServices\SDK\Response;
 
-use CheckoutFinland\SDK\Interfaces\ResponseInterface;
+use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 
 /**
  * Class RefundResponse
  *
- * @package CheckoutFinland\SDK\Response
+ * @package OpMerchantServices\SDK\Response
  */
 class RefundResponse implements ResponseInterface
 {

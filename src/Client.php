@@ -3,18 +3,18 @@
  * Class Client
  */
 
-namespace CheckoutFinland\SDK;
+namespace OpMerchantServices\SDK;
 
-use CheckoutFinland\SDK\Exception\ValidationException;
-use CheckoutFinland\SDK\Model\Provider;
-use CheckoutFinland\SDK\Request\PaymentRequest;
-use CheckoutFinland\SDK\Request\RefundRequest;
-use CheckoutFinland\SDK\Request\EmailRefundRequest;
-use CheckoutFinland\SDK\Response\PaymentResponse;
-use CheckoutFinland\SDK\Response\RefundResponse;
-use CheckoutFinland\SDK\Response\EmailRefundResponse;
-use CheckoutFinland\SDK\Util\Signature;
-use CheckoutFinland\SDK\Interfaces\RequestInterface;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Model\Provider;
+use OpMerchantServices\SDK\Request\PaymentRequest;
+use OpMerchantServices\SDK\Request\RefundRequest;
+use OpMerchantServices\SDK\Request\EmailRefundRequest;
+use OpMerchantServices\SDK\Response\PaymentResponse;
+use OpMerchantServices\SDK\Response\RefundResponse;
+use OpMerchantServices\SDK\Response\EmailRefundResponse;
+use OpMerchantServices\SDK\Util\Signature;
+use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\HandlerStack;
@@ -23,7 +23,7 @@ use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use CheckoutFinland\SDK\Exception\HmacException;
+use OpMerchantServices\SDK\Exception\HmacException;
 use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
@@ -31,7 +31,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * The client is the connector class for the API.
  *
- * @package CheckoutFinland\SDK
+ * @package OpMerchantServices\SDK
  */
 class Client
 {

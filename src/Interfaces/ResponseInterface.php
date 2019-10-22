@@ -3,14 +3,14 @@
  * Interface ResponseInterface
  */
 
-namespace CheckoutFinland\SDK\Interfaces;
+namespace OpMerchantServices\SDK\Interfaces;
 
 /**
  * Interface ResponseInterface
  *
  * All response classes implement this intefrace.
  *
- * @package CheckoutFinland\SDK\Interfaces
+ * @package OpMerchantServices\SDK\Interfaces
  */
 interface ResponseInterface
 {

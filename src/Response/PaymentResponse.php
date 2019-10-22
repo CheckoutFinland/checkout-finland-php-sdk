@@ -3,17 +3,17 @@
  * Class PaymentResponse
  */
 
-namespace CheckoutFinland\SDK\Response;
+namespace OpMerchantServices\SDK\Response;
 
-use CheckoutFinland\SDK\Model\Provider;
-use CheckoutFinland\SDK\Interfaces\ResponseInterface;
+use OpMerchantServices\SDK\Model\Provider;
+use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 
 /**
  * Class PaymentResponse
  *
  * Represents a response object of payment creation.
  *
- * @package CheckoutFinland\SDK\Response
+ * @package OpMerchantServices\SDK\Response
  */
 class PaymentResponse implements ResponseInterface
 {

@@ -3,9 +3,9 @@
  * Class RefundItem
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -14,7 +14,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=refunditem
  *
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class RefundItem implements \JsonSerializable
 {

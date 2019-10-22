@@ -3,11 +3,11 @@
  * Class Customer
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class Customer
@@ -15,7 +15,7 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * The customer class defines the customer details object.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=customer
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class Customer implements \JsonSerializable
 {

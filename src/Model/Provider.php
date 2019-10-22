@@ -3,10 +3,10 @@
  * Class Provider
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use CheckoutFinland\SDK\Util\PropertyBinder;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\PropertyBinder;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class Provider
@@ -15,7 +15,7 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * containing an array of providers.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/examples?id=response
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class Provider implements \JsonSerializable
 {
