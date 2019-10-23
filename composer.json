@@ -1,6 +1,6 @@
 {
-    "name": "checkoutfinland/sdk",
-    "description": "PHP SDK for using Checkout Finland's PSP API",
+    "name": "op-merchant-services/op-payment-service-php-sdk",
+    "description": "PHP SDK for using OP Payment Service (formerly Checkout Finland)",
     "authors": [
         {
             "name": "Miika Arponen",
@@ -13,10 +13,23 @@
             "email": "ville.siltala@geniem.com",
             "homepage": "http://github.com/villesiltala",
             "role": "Developer"
+        },
+        {
+            "name": "Henryk Helsky",
+            "email": "henryk.helsky@geniem.com",
+            "homepage": "https://github.com/traone",
+            "role": "Developer"
+        },
+        {
+            "name": "Joonas Loueranta",
+            "email": "joonas.loueranta@op.fi",
+            "homepage": "https://github.com/loueranta",
+            "role": "Manager"
         }
+
     ],
     "keywords": [
-        "checkout finland", "payment service provider"
+        "op payment service", "checkout finland", "payment service provider"
     ],
     "license": "MIT",
     "require": {
