@@ -3,12 +3,12 @@
  * Class EmailRefundResponse
  */
 
-namespace CheckoutFinland\SDK\Response;
+namespace OpMerchantServices\SDK\Response;
 
 /**
  * Class EmailRefundResponse
  *
- * @package CheckoutFinland\SDK\Response
+ * @package OpMerchantServices\SDK\Response
  */
 class EmailRefundResponse extends RefundResponse
 {

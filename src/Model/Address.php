@@ -3,11 +3,11 @@
  * Class Address
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class Address
@@ -15,7 +15,7 @@ use CheckoutFinland\SDK\Util\JsonSerializable;
  * This class defines address details for a payment request.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=address
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class Address implements \JsonSerializable
 {

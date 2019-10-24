@@ -3,14 +3,14 @@
  * Interface Request
  */
 
-namespace CheckoutFinland\SDK\Interfaces;
+namespace OpMerchantServices\SDK\Interfaces;
 
 /**
  * Interface Request
  *
  * An interface for all request classes to implement.
  *
- * @package CheckoutFinland\SDK
+ * @package OpMerchantServices\SDK
  */
 interface RequestInterface
 {

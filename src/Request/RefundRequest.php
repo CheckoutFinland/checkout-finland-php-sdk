@@ -3,12 +3,12 @@
  * Class Refund
  */
 
-namespace CheckoutFinland\SDK\Request;
+namespace OpMerchantServices\SDK\Request;
 
-use CheckoutFinland\SDK\Interfaces\RequestInterface;
-use CheckoutFinland\SDK\Model\CallbackUrl;
-use CheckoutFinland\SDK\Model\RefundItem;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Interfaces\RequestInterface;
+use OpMerchantServices\SDK\Model\CallbackUrl;
+use OpMerchantServices\SDK\Model\RefundItem;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -17,7 +17,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=http-request-body
  *
- * @package CheckoutFinland\SDK\Request
+ * @package OpMerchantServices\SDK\Request
  */
 class RefundRequest implements \JsonSerializable, RequestInterface
 {

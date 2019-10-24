@@ -3,7 +3,7 @@
  * Trait JsonSerializable
  */
 
-namespace CheckoutFinland\SDK\Util;
+namespace OpMerchantServices\SDK\Util;
 
 /**
  * Trait JsonSerializable

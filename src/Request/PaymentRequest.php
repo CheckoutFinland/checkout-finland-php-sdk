@@ -3,14 +3,14 @@
  * Class PaymentRequest
  */
 
-namespace CheckoutFinland\SDK\Request;
+namespace OpMerchantServices\SDK\Request;
 
-use CheckoutFinland\SDK\Interfaces\RequestInterface;
-use CheckoutFinland\SDK\Model\Address;
-use CheckoutFinland\SDK\Model\CallbackUrl;
-use CheckoutFinland\SDK\Model\Customer;
-use CheckoutFinland\SDK\Model\Item;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Interfaces\RequestInterface;
+use OpMerchantServices\SDK\Model\Address;
+use OpMerchantServices\SDK\Model\CallbackUrl;
+use OpMerchantServices\SDK\Model\Customer;
+use OpMerchantServices\SDK\Model\Item;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -21,7 +21,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * the CheckoutFinland\SDK\Client class.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=create-request-body
- * @package CheckoutFinland\SDK\Request
+ * @package OpMerchantServices\SDK\Request
  */
 class PaymentRequest implements \JsonSerializable, RequestInterface
 {

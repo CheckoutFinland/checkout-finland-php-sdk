@@ -3,9 +3,9 @@
  * Class CallbackUrl
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -15,7 +15,7 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * This class defines callback url details.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=callbackurl
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
 class CallbackUrl implements \JsonSerializable
 {
