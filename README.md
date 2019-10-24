@@ -1,3 +1,2 @@
-# php-sdk
-PHP SDK for using OP Payment Service (previously known as Checkout Finland) PSP API.
-
+# OP Payment Service PHP-SDK
+PHP SDK for using OP Payment Service (formerly Checkout Finland)
