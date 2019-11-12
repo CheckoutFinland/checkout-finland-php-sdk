@@ -1,0 +1,62 @@
+<?php
+ /**
+ * An example of a cart page.
+ */
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OP Payment Service Example</title>
+</head>
+<body>
+    <h1>OP Payment Service Example</h1>
+
+    <form method="post" action="checkout.php">
+        <fieldset>
+            <legend>Fill in your payment information</legend>
+
+                <div>
+                    <label for="first-name">First name</label>
+                    <input type="text" name="first-name" value="Maija"/>
+                </div>
+
+                <div>
+                    <label for="last-name">Last name</label>
+                    <input type="text" name="last-name" value="Meikäläinen" />
+                </div>
+
+                <div>
+                    <label for="amount">Amount €</label>
+                    <input type="number" name="amount" value="10" />
+                </div>
+
+                <div>
+                    <label for="address">Street address</label>
+                    <input type="text" name="address" value="Hämeenkatu 1" />
+                </div>
+
+                <div>
+                    <label for="postal-code">Postal code</label>
+                    <input type="text" name="postal-code" value="33100" />
+                </div>
+
+                <div>
+                    <label for="city">City</label>
+                    <input type="text" name="city" value="Tampere" />
+                </div>
+
+                <div>
+                    <label for="country">Country</label>
+                    <input type="text" name="country" value="FI" />
+                </div>
+
+                <input type="submit">Checkout</button>
+            </fieldset>
+    </form>
+</body>
+</html>
