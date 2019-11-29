@@ -5,9 +5,8 @@
 
 namespace OpMerchantServices\SDK\Model;
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class CallbackUrl
@@ -25,15 +24,21 @@ class CallbackUrl implements \JsonSerializable
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('success', v::notEmpty())
-        ->key('cancel', v::notEmpty())
-        ->assert($props);
+        if (empty($props['success'])) {
+            throw new ValidationException('Success is empty');
+        }
+
+        if (empty($props['cancel'])) {
+            throw new ValidationException('Cancel is empty');
+        }
+
+        return true;
     }
 
     /**

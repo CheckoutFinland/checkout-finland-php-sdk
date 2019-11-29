@@ -182,6 +182,7 @@ class Client
      *                               not required for a new payment request.
      *
      * @return array
+     * @throws \Exception
      */
     protected function getHeaders(string $method, string $transactionId = null)
     {

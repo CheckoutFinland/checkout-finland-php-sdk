@@ -1,16 +1,16 @@
 <?php
 /**
- * Class Item
+ * Class ItemTest
  */
 
 namespace OpMerchantServices\SDK\Model;
 
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
+use MongoLog;
 
 /**
- * Class Item
+ * Class ItemTest
  *
  * This class defines payment item details.
  *
@@ -19,26 +19,7 @@ use OpMerchantServices\SDK\Util\JsonSerializable;
  */
 class Item implements \JsonSerializable
 {
-
     use JsonSerializable;
-
-    /**
-     * Validates with Respect\Validation library and throws an exception for invalid objects
-     *
-     * @throws NestedValidationException Thrown when the assert() fails.
-     */
-    public function validate()
-    {
-        $props = get_object_vars($this);
-
-        v::key('unitPrice', v::intType())
-        ->key('units', v::intType())
-        ->key('vatPercentage', v::intType())
-        ->key('productCode', v::notEmpty())
-        ->key('deliveryDate', v::notEmpty())
-        ->key('description', v::stringType()->length(null,1000))
-        ->assert($props);
-    }
 
     /**
      * Price per unit, VAT included, in each country's
@@ -375,5 +356,35 @@ class Item implements \JsonSerializable
         $this->commission = $commission;
 
         return $this;
+    }
+
+
+    /**
+     * Validates with Respect\Validation library and throws an exception for invalid objects
+     *
+     * @throws ValidationException
+     */
+    public function validate()
+    {
+        $props = get_object_vars($this);
+
+        if (!filter_var($props['unitPrice'], FILTER_VALIDATE_INT)) {
+            //throw new \Exception('UnitPrice is not an integer');
+            throw new ValidationException('UnitPrice is not an integer');
+        }
+        if (!filter_var($props['units'], FILTER_VALIDATE_INT)) {
+            throw new ValidationException('Units is not an integer');
+        }
+        if (!filter_var($props['vatPercentage'], FILTER_VALIDATE_INT)) {
+            throw new ValidationException('vatPercentage is not an integer');
+        }
+        if (empty($props['productCode'])) {
+            throw new ValidationException('productCode is empty');
+        }
+        if (empty($props['deliveryDate'])) {
+            throw new ValidationException('deliveryDate is empty');
+        }
+
+        return true;
     }
 }
