@@ -34,7 +34,7 @@ class Customer implements \JsonSerializable
             throw new ValidationException('Email is empty');
         }
 
-        if (filter_var($props['email'], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($props['email'], FILTER_VALIDATE_EMAIL)) {
             throw new ValidationException('Email is not a valid email address');
         }
 
