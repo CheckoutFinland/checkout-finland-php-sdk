@@ -33,8 +33,12 @@ class RefundItem implements \JsonSerializable
             throw new ValidationException('Amount is empty');
         }
 
-        if (filter_var($props['amount'], FILTER_VALIDATE_INT)) {
-            throw new ValidationException('Amount is empty');
+        if (empty($props['stamp'])) {
+            throw new ValidationException('Stamp can not be empty');
+        }
+
+        if (!is_string($props['stamp'])) {
+            throw new ValidationException('Stamp is not a string');
         }
 
         return true;
