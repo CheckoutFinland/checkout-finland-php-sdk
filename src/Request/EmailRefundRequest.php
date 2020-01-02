@@ -5,6 +5,7 @@
 
 namespace OpMerchantServices\SDK\Request;
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\RefundItem;
@@ -33,12 +34,21 @@ class EmailRefundRequest extends RefundRequest
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
      * @throws NestedValidationException Thrown when the validate() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         parent::validate();
 
-        v::notEmpty()->email()->validate($this->email);
+        if (empty($this->email)) {
+            throw new ValidationException('email can not be empty');
+        }
+
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            throw new ValidationException('email is not a valid email address');
+        }
+
+        return true;
     }
 
     /**
