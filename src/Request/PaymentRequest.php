@@ -5,6 +5,7 @@
 
 namespace OpMerchantServices\SDK\Request;
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\Address;
 use OpMerchantServices\SDK\Model\CallbackUrl;
@@ -29,13 +30,32 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
     use JsonSerializable;
 
     /**
+     * @var array
+     */
+    private $supportedCurrencies = ['EUR'];
+
+    /**
+     * @var array
+     */
+    private $supportedLanguages = ['FI', 'SV', 'EN'];
+
+    /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
      * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
+
+        if (empty($props['items'])) {
+            throw new ValidationException('Items is empty');
+        }
+
+        if (!is_array($props['items'])) {
+            throw new ValidationException('Items needs to be type of array');
+        }
 
         // Count the total amount of the payment.
         $items_total = array_reduce($this->getItems(), function ($carry = 0, ?Item $item = null) {
@@ -45,19 +65,45 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
             return $item->getUnitPrice() * $item->getUnits() + $carry;
         });
 
-        v::key('stamp', v::notEmpty())
-        ->key('reference', v::notEmpty())
-        ->key('amount', v::notEmpty()->intVal()->equals($items_total))
-        ->key('currency', v::notEmpty()->equals('EUR'))
-        ->key('language', v::oneOf(
-            v::equals('FI'),
-            v::equals('SV'),
-            v::equals('EN')
-        ))
-        ->key('items', v::notEmpty()->arrayType())
-        ->key('customer', v::notEmpty())
-        ->key('redirectUrls', v::notEmpty())
-        ->assert($props);
+        if (empty($props['amount'])) {
+            throw new ValidationException('Amount is empty');
+        }
+
+        if (!filter_var($props['amount'], FILTER_VALIDATE_INT)) {
+            throw new ValidationException('Amount is not a number');
+        }
+
+        if ($props['amount'] !== $items_total) {
+            throw new ValidationException('Amount doesnt match ItemsTotal');
+        }
+
+        if (empty($props['stamp'])) {
+            throw new ValidationException('Stamp is empty');
+        }
+
+        if (empty($props['reference'])) {
+            throw new ValidationException('Reference is empty');
+        }
+
+        if (empty($props['currency'])) {
+            throw new ValidationException('Currency is empty');
+        }
+
+        if (!in_array($props['currency'], $this->supportedCurrencies)) {
+            throw new ValidationException('Unsupported currency chosen');
+        }
+
+        if (!in_array($props['language'], $this->supportedLanguages)) {
+            throw new ValidationException('Unsupported language chosen');
+        }
+
+        if (empty($props['customer'])) {
+            throw new ValidationException('Customer is empty');
+        }
+
+        if (empty($props['redirectUrls'])) {
+            throw new ValidationException('RedirectUrls is empty');
+        }
 
         // Validate the items.
         array_walk($this->items, function (Item $item) {
@@ -74,6 +120,8 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
         if (! empty($this->invoicingAddress)) {
             $this->invoicingAddress->validate();
         }
+
+        return true;
     }
 
     /**
