@@ -30,16 +30,6 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
     use JsonSerializable;
 
     /**
-     * @var array
-     */
-    private $supportedCurrencies = ['EUR'];
-
-    /**
-     * @var array
-     */
-    private $supportedLanguages = ['FI', 'SV', 'EN'];
-
-    /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
      * @throws NestedValidationException Thrown when the assert() fails.
@@ -48,6 +38,9 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
     public function validate()
     {
         $props = get_object_vars($this);
+
+        $supportedLanguages = ['FI', 'SV', 'EN'];
+         $supportedCurrencies = ['EUR'];
 
         if (empty($props['items'])) {
             throw new ValidationException('Items is empty');
@@ -89,11 +82,11 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
             throw new ValidationException('Currency is empty');
         }
 
-        if (!in_array($props['currency'], $this->supportedCurrencies)) {
+        if (!in_array($props['currency'], $supportedCurrencies)) {
             throw new ValidationException('Unsupported currency chosen');
         }
 
-        if (!in_array($props['language'], $this->supportedLanguages)) {
+        if (!in_array($props['language'], $supportedLanguages)) {
             throw new ValidationException('Unsupported language chosen');
         }
 
