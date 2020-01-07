@@ -58,11 +58,4 @@ class PaymentRequestTest extends TestCase
         } catch (ValidationException $e) {
         }
     }
-
-    public function testExceptions()
-    {
-
-    }
-
-
 }
