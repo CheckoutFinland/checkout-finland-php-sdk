@@ -17,12 +17,10 @@ class ClientTest extends TestCase
     {
         $merchantId = 375917;
         $secret = 'SAIPPUAKAUPPIAS';
-        $args = [
-            'timeout' => 20,
-            'cofPluginVersion' => 'phpunit-test'
-        ];
+        $args = ['timeout' => 20];
+        $cofPluginVersion = 'phpunit-test';
 
-        $client = new Client($merchantId, $secret, $args);
+        $client = new Client($merchantId, $secret, $cofPluginVersion, $args);
 
         $item = (new Item())
             ->setDeliveryDate('2020-12-12')
@@ -89,16 +87,12 @@ class ClientTest extends TestCase
                 $this->assertObjectHasAttribute('href', $response);
                 $this->assertObjectHasAttribute('providers', $response);
                 $this->assertIsArray($response->getProviders());
-
-                var_dump($response);
-
-
+                //var_dump($response);
             } catch (HmacException $e) {
                 var_dump($e->getMessage());
             } catch (ValidationException $e) {
                 var_dump($e->getMessage());
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                echo 321;
                 var_dump(json_decode($e->getResponse()->getBody()));
             }
 
