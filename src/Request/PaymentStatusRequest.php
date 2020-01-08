@@ -3,8 +3,7 @@
 namespace OpMerchantServices\SDK\Request;
 
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
 
 /**
  * Class PaymentStatusRequest
@@ -28,7 +27,9 @@ class PaymentStatusRequest implements RequestInterface
      */
     public function validate()
     {
-        v::notEmpty()->stringType()->validate($this->transactionId);
+        if (empty($this->transactionId)) {
+            throw new ValidationException('Transaction id is empty');
+        }
     }
 
     /**
