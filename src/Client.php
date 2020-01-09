@@ -8,9 +8,11 @@ namespace OpMerchantServices\SDK;
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\PaymentRequest;
+use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
 use OpMerchantServices\SDK\Request\EmailRefundRequest;
 use OpMerchantServices\SDK\Response\PaymentResponse;
+use OpMerchantServices\SDK\Response\PaymentStatusResponse;
 use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
 use OpMerchantServices\SDK\Util\Signature;
@@ -306,6 +308,50 @@ class Client
     }
 
     /**
+     * Create a payment status request.
+     *
+     * @param PaymentStatusRequest $paymentStatusRequest Payment status request
+     *
+     * @return PaymentResponse
+     * @throws HmacException        Thrown if HMAC calculation fails for responses.
+     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException  Thrown if payment validation fails.
+     */
+    public function getPaymentStatus(PaymentStatusRequest $paymentStatusRequest)
+    {
+        $this->validateRequestItem($paymentStatusRequest);
+
+        $uri = new Uri('/payments/' . $paymentStatusRequest->getTransactionId());
+
+        $payment_status_response = $this->get(
+            $uri,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return PaymentStatusResponse
+             */
+            function ($decoded) {
+                return ( new PaymentStatusResponse() )
+                    ->setTransactionId($decoded->transactionId)
+                    ->setStatus($decoded->status ?? null)
+                    ->setAmount($decoded->amount ?? null)
+                    ->setCurrency($decoded->currency ?? null)
+                    ->setStamp($decoded->stamp ?? null)
+                    ->setReference($decoded->reference ?? null)
+                    ->setCreatedAt($decoded->createdAt ?? null)
+                    ->setHref($decoded->href ?? null)
+                    ->setProvider($decoded->provider ?? null)
+                    ->setFilingCode($decoded->filingCode ?? null)
+                    ->setPaidAt($decoded->paidAt ?? null);
+            },
+            $transactionId
+        );
+
+        return $payment_status_response;
+    }
+
+    /**
      * Refunds a payment by transaction ID.
      *
      * @see https://checkoutfinland.github.io/psp-api/#/?id=refund
@@ -425,6 +471,42 @@ class Client
         // Handle header data and validate HMAC.
         $headers = $this->reduceHeaders($response->getHeaders());
         $this->validateHmac($headers, $body, $headers['signature'] ?? '');
+
+        if ($callback) {
+            $decoded = json_decode($body);
+            return call_user_func($callback, $decoded);
+        }
+
+        return $response;
+    }
+
+    /**
+     * A wrapper for get requests.
+     *
+     * @param Uri               $uri            The uri for the request.
+     * @param callable          $callback       The callback method to run for the decoded response.
+     *                                          If left empty, the response is returned.
+     * @param string            $transactionId  Checkout transaction ID when accessing single transaction
+     *                                          not required for a new payment request.
+     *
+     * @return mixed|ResponseInterface Callback return value or the response object.
+     * @throws HmacException
+     */
+    protected function get(Uri $uri, callable $callback = null, string $transactionId = null)
+    {
+        $headers = $this->getHeaders('GET', $transactionId);
+        $mac     = $this->calculateHmac($headers);
+
+        $headers['signature'] = $mac;
+
+        $response = $this->http_client->get($uri, [
+            'headers' => $headers
+        ]);
+        $body     = (string) $response->getBody();
+
+        // Handle header data and validate HMAC.
+        $responseHeaders = $this->reduceHeaders($response->getHeaders());
+        $this->validateHmac($responseHeaders, $body, $responseHeaders['signature'] ?? '');
 
         if ($callback) {
             $decoded = json_decode($body);
