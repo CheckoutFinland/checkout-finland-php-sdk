@@ -312,10 +312,10 @@ class Client
      *
      * @param PaymentStatusRequest $paymentStatusRequest Payment status request
      *
+     * @param string $transactionId
      * @return PaymentResponse
-     * @throws HmacException        Thrown if HMAC calculation fails for responses.
-     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
-     * @throws ValidationException  Thrown if payment validation fails.
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
      */
     public function getPaymentStatus(PaymentStatusRequest $paymentStatusRequest)
     {
@@ -345,7 +345,7 @@ class Client
                     ->setFilingCode($decoded->filingCode ?? null)
                     ->setPaidAt($decoded->paidAt ?? null);
             },
-            $transactionId
+            $paymentStatusRequest->getTransactionId()
         );
 
         return $payment_status_response;
