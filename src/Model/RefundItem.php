@@ -5,9 +5,8 @@
 
 namespace OpMerchantServices\SDK\Model;
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class RefundItem
@@ -24,14 +23,25 @@ class RefundItem implements \JsonSerializable
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('amount', v::notEmpty()->intVal())
-         ->assert($props);
+        if (empty($props['amount'])) {
+            throw new ValidationException('Amount is empty');
+        }
+
+        if (empty($props['stamp'])) {
+            throw new ValidationException('Stamp can not be empty');
+        }
+
+        if (!is_string($props['stamp'])) {
+            throw new ValidationException('Stamp is not a string');
+        }
+
+        return true;
     }
 
     /**

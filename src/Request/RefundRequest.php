@@ -5,6 +5,7 @@
 
 namespace OpMerchantServices\SDK\Request;
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\RefundItem;
@@ -28,6 +29,7 @@ class RefundRequest implements \JsonSerializable, RequestInterface
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
      * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
@@ -51,11 +53,28 @@ class RefundRequest implements \JsonSerializable, RequestInterface
             $items_total = $this->amount;
         }
 
-        v::key('amount', v::notEmpty()->intVal()->equals($items_total))
-        ->assert($props);
+        if (empty($props['amount'])) {
+            throw new ValidationException('Amount can not be empty');
+        }
 
-        // Validate the callback urls.
+        if (!filter_var($props['amount'], FILTER_VALIDATE_INT)) {
+            throw new ValidationException('Amount is not an integer');
+        }
+
+        if ($items_total !== $props['amount']) {
+            throw new ValidationException('ItemsTotal does not match Amount');
+        }
+
+        //v::key('amount', v::notEmpty()->intVal()->equals($items_total))
+        //->assert($props);
+
+        if (empty($props['callbackUrls'])) {
+            throw new ValidationException('CallbackUrls are not set');
+        }
+
         $this->callbackUrls->validate();
+
+        return true;
     }
 
     /**

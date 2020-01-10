@@ -108,6 +108,25 @@ class Client
     protected $cofPluginVersion;
 
     /**
+     * @param string $cofPluginVersion
+     * @return Client
+     */
+    public function setCofPluginVersion(string $cofPluginVersion): Client
+    {
+        $this->cofPluginVersion = $cofPluginVersion;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCofPluginVersion(): string
+    {
+        return $this->cofPluginVersion;
+    }
+
+
+    /**
      * The Guzzle HTTP client.
      *
      * @var \GuzzleHttp\Client
@@ -124,6 +143,7 @@ class Client
      *
      * @param int    $merchantId The merchant.
      * @param string $secretKey  The secret key.
+     * @param string $cofPluginVersion Plugin version.
      * @param array $args {
      *      Optional. Array of additional arguments.
      *
@@ -133,10 +153,11 @@ class Client
      *      @type string          $message_format   The format for logger messages.
      *                                              See: https://github.com/guzzle/guzzle/blob/master/src/MessageFormatter.php#L9
      */
-    public function __construct(int $merchantId, string $secretKey, $args = [])
+    public function __construct(int $merchantId, string $secretKey, string $cofPluginVersion, $args = [])
     {
         $this->setMerchantId($merchantId);
         $this->setSecretKey($secretKey);
+        $this->setCofPluginVersion($cofPluginVersion);
 
         $stack = $this->createLoggerStack($args);
 
@@ -148,8 +169,6 @@ class Client
                 'handler'  => $stack,
             ]
         );
-
-        $this->cofPluginVersion = $args['cofPluginVersion'] ?? 'php-sdk-default';
     }
 
     /**
@@ -184,6 +203,7 @@ class Client
      *                               not required for a new payment request.
      *
      * @return array
+     * @throws \Exception
      */
     protected function getHeaders(string $method, string $transactionId = null)
     {

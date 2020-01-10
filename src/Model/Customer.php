@@ -5,8 +5,7 @@
 
 namespace OpMerchantServices\SDK\Model;
 
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
@@ -23,16 +22,23 @@ class Customer implements \JsonSerializable
     use JsonSerializable;
 
     /**
-     * Validates with Respect\Validation library and throws an exception for invalid objects
+     * Validate email
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('email', v::notEmpty()->email())
-        ->assert($props);
+        if (empty($props['email'])) {
+            throw new ValidationException('Email is empty');
+        }
+
+        if (!filter_var($props['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new ValidationException('Email is not a valid email address');
+        }
+
+        return true;
     }
 
     /**

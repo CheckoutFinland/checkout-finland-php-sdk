@@ -5,8 +5,7 @@
 
 namespace OpMerchantServices\SDK\Model;
 
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
@@ -25,17 +24,29 @@ class Address implements \JsonSerializable
     /**
      * Validates with Respect\Validation library and throws exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('streetAddress', v::notEmpty())
-        ->key('postalCode', v::notEmpty())
-        ->key('city', v::notEmpty())
-        ->key('country', v::notEmpty())
-        ->assert($props);
+        if (empty($props['streetAddress'])) {
+            throw new ValidationException('streetAddress is empty');
+        }
+
+        if (empty($props['postalCode'])) {
+            throw new ValidationException('postalCode is empty');
+        }
+
+        if (empty($props['city'])) {
+            throw new ValidationException('city is empty');
+        }
+
+        if (empty($props['country'])) {
+            throw new ValidationException('country is empty');
+        }
+
+        return true;
     }
 
     /**

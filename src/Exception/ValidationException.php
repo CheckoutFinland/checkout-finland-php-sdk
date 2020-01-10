@@ -5,8 +5,6 @@
 
 namespace OpMerchantServices\SDK\Exception;
 
-use Respect\Validation\Exceptions\NestedValidationException;
-use Throwable;
 
 /**
  * Class ValidationException
