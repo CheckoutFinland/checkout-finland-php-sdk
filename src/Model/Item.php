@@ -7,7 +7,6 @@ namespace OpMerchantServices\SDK\Model;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use MongoLog;
 
 /**
  * Class ItemTest

@@ -16,7 +16,7 @@ trait JsonSerializable
      * return all object variables including
      * private/protected properties.
      *
-     * @return \stdClass
+     * @return array
      */
     public function jsonSerialize()
     {

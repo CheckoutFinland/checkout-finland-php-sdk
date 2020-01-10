@@ -24,9 +24,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use OpMerchantServices\SDK\Exception\HmacException;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class Client
@@ -83,7 +81,7 @@ class Client
     /**
      * Set the merchant secret key.
      *
-     * @param string $secretKey The secrect key.
+     * @param string $secretKey The secret key.
      * @return Client Return self to enable chaining.
      */
     public function setSecretKey(string $secretKey) : Client
@@ -129,7 +127,7 @@ class Client
     /**
      * The Guzzle HTTP client.
      *
-     * @var \GuzzleHttp\Client
+     * @var GuzzleHttpClient
      */
     protected $http_client;
 
@@ -312,7 +310,6 @@ class Client
      *
      * @param PaymentStatusRequest $paymentStatusRequest Payment status request
      *
-     * @param string $transactionId
      * @return PaymentResponse
      * @throws HmacException Thrown if HMAC calculation fails for responses.
      * @throws ValidationException Thrown if payment validation fails.
@@ -519,11 +516,6 @@ class Client
     /**
      * Validate a request item.
      *
-     * Handle the Respect\Validation nested exception by
-     * wrapping the messages into a validation exception.
-     * The original Respect\Validation exceptions is accessible
-     * by calling $e->getPrevious() for the thrown exception.
-     *
      * @param RequestInterface $item A request instance.
      *
      * @throws ValidationException
@@ -533,11 +525,9 @@ class Client
         if (method_exists($item, 'validate')) {
             try {
                 $item->validate();
-            } catch (NestedValidationException $e) {
-                $message  = $e->getMainMessage();
-                $messages = $e->getMessages();
-                throw ( new ValidationException($message, $e->getCode(), $e) )
-                    ->setMessages($messages);
+            } catch (\Exception $e) {
+                $message  = $e->getMessage();
+                throw new ValidationException($message, $e->getCode(), $e);
             }
         }
     }
@@ -547,7 +537,7 @@ class Client
      * an associative array where every header key has
      * an array of values. This method reduces the values to one.
      *
-     * @param array[][] $headers The respose headers.
+     * @param array[][] $headers The response headers.
      *
      * @return array
      */

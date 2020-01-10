@@ -10,8 +10,6 @@ use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\RefundItem;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class Refund
@@ -28,7 +26,6 @@ class RefundRequest implements \JsonSerializable, RequestInterface
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
      * @throws ValidationException
      */
     public function validate()
@@ -64,9 +61,6 @@ class RefundRequest implements \JsonSerializable, RequestInterface
         if ($items_total !== $props['amount']) {
             throw new ValidationException('ItemsTotal does not match Amount');
         }
-
-        //v::key('amount', v::notEmpty()->intVal()->equals($items_total))
-        //->assert($props);
 
         if (empty($props['callbackUrls'])) {
             throw new ValidationException('CallbackUrls are not set');

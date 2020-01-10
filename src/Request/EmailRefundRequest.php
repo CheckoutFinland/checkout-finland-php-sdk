@@ -10,8 +10,6 @@ use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\RefundItem;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class EmailRefund
