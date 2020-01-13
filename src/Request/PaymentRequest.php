@@ -12,8 +12,6 @@ use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\Customer;
 use OpMerchantServices\SDK\Model\Item;
 use OpMerchantServices\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * Class PaymentRequest
@@ -32,7 +30,6 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
      * @throws ValidationException
      */
     public function validate()

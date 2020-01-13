@@ -10,7 +10,7 @@ use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 /**
  * Class PaymentStatusResponse
  *
- * Represents a response object of payment creation.
+ * Represents a response object of payment status.
  *
  * @package OpMerchantServices\SDK\Response
  */

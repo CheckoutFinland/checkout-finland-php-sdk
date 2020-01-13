@@ -23,13 +23,15 @@ class PaymentStatusRequest implements RequestInterface
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the validate() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         if (empty($this->transactionId)) {
             throw new ValidationException('Transaction id is empty');
         }
+
+        return true;
     }
 
     /**
