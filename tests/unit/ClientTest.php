@@ -79,9 +79,6 @@ class ClientTest extends TestCase
             ->setInvoicingAddress($address)
         ;
 
-
-        //$providers = $client->getPaymentProviders();
-        //var_dump($providers);
         $transactionId = '';
 
         if ($paymentRequest->validate()) {
