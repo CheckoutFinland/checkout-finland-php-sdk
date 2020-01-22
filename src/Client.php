@@ -310,7 +310,7 @@ class Client
      *
      * @param PaymentStatusRequest $paymentStatusRequest Payment status request
      *
-     * @return PaymentResponse
+     * @return PaymentStatusResponse
      * @throws HmacException Thrown if HMAC calculation fails for responses.
      * @throws ValidationException Thrown if payment validation fails.
      */
