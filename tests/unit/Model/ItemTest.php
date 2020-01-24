@@ -18,15 +18,12 @@ class ItemTest extends TestCase
 
         $i->setUnitPrice(1)
             ->setUnits(2)
-            ->setVatPercentage(25)
+            ->setVatPercentage(0)
             ->setProductCode('productCode123')
             ->setDeliveryDate('12.12.1999')
             ->setDescription('description');
 
-        try {
-            $this->assertIsBool($i->validate(), 'Item::validate');
-        } catch (ValidationException $e) {
-        }
+        $this->assertEquals(true, $i->validate());
     }
 
     public function testExceptions()
