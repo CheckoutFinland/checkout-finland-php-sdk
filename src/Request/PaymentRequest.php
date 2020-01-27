@@ -59,7 +59,7 @@ class PaymentRequest implements \JsonSerializable, RequestInterface
             throw new ValidationException('Amount is empty');
         }
 
-        if (!filter_var($props['amount'], FILTER_VALIDATE_INT)) {
+        if (filter_var($props['amount'], FILTER_VALIDATE_INT) === false) {
             throw new ValidationException('Amount is not a number');
         }
 

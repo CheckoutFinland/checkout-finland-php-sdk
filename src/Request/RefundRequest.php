@@ -54,7 +54,7 @@ class RefundRequest implements \JsonSerializable, RequestInterface
             throw new ValidationException('Amount can not be empty');
         }
 
-        if (!filter_var($props['amount'], FILTER_VALIDATE_INT)) {
+        if (filter_var($props['amount'], FILTER_VALIDATE_INT) === false) {
             throw new ValidationException('Amount is not an integer');
         }
 
