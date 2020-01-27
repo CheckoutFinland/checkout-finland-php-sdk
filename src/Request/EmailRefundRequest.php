@@ -42,7 +42,7 @@ class EmailRefundRequest extends RefundRequest
             throw new ValidationException('email can not be empty');
         }
 
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             throw new ValidationException('email is not a valid email address');
         }
 

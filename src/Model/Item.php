@@ -367,14 +367,14 @@ class Item implements \JsonSerializable
     {
         $props = get_object_vars($this);
 
-        if (!filter_var($props['unitPrice'], FILTER_VALIDATE_INT)) {
+        if (filter_var($props['unitPrice'], FILTER_VALIDATE_INT) === false) {
             //throw new \Exception('UnitPrice is not an integer');
             throw new ValidationException('UnitPrice is not an integer');
         }
-        if (!filter_var($props['units'], FILTER_VALIDATE_INT)) {
+        if (filter_var($props['units'], FILTER_VALIDATE_INT) === false) {
             throw new ValidationException('Units is not an integer');
         }
-        if (!filter_var($props['vatPercentage'], FILTER_VALIDATE_INT)) {
+        if (filter_var($props['vatPercentage'], FILTER_VALIDATE_INT) === false) {
             throw new ValidationException('vatPercentage is not an integer');
         }
         if (empty($props['productCode'])) {
