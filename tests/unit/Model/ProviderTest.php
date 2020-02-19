@@ -7,6 +7,7 @@ class ProviderTest extends TestCase
 {
     public function testProvider()
     {
+        // Test Provider data
         $p = new Provider();
         $group = 'Group1';
         $icon = 'https://somedomain.com/icons/icon.png';

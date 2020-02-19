@@ -11,6 +11,7 @@ class EmailRefundRequestTest extends TestCase
 
     public function testEmailRefundRequest()
     {
+        // Setup an EmailRefundRequest
         $er = new EmailRefundRequest();
         $er->setAmount(20);
         $er->setEmail('some@email.com');
@@ -36,7 +37,7 @@ class EmailRefundRequestTest extends TestCase
 
     public function testExceptions()
     {
-
+        // Test exception messages
         $er = new EmailRefundRequest();
 
         try {

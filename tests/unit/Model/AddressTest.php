@@ -7,14 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 class AddressTest extends TestCase
 {
-
     public function testExceptions()
     {
         $this->expectException(ValidationException::class);
         $a = new Address;
         $a->validate();
     }
-
 
     public function testIsAddressValid()
     {
@@ -30,14 +28,13 @@ class AddressTest extends TestCase
             ->setCity('London')
             ->setCountry('United Kingdom');
 
-        try {
-            $this->assertIsBool($a->validate(), 'Address::validate');
-        } catch (ValidationException $e) {
-        }
+        $this->assertIsBool($a->validate(), 'Address::validate');
+
     }
 
-    public function testExeceptionMessages()
+    public function testExceptionMessages()
     {
+        // Test that missing infos will throw some exceptions
         $a = new Address;
 
         try {
@@ -76,8 +73,6 @@ class AddressTest extends TestCase
             $this->assertIsBool($a->validate(), 'Address::validate is bool');
         } catch (ValidationException $e) {
         }
-
-
 
     }
 

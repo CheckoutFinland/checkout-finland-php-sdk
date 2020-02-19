@@ -1,6 +1,5 @@
 <?php
 
-
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +32,7 @@ class CallbackUrlTest extends TestCase
 
     public function testExceptionMessages()
     {
+        // Test Exceptions for missing infos
         $c = new CallbackUrl;
 
         try {

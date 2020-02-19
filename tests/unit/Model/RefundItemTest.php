@@ -10,7 +10,7 @@ class RefundItemTest extends TestCase
     public function testValidation()
     {
         $rfi = new RefundItem();
-        $rfi->setAmount(123.2322323); // setter parameter typecasting should work for floats
+        $rfi->setAmount(123.2322323); // setter parameter typecasting should work for floats => rounded to 123
         $this->assertEquals(123, $rfi->getAmount());
         $rfi->setStamp('someStringValueForTheStamp');
         $this->assertEquals(true, $rfi->validate());

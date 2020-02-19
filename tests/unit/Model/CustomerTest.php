@@ -17,7 +17,7 @@ class CustomerTest extends TestCase
 
     public function testExceptions()
     {
-        // Test fail
+        // Test failing to give a valid email
         $this->expectException(ValidationException::class);
         $c2 = new Customer();
         $c2->setEmail('notAnEmailAddress');

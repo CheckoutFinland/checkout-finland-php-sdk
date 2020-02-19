@@ -23,9 +23,9 @@ class ClientTest extends TestCase
     public function testPaymentRequest()
     {
         $args = ['timeout' => 20];
-
+        // init client
         $client = new Client(self::MERCHANT_ID, self::SECRET, self::COF_PLUGIN_VERSION, $args);
-
+        // Add some items
         $item = (new Item())
             ->setDeliveryDate('2020-12-12')
             ->setProductCode('pr1')
@@ -36,16 +36,18 @@ class ClientTest extends TestCase
             ->setDescription('some description')
             ->setUnitPrice(100);
 
+        // Also test with zero VAT
         $item2 = (new Item())
             ->setDeliveryDate('2020-12-12')
             ->setProductCode('pr2')
-            ->setVatPercentage(24)
+            ->setVatPercentage(0)
             ->setReference('itemReference123')
             ->setStamp('itemStamp-' . rand(1, 999999))
             ->setUnits(2)
             ->setDescription('some description2')
             ->setUnitPrice(200);
 
+        // Redirect and callbackUrl's
         $redirect = (new CallbackUrl())
             ->setCancel('https://somedomain.com/cancel')
             ->setSuccess('https://somedomain.com/success');
@@ -54,10 +56,12 @@ class ClientTest extends TestCase
             ->setCancel('https://callbackdomain.com/cancel')
             ->setSuccess('https://callbackdomain.com/success');
 
+        // Add a customer too
         $customer = (new Customer())
             ->setEmail('customer@customerdomain.com')
         ;
 
+        // Customer needs an address
         $address = (new Address())
             ->setStreetAddress('Hämeenkatu 12')
             ->setCity('Tampere')
@@ -65,6 +69,7 @@ class ClientTest extends TestCase
             ->setPostalCode('33200')
         ;
 
+        // Setup PaymentRequest
         $paymentRequest = (new PaymentRequest())
             ->setCustomer($customer)
             ->setRedirectUrls($redirect)
@@ -81,6 +86,7 @@ class ClientTest extends TestCase
 
         $transactionId = '';
 
+        // Send out a PaymentRequest
         if ($paymentRequest->validate()) {
             try {
                 $response = $client->createPayment($paymentRequest);
@@ -91,7 +97,7 @@ class ClientTest extends TestCase
                 $this->assertIsArray($response->getProviders());
 
                 $transactionId = $response->getTransactionId();
-
+                // Uncomment to debug response
                 //var_dump($response);
             } catch (HmacException $e) {
                 var_dump($e->getMessage());
@@ -105,7 +111,7 @@ class ClientTest extends TestCase
             echo 'PaymentRequest is not valid';
         }
 
-        // Test payment status request with the transactionId we got from the PaymentRequest
+        // Test payment status request with the transactionId we got from the initial PaymentRequest
         $psr = new PaymentStatusRequest();
         $psr->setTransactionId($transactionId);
 

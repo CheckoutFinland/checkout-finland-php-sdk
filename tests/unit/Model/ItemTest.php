@@ -1,6 +1,5 @@
 <?php
 
-
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\Item;
 use PHPUnit\Framework\TestCase;
@@ -37,6 +36,7 @@ class ItemTest extends TestCase
     {
         $i = new Item;
 
+        // Test exceptions
         try {
             $i->validate();
         } catch (Exception $e) {
@@ -78,7 +78,5 @@ class ItemTest extends TestCase
         } catch (ValidationException $e) {
         }
 
-
     }
-
 }

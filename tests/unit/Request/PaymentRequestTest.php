@@ -11,6 +11,7 @@ class PaymentRequestTest extends TestCase
 {
     public function testPaymentRequest()
     {
+        // Test PaymentRequest object
         $r = new PaymentRequest();
         $r->setAmount(30);
         $r->setStamp('RequestStamp');
