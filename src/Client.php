@@ -270,6 +270,58 @@ class Client
     }
 
     /**
+     * Get a grouped list of payment providers.
+     *
+     * @param int $amount Purchase amount in currency's minor unit.
+     * @return Provider[]
+     *
+     * @throws HmacException       Thrown if HMAC calculation fails for responses.
+     * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
+     */
+    public function getGroupedPaymentProviders(int $amount = null)
+    {
+        $uri = new Uri('/merchants/grouped-payment-providers');
+
+        $headers = $this->getHeaders('GET');
+        $mac     = $this->calculateHmac($headers);
+        $res     = [];
+
+        // Sign the request.
+        $headers['signature'] = $mac;
+        $request_params       = [
+            'headers' => $headers,
+        ];
+
+        // Set the amount query parameter.
+        if ($amount !== null) {
+            $request_params['query'] = [
+                'amount' => $amount
+            ];
+        }
+
+        $response = $this->http_client->get($uri, $request_params);
+        $body     = (string) $response->getBody();
+
+        // Validate the signature.
+        $headers = $this->reduceHeaders($response->getHeaders());
+        $this->validateHmac($headers, $body, $headers['signature'] ?? '');
+
+        // Instantiate providers.
+        $decoded   = json_decode($body);
+        error_log(print_r($decoded, true));
+        
+        $providers = array_map(function ($provider_data) {
+            return ( new Provider() )->bindProperties($provider_data);
+        }, $decoded->providers);
+        
+        $res['providers'] = $providers;
+        $res['terms'] = $decoded->terms;
+
+        //return $providers;
+        return $res;
+    }
+
+    /**
      * Create a payment request.
      *
      * @param PaymentRequest $payment A payment class instance.
