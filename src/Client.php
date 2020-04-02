@@ -308,14 +308,25 @@ class Client
 
         // Instantiate providers.
         $decoded   = json_decode($body);
-        error_log(print_r($decoded, true));
         
         $providers = array_map(function ($provider_data) {
             return ( new Provider() )->bindProperties($provider_data);
         }, $decoded->providers);
+
+        $groups = array_map(function($group_data) {
+            return [
+                'id'        => $group_data->id,
+                'name'      => $group_data->name,
+                'icon'      => $group_data->svg,
+                'providers' => array_map(function($provider_data) {
+                    return ( new Provider() )->bindProperties($provider_data);
+                }, $group_data->providers),
+            ];
+        }, $decoded->groups);
         
-        $res['providers'] = $providers;
+        //$res['providers'] = $providers;
         $res['terms'] = $decoded->terms;
+        $res['groups'] = $groups;
 
         //return $providers;
         return $res;
