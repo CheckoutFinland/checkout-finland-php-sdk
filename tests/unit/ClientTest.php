@@ -8,6 +8,7 @@ use OpMerchantServices\SDK\Model\Address;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\Customer;
 use OpMerchantServices\SDK\Model\Item;
+use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use PHPUnit\Framework\TestCase;
@@ -55,15 +56,13 @@ class ClientTest extends TestCase
             ->setSuccess('https://callbackdomain.com/success');
 
         $customer = (new Customer())
-            ->setEmail('customer@customerdomain.com')
-        ;
+            ->setEmail('customer@customerdomain.com');
 
         $address = (new Address())
             ->setStreetAddress('Hämeenkatu 12')
             ->setCity('Tampere')
             ->setCountry('Finland')
-            ->setPostalCode('33200')
-        ;
+            ->setPostalCode('33200');
 
         $paymentRequest = (new PaymentRequest())
             ->setCustomer($customer)
@@ -76,8 +75,7 @@ class ClientTest extends TestCase
             ->setCurrency('EUR')
             ->setLanguage('EN')
             ->setDeliveryAddress($address)
-            ->setInvoicingAddress($address)
-        ;
+            ->setInvoicingAddress($address);
 
         $transactionId = '';
 
@@ -120,5 +118,29 @@ class ClientTest extends TestCase
         } catch (ValidationException $e) {
             var_dump('validation error');
         }
+    }
+
+    public function testAddCardFormRequest()
+    {
+        $args = ['timeout' => 20];
+
+        $datetime = new \DateTime();
+        $client = new Client(self::MERCHANT_ID, self::SECRET, self::COF_PLUGIN_VERSION, $args);
+
+        $addCardFormRequest = (new AddCardFormRequest())
+            ->setCheckoutAccount(self::MERCHANT_ID)
+            ->setCheckoutAlgorithm('sha256')
+            ->setCheckoutMethod('POST')
+            ->setCheckoutNonce(uniqid(true))
+            ->setCheckoutTimestamp($datetime->format('Y-m-d\TH:i:s.u\Z'))
+            ->setCheckoutRedirectSuccessUrl('https://somedomain.com/success')
+            ->setCheckoutRedirectCancelUrl('https://somedomain.com/cancel')
+            ->setLanguage('EN')
+            ->setSignature('d902e82ee61cb2c6ff2ba48b255402eb5d446c943e8ebbb3ada4fe40be7b8ab5');
+
+            $this->assertTrue($addCardFormRequest->validate());
+            $response = $client->createAddCardFormRequest($addCardFormRequest);
+
+            $this->assertEquals(302, $response->getStatusCode());
     }
 }

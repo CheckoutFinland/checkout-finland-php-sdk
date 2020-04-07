@@ -7,6 +7,7 @@ namespace OpMerchantServices\SDK;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\Provider;
+use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
@@ -48,7 +49,7 @@ class Client
      *
      * @return int
      */
-    public function getMerchantId() : ?int
+    public function getMerchantId(): ?int
     {
 
         return $this->merchantId;
@@ -60,7 +61,7 @@ class Client
      * @param int $merchantId The merchant id.
      * @return Client Return self to enable chaining.
      */
-    public function setMerchantId(int $merchantId) : Client
+    public function setMerchantId(int $merchantId): Client
     {
         $this->merchantId = $merchantId;
 
@@ -72,7 +73,7 @@ class Client
      *
      * @return string
      */
-    public function getSecretKey() : ?string
+    public function getSecretKey(): ?string
     {
 
         return $this->secretKey;
@@ -84,7 +85,7 @@ class Client
      * @param string $secretKey The secret key.
      * @return Client Return self to enable chaining.
      */
-    public function setSecretKey(string $secretKey) : Client
+    public function setSecretKey(string $secretKey): Client
     {
         $this->secretKey = $secretKey;
 
@@ -139,17 +140,14 @@ class Client
     /**
      * Client constructor.
      *
-     * @param int    $merchantId The merchant.
-     * @param string $secretKey  The secret key.
+     * @param int $merchantId The merchant.
+     * @param string $secretKey The secret key.
      * @param string $cofPluginVersion Plugin version.
-     * @param array $args {
-     *      Optional. Array of additional arguments.
+     * @param array $args Optional. Array of additional arguments.
      *
-     *      @type float           $timeout          A timeout value in seconds for the GuzzleHTTP client.
-     *      @type LoggerInterface $logger           A PSR-3 logger instance.
-     *                                              See: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
-     *      @type string          $message_format   The format for logger messages.
-     *                                              See: https://github.com/guzzle/guzzle/blob/master/src/MessageFormatter.php#L9
+     * @type float $timeout A timeout value in seconds for the GuzzleHTTP client.
+     * @type LoggerInterface $logger A PSR-3 logger instance. See: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
+     * @type string $message_format The format for logger messages. See: https://github.com/guzzle/guzzle/blob/master/src/MessageFormatter.php#L9
      */
     public function __construct(int $merchantId, string $secretKey, string $cofPluginVersion, $args = [])
     {
@@ -161,10 +159,10 @@ class Client
 
         $this->http_client = new GuzzleHttpClient(
             [
-                'headers'  => [],
+                'headers' => [],
                 'base_uri' => self::API_ENDPOINT,
-                'timeout'  => $args['timeout'] ?? 10,
-                'handler'  => $stack,
+                'timeout' => $args['timeout'] ?? 10,
+                'handler' => $stack,
             ]
         );
     }
@@ -196,9 +194,8 @@ class Client
     /**
      * Format request headers.
      *
-     * @param string $method         The request method. GET or POST.
-     * @param string $transactionId  Checkout transaction ID when accessing single transaction
-     *                               not required for a new payment request.
+     * @param string $method The request method. GET or POST.
+     * @param string $transactionId Checkout transaction ID when accessing single transaction not required for a new payment request.
      *
      * @return array
      * @throws \Exception
@@ -208,16 +205,16 @@ class Client
         $datetime = new \DateTime();
 
         $headers = [
-            'checkout-account'   => $this->merchantId,
+            'checkout-account' => $this->merchantId,
             'checkout-algorithm' => 'sha256',
-            'checkout-method'    => strtoupper($method),
-            'checkout-nonce'     => uniqid(true),
+            'checkout-method' => strtoupper($method),
+            'checkout-nonce' => uniqid(true),
             'checkout-timestamp' => $datetime->format('Y-m-d\TH:i:s.u\Z'),
             'cof-plugin-version' => $this->cofPluginVersion,
-            'content-type'       => 'application/json; charset=utf-8',
+            'content-type' => 'application/json; charset=utf-8',
         ];
 
-        if (! empty($transactionId)) {
+        if (!empty($transactionId)) {
             $headers['checkout-transaction-id'] = $transactionId;
         }
 
@@ -238,11 +235,11 @@ class Client
         $uri = new Uri('/merchants/payment-providers');
 
         $headers = $this->getHeaders('GET');
-        $mac     = $this->calculateHmac($headers);
+        $mac = $this->calculateHmac($headers);
 
         // Sign the request.
         $headers['signature'] = $mac;
-        $request_params       = [
+        $request_params = [
             'headers' => $headers,
         ];
 
@@ -254,16 +251,16 @@ class Client
         }
 
         $response = $this->http_client->get($uri, $request_params);
-        $body     = (string) $response->getBody();
+        $body = (string)$response->getBody();
 
         // Validate the signature.
         $headers = $this->reduceHeaders($response->getHeaders());
         $this->validateHmac($headers, $body, $headers['signature'] ?? '');
 
         // Instantiate providers.
-        $decoded   = json_decode($body);
+        $decoded = json_decode($body);
         $providers = array_map(function ($provider_data) {
-            return ( new Provider() )->bindProperties($provider_data);
+            return (new Provider())->bindProperties($provider_data);
         }, $decoded);
 
         return $providers;
@@ -359,7 +356,7 @@ class Client
              * @return PaymentResponse
              */
             function ($decoded) {
-                return ( new PaymentResponse() )
+                return (new PaymentResponse())
                     ->setTransactionId($decoded->transactionId ?? null)
                     ->setHref($decoded->href ?? null)
                     ->setProviders($decoded->providers ?? null);
@@ -393,7 +390,7 @@ class Client
              * @return PaymentStatusResponse
              */
             function ($decoded) {
-                return ( new PaymentStatusResponse() )
+                return (new PaymentStatusResponse())
                     ->setTransactionId($decoded->transactionId)
                     ->setStatus($decoded->status ?? null)
                     ->setAmount($decoded->amount ?? null)
@@ -417,15 +414,15 @@ class Client
      *
      * @see https://checkoutfinland.github.io/psp-api/#/?id=refund
      *
-     * @param RefundRequest $refund        A refund instance.
-     * @param string        $transactionID The transaction id.
+     * @param RefundRequest $refund A refund instance.
+     * @param string $transactionID The transaction id.
      *
      * @return RefundResponse Returns a refund response after successful refunds.
      * @throws HmacException        Thrown if HMAC calculation fails for responses.
      * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException  Thrown if payment validation fails.
      */
-    public function refund(RefundRequest $refund, string $transactionID = '') : RefundResponse
+    public function refund(RefundRequest $refund, string $transactionID = ''): RefundResponse
     {
         $this->validateRequestItem($refund);
 
@@ -442,12 +439,12 @@ class Client
                  * @param mixed $decoded The decoded body.
                  * @return RefundResponse
                  */
-                    function ($decoded) {
-                        return ( new RefundResponse() )
-                         ->setProvider($decoded->provider ?? null)
-                         ->setStatus($decoded->status ?? null)
-                         ->setTransactionId($decoded->transactionId ?? null);
-                    },
+                function ($decoded) {
+                    return (new RefundResponse())
+                        ->setProvider($decoded->provider ?? null)
+                        ->setStatus($decoded->status ?? null)
+                        ->setTransactionId($decoded->transactionId ?? null);
+                },
                 $transactionID
             );
         } catch (HmacException $e) {
@@ -462,15 +459,15 @@ class Client
      *
      * @see https://checkoutfinland.github.io/psp-api/#/?id=email-refund
      *
-     * @param EmailRefundRequest $refund        An email refund instance.
-     * @param string             $transactionID The transaction id.
+     * @param EmailRefundRequest $refund An email refund instance.
+     * @param string $transactionID The transaction id.
      *
      * @return EmailRefundResponse Returns a refund response after successful refunds.
      * @throws HmacException       Thrown if HMAC calculation fails for responses.
      * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
      * @throws ValidationException Thrown if payment validation fails.
      */
-    public function emailRefund(EmailRefundRequest $refund, string $transactionID = '') : EmailRefundResponse
+    public function emailRefund(EmailRefundRequest $refund, string $transactionID = ''): EmailRefundResponse
     {
         $this->validateRequestItem($refund);
 
@@ -487,12 +484,12 @@ class Client
                  * @param mixed $decoded The decoded body.
                  * @return EmailRefundResponse
                  */
-                    function ($decoded) {
-                        return ( new EmailRefundResponse() )
-                         ->setProvider($decoded->provider ?? null)
-                         ->setStatus($decoded->status ?? null)
-                         ->setTransactionId($decoded->transactionId ?? null);
-                    },
+                function ($decoded) {
+                    return (new EmailRefundResponse())
+                        ->setProvider($decoded->provider ?? null)
+                        ->setStatus($decoded->status ?? null)
+                        ->setTransactionId($decoded->transactionId ?? null);
+                },
                 $transactionID
             );
         } catch (HmacException $e) {
@@ -503,35 +500,74 @@ class Client
     }
 
     /**
+     * Create a AddCardForm request.
+     *
+     * @param AddCardFormRequest $addCardFormRequest A payment class instance.
+     *
+     * @return AddCardFormResponse
+     * @throws HmacException        Thrown if HMAC calculation fails for responses.
+     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException  Thrown if payment validation fails.
+     */
+    public function createAddCardFormRequest(AddCardFormRequest $addCardFormRequest)
+    {
+        $this->validateRequestItem($addCardFormRequest);
+
+        $uri = new Uri('/tokenization/addcard-form');
+
+        $addCardFormResponse = $this->post(
+            $uri,
+            $addCardFormRequest,
+            null,
+            null,
+            false
+        );
+
+        return $addCardFormResponse;
+    }
+
+    /**
      * A wrapper for post requests.
      *
-     * @param Uri               $uri            The uri for the request.
-     * @param \JsonSerializable $data           The request payload.
-     * @param callable          $callback       The callback method to run for the decoded response.
-     *                                          If left empty, the response is returned.
-     * @param string            $transactionId  Checkout transaction ID when accessing single transaction
-     *                                          not required for a new payment request.
+     * @param Uri $uri The uri for the request.
+     * @param \JsonSerializable $data The request payload.
+     * @param callable $callback The callback method to run for the decoded response. If left empty, the response is returned.
+     * @param string $transactionId Checkout transaction ID when accessing single transaction not required for a new payment request.
+     * @param bool $signatureInHeader Checks if signature is calculated from header/body parameters
      *
      * @return mixed|ResponseInterface Callback return value or the response object.
      * @throws HmacException
      */
-    protected function post(Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null)
+    protected function post(Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null, bool $signatureInHeader = true)
     {
-        $headers = $this->getHeaders('POST', $transactionId);
-        $body    = json_encode($data, JSON_UNESCAPED_SLASHES);
-        $mac     = $this->calculateHmac($headers, $body);
+        $body = json_encode($data, JSON_UNESCAPED_SLASHES);
 
-        $headers['signature'] = $mac;
+        if ($signatureInHeader) {
+            $headers = $this->getHeaders('POST', $transactionId);
+            $mac = $this->calculateHmac($headers, $body);
+            $headers['signature'] = $mac;
 
-        $response = $this->http_client->post($uri, [
-            'headers' => $headers,
-            'body'    => $body
-        ]);
-        $body     = (string) $response->getBody();
+            $response = $this->http_client->post($uri, [
+                'headers' => $headers,
+                'body' => $body,
+                'allow_redirects' => false
+            ]);
+            $body = (string)$response->getBody();
 
-        // Handle header data and validate HMAC.
-        $headers = $this->reduceHeaders($response->getHeaders());
-        $this->validateHmac($headers, $body, $headers['signature'] ?? '');
+            // Handle header data and validate HMAC.
+            $headers = $this->reduceHeaders($response->getHeaders());
+            $this->validateHmac($headers, $body, $headers['signature'] ?? '');
+        } else {
+            $mac = $this->calculateHmac($data->toArray());
+            $data->setSignature($mac);
+            $body = json_encode($data->toArray(), JSON_UNESCAPED_SLASHES);
+
+            $response = $this->http_client->post($uri, [
+                'body' => $body,
+                'allow_redirects' => false
+            ]);
+            $body = (string)$response->getBody();
+        }
 
         if ($callback) {
             $decoded = json_decode($body);
@@ -544,11 +580,9 @@ class Client
     /**
      * A wrapper for get requests.
      *
-     * @param Uri               $uri            The uri for the request.
-     * @param callable          $callback       The callback method to run for the decoded response.
-     *                                          If left empty, the response is returned.
-     * @param string            $transactionId  Checkout transaction ID when accessing single transaction
-     *                                          not required for a new payment request.
+     * @param Uri $uri The uri for the request.
+     * @param callable $callback The callback method to run for the decoded response. If left empty, the response is returned.
+     * @param string $transactionId Checkout transaction ID when accessing single transaction not required for a new payment request.
      *
      * @return mixed|ResponseInterface Callback return value or the response object.
      * @throws HmacException
@@ -556,14 +590,14 @@ class Client
     protected function get(Uri $uri, callable $callback = null, string $transactionId = null)
     {
         $headers = $this->getHeaders('GET', $transactionId);
-        $mac     = $this->calculateHmac($headers);
+        $mac = $this->calculateHmac($headers);
 
         $headers['signature'] = $mac;
 
         $response = $this->http_client->get($uri, [
             'headers' => $headers
         ]);
-        $body     = (string) $response->getBody();
+        $body = (string)$response->getBody();
 
         // Handle header data and validate HMAC.
         $responseHeaders = $this->reduceHeaders($response->getHeaders());
@@ -590,7 +624,7 @@ class Client
             try {
                 $item->validate();
             } catch (\Exception $e) {
-                $message  = $e->getMessage();
+                $message = $e->getMessage();
                 throw new ValidationException($message, $e->getCode(), $e);
             }
         }
@@ -617,8 +651,8 @@ class Client
      * A proxy for the Signature class' static method
      * to be used via a client instance.
      *
-     * @param array  $params The parameters.
-     * @param string $body   The body.
+     * @param array $params The parameters.
+     * @param string $body The body.
      * @return string SHA-256 HMAC
      */
     protected function calculateHmac(array $params = [], string $body = '')
@@ -630,8 +664,8 @@ class Client
      * A proxy for the Signature class' static method
      * to be used via a client instance.
      *
-     * @param array  $response  The response parameters.
-     * @param string $body      The response body.
+     * @param array $response The response parameters.
+     * @param string $body The response body.
      * @param string $signature The response signature key.
      *
      * @throws HmacException
