@@ -25,6 +25,12 @@
             "email": "joonas.loueranta@op.fi",
             "homepage": "https://github.com/loueranta",
             "role": "Manager"
+        },
+        {
+            "name": "Ville Pietarinen",
+            "email": "ville.pietarinen@geniem.com",
+            "homepage": "http://github.com/villepietarinen",
+            "role": "Developer"
         }
 
     ],
