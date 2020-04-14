@@ -8,10 +8,12 @@ namespace OpMerchantServices\SDK;
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
+use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
 use OpMerchantServices\SDK\Request\EmailRefundRequest;
+use OpMerchantServices\SDK\Response\GetTokenResponse;
 use OpMerchantServices\SDK\Response\PaymentResponse;
 use OpMerchantServices\SDK\Response\PaymentStatusResponse;
 use OpMerchantServices\SDK\Response\RefundResponse;
@@ -200,7 +202,7 @@ class Client
      * @return array
      * @throws \Exception
      */
-    protected function getHeaders(string $method, string $transactionId = null)
+    protected function getHeaders(string $method, string $transactionId = null, string $checkoutTokenizationId = null)
     {
         $datetime = new \DateTime();
 
@@ -216,6 +218,10 @@ class Client
 
         if (!empty($transactionId)) {
             $headers['checkout-transaction-id'] = $transactionId;
+        }
+
+        if (!empty($checkoutTokenizationId)) {
+            $headers['checkout-tokenization-id'] = $checkoutTokenizationId;
         }
 
         return $headers;
@@ -502,12 +508,12 @@ class Client
     /**
      * Create a AddCardForm request.
      *
-     * @param AddCardFormRequest $addCardFormRequest A payment class instance.
+     * @param AddCardFormRequest $addCardFormRequest A AddCardFormRequest class instance.
      *
      * @return AddCardFormResponse
-     * @throws HmacException        Thrown if HMAC calculation fails for responses.
-     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
-     * @throws ValidationException  Thrown if payment validation fails.
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws RequestException A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException Thrown if AddCardFormRequest validation fails.
      */
     public function createAddCardFormRequest(AddCardFormRequest $addCardFormRequest)
     {
@@ -527,6 +533,47 @@ class Client
     }
 
     /**
+     * @param GetTokenRequest $getTokenRequest A GetTokenRequest class instance.
+     * @return GetTokenResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function createGetTokenRequest(GetTokenRequest $getTokenRequest): GetTokenResponse
+    {
+        $this->validateRequestItem($getTokenRequest);
+        $checkoutTokenizationId = $getTokenRequest->getCheckoutTokenizationId();
+
+        try {
+            $uri = new Uri('/tokenization/' . $getTokenRequest->getCheckoutTokenizationId());
+
+            $getTokenResponse = $this->post(
+                $uri,
+                $getTokenRequest,
+                /**
+                 * Create the response instance.
+                 *
+                 * @param mixed $decoded The decoded body.
+                 * @return GetTokenResponse
+                 */
+                function ($decoded) {
+                    return (new GetTokenResponse())
+                        ->setToken($decoded->token)
+                        ->setCard($decoded->card)
+                        ->setCustomer($decoded->customer);
+                },
+                null,
+                true,
+                $checkoutTokenizationId
+            );
+
+        } catch (HmacException $e) {
+            throw $e;
+        }
+
+        return $getTokenResponse;
+    }
+
+    /**
      * A wrapper for post requests.
      *
      * @param Uri $uri The uri for the request.
@@ -538,12 +585,12 @@ class Client
      * @return mixed|ResponseInterface Callback return value or the response object.
      * @throws HmacException
      */
-    protected function post(Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null, bool $signatureInHeader = true)
+    protected function post(Uri $uri, \JsonSerializable $data, callable $callback = null, string $transactionId = null, bool $signatureInHeader = true, string $checkoutTokenizationId = null)
     {
         $body = json_encode($data, JSON_UNESCAPED_SLASHES);
 
         if ($signatureInHeader) {
-            $headers = $this->getHeaders('POST', $transactionId);
+            $headers = $this->getHeaders('POST', $transactionId, $checkoutTokenizationId);
             $mac = $this->calculateHmac($headers, $body);
             $headers['signature'] = $mac;
 

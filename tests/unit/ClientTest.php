@@ -9,6 +9,7 @@ use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\Customer;
 use OpMerchantServices\SDK\Model\Item;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
+use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use PHPUnit\Framework\TestCase;
@@ -142,5 +143,47 @@ class ClientTest extends TestCase
             $response = $client->createAddCardFormRequest($addCardFormRequest);
 
             $this->assertEquals(302, $response->getStatusCode());
+    }
+
+    public function testGetTokenRequest()
+    {
+        $args = ['timeout' => 20];
+        $checkoutTokenizationId = '818c478e-5682-46bf-97fd-b9c2b93a3fcd';
+
+        $client = new Client(self::MERCHANT_ID, self::SECRET, self::COF_PLUGIN_VERSION, $args);
+
+        $getTokenRequest = (new GetTokenRequest())
+            ->setCheckoutTokenizationId($checkoutTokenizationId);
+
+        $this->assertTrue($getTokenRequest->validate());
+        $response = $client->createGetTokenRequest($getTokenRequest);
+
+        $responseJsonData = $response->jsonSerialize();
+
+        $expectedArray = [
+            'token' => 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
+            'card' => [
+                'type' => 'Visa',
+                'bin' => '415301',
+                'partial_pan' => '0024',
+                'expire_year' => '2023',
+                'expire_month' => '11',
+                'cvc_required' => 'no',
+                'funding' => 'debit',
+                'category' => 'unknown',
+                'country_code' => 'FI',
+                'pan_fingerprint' => '693a68deec6d6fa363c72108f8d656d4fd0b6765f5457dd1c139523f4daaafce',
+                'card_fingerprint' => 'c34cdd1952deb81734c012fbb11eabc56c4d61d198f28b448327ccf13f45417f'
+            ],
+            'customer' => [
+                'network_address' => '93.174.192.154',
+                'country_code' => 'FI'
+            ]
+        ];
+
+        $this->assertObjectHasAttribute('token', $response);
+        $this->assertObjectHasAttribute('card', $response);
+        $this->assertObjectHasAttribute('customer', $response);
+        $this->assertJsonStringEqualsJsonString(json_encode($expectedArray), json_encode($responseJsonData));
     }
 }
