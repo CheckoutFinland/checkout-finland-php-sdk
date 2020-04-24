@@ -8,16 +8,20 @@ namespace OpMerchantServices\SDK;
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
+use OpMerchantServices\SDK\Request\CitPaymentRequest;
 use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
 use OpMerchantServices\SDK\Request\EmailRefundRequest;
+use OpMerchantServices\SDK\Request\RevertCitPaymentAuthHoldRequest;
+use OpMerchantServices\SDK\Response\CitPaymentResponse;
 use OpMerchantServices\SDK\Response\GetTokenResponse;
 use OpMerchantServices\SDK\Response\PaymentResponse;
 use OpMerchantServices\SDK\Response\PaymentStatusResponse;
 use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
+use OpMerchantServices\SDK\Response\RevertCitPaymentAuthHoldResponse;
 use OpMerchantServices\SDK\Util\Signature;
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -198,6 +202,7 @@ class Client
      *
      * @param string $method The request method. GET or POST.
      * @param string $transactionId Checkout transaction ID when accessing single transaction not required for a new payment request.
+     * @param string $checkoutTokenizationId Checkout tokenization ID for getToken request
      *
      * @return array
      * @throws \Exception
@@ -574,6 +579,147 @@ class Client
     }
 
     /**
+     * Create a CIT payment request.
+     *
+     * @param CitPaymentRequest $citPayment A CIT payment class instance.
+     * @param Uri $uri The uri for the request.
+     *
+     * @return CitPaymentResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws RequestException A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    private function createCitPayment(CitPaymentRequest $citPayment, Uri $uri): CitPaymentResponse
+    {
+        $this->validateRequestItem($citPayment);
+
+        try {
+            $citPaymentResponse = $this->post(
+                $uri,
+                $citPayment,
+                /**
+                 * Create the response instance.
+                 *
+                 * @param mixed $decoded The decoded body.
+                 * @return CitPaymentResponse
+                 */
+                function ($decoded) {
+                    return (new CitPaymentResponse())
+                        ->setTransactionId($decoded->transactionId ?? null)
+                        ->setThreeDSecureUrl($decoded->threeDSecureUrl ?? null);
+                }
+            );
+
+            return $citPaymentResponse;
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->hasResponse()) {
+                $decoded = json_decode($e->getResponse()->getBody());
+                return (new CitPaymentResponse())
+                    ->setTransactionId($decoded->transactionId ?? null)
+                    ->setThreeDSecureUrl($decoded->threeDSecureUrl ?? null);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @param CitPaymentRequest $citPayment
+     * @return CitPaymentResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function createCitPaymentCharge(CitPaymentRequest $citPayment): CitPaymentResponse
+    {
+        $uri = new Uri('/payments/token/cit/charge');
+
+        return $this->createCitPayment($citPayment, $uri);
+    }
+
+    /**
+     * @param CitPaymentRequest $citPayment
+     * @return CitPaymentResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function createCitPaymentAuthorizationHold(CitPaymentRequest $citPayment): CitPaymentResponse
+    {
+        $uri = new Uri('/payments/token/cit/authorization-hold');
+
+        return $this->createCitPayment($citPayment, $uri);
+    }
+
+    /**
+     * @param CitPaymentRequest $citPayment
+     * @param string $transactionId The transaction id.
+     *
+     * @return CitPaymentResponse
+     *
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function createCitPaymentCommit(CitPaymentRequest $citPayment, string $transactionId = ''): CitPaymentResponse
+    {
+        $this->validateRequestItem($citPayment);
+
+        $uri = new Uri('/payments/' . $transactionId . '/token/commit');
+
+        $citPaymentResponse = $this->post(
+            $uri,
+            $citPayment,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return CitPaymentResponse
+             */
+            function ($decoded) {
+                return (new CitPaymentResponse())
+                    ->setTransactionId($decoded->transactionId ?? null)
+                    ->setThreeDSecureUrl($decoded->threeDSecureUrl ?? null);
+            },
+            $transactionId
+        );
+
+        return $citPaymentResponse;
+    }
+
+    /**
+     * @param RevertCitPaymentAuthHoldRequest $revertCitPaymentAuthHoldRequest
+     * @param string $transactionId The transaction id.
+     *
+     * @return RevertCitPaymentAuthHoldResponse
+     *
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function revertCitPaymentAuthorizationHold(RevertCitPaymentAuthHoldRequest $revertCitPaymentAuthHoldRequest): RevertCitPaymentAuthHoldResponse
+    {
+        $this->validateRequestItem($revertCitPaymentAuthHoldRequest);
+        $transactionId = $revertCitPaymentAuthHoldRequest->getTransactionId();
+
+        $uri = new Uri('/payments/' . $transactionId . '/token/revert');
+
+        $revertCitPaymentAuthHoldResponse = $this->post(
+            $uri,
+            $revertCitPaymentAuthHoldRequest,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return RevertCitPaymentAuthHoldResponse
+             */
+            function ($decoded) {
+                return (new RevertCitPaymentAuthHoldResponse())
+                    ->setTransactionId($decoded->transactionId ?? null);
+            },
+            $transactionId
+        );
+
+        return $revertCitPaymentAuthHoldResponse;
+    }
+
+    /**
      * A wrapper for post requests.
      *
      * @param Uri $uri The uri for the request.
@@ -581,6 +727,7 @@ class Client
      * @param callable $callback The callback method to run for the decoded response. If left empty, the response is returned.
      * @param string $transactionId Checkout transaction ID when accessing single transaction not required for a new payment request.
      * @param bool $signatureInHeader Checks if signature is calculated from header/body parameters
+     * @param string $checkoutTokenizationId Checkout tokenization ID for getToken request
      *
      * @return mixed|ResponseInterface Callback return value or the response object.
      * @throws HmacException

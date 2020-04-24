@@ -6,11 +6,81 @@
  * Time: 9.15
  */
 
+use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use PHPUnit\Framework\TestCase;
 
 class AddCardFormRequestTest extends TestCase
 {
+    public function validationProvider()
+    {
+        return [
+            'Checkout account is empty' => [
+                [
+                    'checkoutAccount' => ''
+                ],
+                'Checkout account is empty'
+            ],
+            'Checkout algorithm is empty' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => ''
+                ],
+                'Checkout algorithm is empty'
+            ],
+            'Unsupported method chosen' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => 'sha256',
+                    'checkoutMethod' => 'PAST'
+                ],
+                'Unsupported method chosen'
+            ],
+            'Checkout timestamp is empty' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => 'sha256',
+                    'checkoutMethod' => 'POST',
+                    'checkoutTimestamp' => ''
+                ],
+                'Checkout timestamp is empty'
+            ],
+            'Checkout redirect success url is empty' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => 'sha256',
+                    'checkoutMethod' => 'POST',
+                    'checkoutTimestamp' => '2020-04-07T08:20:13.729011Z',
+                    'checkoutRedirectSuccessUrl' => ''
+                ],
+                'Checkout redirect success url is empty'
+            ],
+            'Checkout redirect cancel url is empty' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => 'sha256',
+                    'checkoutMethod' => 'POST',
+                    'checkoutTimestamp' => '2020-04-07T08:20:13.729011Z',
+                    'checkoutRedirectSuccessUrl' => 'https://somedomain.com/success',
+                    'checkoutRedirectCancelUrl' => ''
+                ],
+                'Checkout redirect cancel url is empty'
+            ],
+            'Unsupported language chosen' => [
+                [
+                    'checkoutAccount' => 375917,
+                    'checkoutAlgorithm' => 'sha256',
+                    'checkoutMethod' => 'POST',
+                    'checkoutTimestamp' => '2020-04-07T08:20:13.729011Z',
+                    'checkoutRedirectSuccessUrl' => 'https://somedomain.com/success',
+                    'checkoutRedirectCancelUrl' => 'https://somedomain.com/cancel',
+                    'language' => 'RU'
+                ],
+                'Unsupported language chosen'
+            ]
+        ];
+    }
+
     public function testAddCardFormRequest()
     {
         $addCardFormRequest = new AddCardFormRequest();
@@ -24,6 +94,8 @@ class AddCardFormRequestTest extends TestCase
         $addCardFormRequest->setcheckoutCallbackSuccessUrl('https://someother.com/success');
         $addCardFormRequest->setcheckoutCallbackCancelUrl('https://someother.com/cancel');
         $addCardFormRequest->setLanguage('EN');
+
+        $this->assertInstanceOf(AddCardFormRequest::class, $addCardFormRequest);
 
         $jsonData = $addCardFormRequest->jsonSerialize();
 
@@ -42,5 +114,30 @@ class AddCardFormRequestTest extends TestCase
 
         $this->assertEquals(true, $addCardFormRequest->validate());
         $this->assertJsonStringEqualsJsonString(json_encode($expectedArray), json_encode($jsonData));
+    }
+
+    /**
+     * @dataProvider validationProvider
+     */
+    public function testAddCardFormRequestValidationExceptionMessages($properties, $exceptionMessage)
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage($exceptionMessage);
+
+        $addCardFormRequest = new AddCardFormRequest();
+
+        foreach ($properties as $property => $value) {
+            $this->setPrivateProperty($addCardFormRequest, $property, $value);
+        }
+
+        $addCardFormRequest->validate();
+    }
+
+    public function setPrivateProperty($class, $propertyName, $value)
+    {
+        $reflector = new ReflectionClass($class);
+        $property = $reflector->getProperty($propertyName);
+        $property->setAccessible(true);
+        $property->setValue($class, $value);
     }
 }
