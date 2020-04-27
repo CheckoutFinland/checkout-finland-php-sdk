@@ -132,7 +132,6 @@ class ClientTest extends TestCase
 
                 $transactionId = $response->getTransactionId();
 
-                //var_dump($response);
             } catch (HmacException $e) {
                 var_dump($e->getMessage());
             } catch (ValidationException $e) {
@@ -264,7 +263,6 @@ class ClientTest extends TestCase
         $this->assertTrue($citPaymentRequest->validate());
 
         $response = $client->createCitPaymentCharge($citPaymentRequest);
-        //var_dump($response);
 
         $this->assertObjectHasAttribute('transactionId', $response);
         $this->assertObjectHasAttribute('threeDSecureUrl', $response);
@@ -280,8 +278,6 @@ class ClientTest extends TestCase
         $this->assertTrue($citPaymentRequest->validate());
 
         $response = $client->createCitPaymentAuthorizationHold($citPaymentRequest);
-
-        //var_dump($response);
 
         $this->assertObjectHasAttribute('transactionId', $response);
 
@@ -308,7 +304,6 @@ class ClientTest extends TestCase
         $this->assertTrue($citPaymentRequest->validate());
 
         $response = $client->createCitPaymentAuthorizationHold($citPaymentRequest);
-        //var_dump($response);
 
         $this->assertObjectHasAttribute('transactionId', $response);
         $this->assertObjectHasAttribute('threeDSecureUrl', $response);
