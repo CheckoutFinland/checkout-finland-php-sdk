@@ -291,12 +291,12 @@ class Client
         $uri = new Uri('/merchants/grouped-payment-providers');
 
         $headers = $this->getHeaders('GET');
-        $mac     = $this->calculateHmac($headers);
-        $res     = [];
+        $mac = $this->calculateHmac($headers);
+        $res = [];
 
         // Sign the request.
         $headers['signature'] = $mac;
-        $request_params       = [
+        $request_params = [
             'headers' => $headers,
         ];
 
@@ -309,30 +309,30 @@ class Client
         }
 
         $response = $this->http_client->get($uri, $request_params);
-        $body     = (string) $response->getBody();
+        $body = (string)$response->getBody();
 
         // Validate the signature.
         $headers = $this->reduceHeaders($response->getHeaders());
         $this->validateHmac($headers, $body, $headers['signature'] ?? '');
 
         // Instantiate providers.
-        $decoded   = json_decode($body);
-        
+        $decoded = json_decode($body);
+
         $providers = array_map(function ($provider_data) {
-            return ( new Provider() )->bindProperties($provider_data);
+            return (new Provider())->bindProperties($provider_data);
         }, $decoded->providers);
 
-        $groups = array_map(function($group_data) {
+        $groups = array_map(function ($group_data) {
             return [
-                'id'        => $group_data->id,
-                'name'      => $group_data->name,
-                'icon'      => $group_data->svg,
-                'providers' => array_map(function($provider_data) {
-                    return ( new Provider() )->bindProperties($provider_data);
+                'id' => $group_data->id,
+                'name' => $group_data->name,
+                'icon' => $group_data->svg,
+                'providers' => array_map(function ($provider_data) {
+                    return (new Provider())->bindProperties($provider_data);
                 }, $group_data->providers),
             ];
         }, $decoded->groups);
-        
+
         //$res['providers'] = $providers;
         $res['terms'] = $decoded->terms;
         $res['groups'] = $groups;
@@ -562,9 +562,7 @@ class Client
                  */
                 function ($decoded) {
                     return (new GetTokenResponse())
-                        ->setToken($decoded->token)
-                        ->setCard($decoded->card)
-                        ->setCustomer($decoded->customer);
+                        ->loadFromStdClass($decoded);
                 },
                 null,
                 true,

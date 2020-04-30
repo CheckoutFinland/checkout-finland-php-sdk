@@ -334,4 +334,25 @@ class Card implements \JsonSerializable
             return $item !== null;
         });
     }
+
+    /**
+     * @param \stdClass $card
+     * @return Card
+     */
+    public function loadFromStdClass(\stdClass $card): Card
+    {
+        $this->setType($card->type);
+        $this->setBin($card->bin);
+        $this->setPartialPan($card->partial_pan);
+        $this->setExpireYear($card->expire_year);
+        $this->setExpireMonth($card->expire_month);
+        $this->setCvcRequired($card->cvc_required);
+        $this->setFunding($card->funding);
+        $this->setCategory($card->category);
+        $this->setCountryCode($card->country_code);
+        $this->setPanFingerprint($card->pan_fingerprint);
+        $this->setCardFingerprint($card->card_fingerprint);
+
+        return $this;
+    }
 }

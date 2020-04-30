@@ -50,7 +50,7 @@ class Customer implements \JsonSerializable
      * @param string $networkAddress
      * @return Customer
      */
-    public function setNetworkAddress(string $networkAddress) : Customer
+    public function setNetworkAddress(string $networkAddress): Customer
     {
         $this->networkAddress = $networkAddress;
 
@@ -69,7 +69,7 @@ class Customer implements \JsonSerializable
      * @param string $countryCode
      * @return Customer
      */
-    public function setCountryCode(string $countryCode) : Customer
+    public function setCountryCode(string $countryCode): Customer
     {
         $this->countryCode = $countryCode;
 
@@ -96,5 +96,17 @@ class Customer implements \JsonSerializable
         return array_filter($this->convertObjectVarsToSnake(), function ($item) {
             return $item !== null;
         });
+    }
+
+    /**
+     * @param \stdClass $customer
+     * @return Customer
+     */
+    public function loadFromStdClass(\stdClass $customer): Customer
+    {
+        $this->setNetworkAddress($customer->network_address);
+        $this->setCountryCode($customer->country_code);
+
+        return $this;
     }
 }

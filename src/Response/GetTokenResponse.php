@@ -8,6 +8,7 @@ namespace OpMerchantServices\SDK\Response;
 use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 use OpMerchantServices\SDK\Model\Token\Card;
 use OpMerchantServices\SDK\Model\Token\Customer;
+use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Util\ObjectPropertyConverter;
 
 /**
@@ -97,5 +98,20 @@ class GetTokenResponse implements ResponseInterface, \JsonSerializable
         return array_filter($this->convertObjectVarsToSnake(), function ($item) {
             return $item !== null;
         });
+    }
+
+    public function loadFromStdClass(\stdClass $response): GetTokenResponse
+    {
+        $this->setToken($response->token);
+
+        $card = new Card();
+        $card->loadFromStdClass($response->card);
+        $this->setCard($card);
+
+        $customer = new Customer();
+        $customer->loadFromStdClass($response->customer);
+        $this->setCustomer($customer);
+
+        return $this;
     }
 }

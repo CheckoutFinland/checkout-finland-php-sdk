@@ -290,7 +290,7 @@ class ClientTest extends TestCase
         $client = new Client(self::MERCHANT_ID, self::SECRET, self::COF_PLUGIN_VERSION);
 
         $res = $client->getPaymentStatus($psr);
-        $this->assertEquals('fail', $res->getStatus());
+        $this->assertEquals('authorization-hold', $res->getStatus());
         $this->assertEquals($res->getTransactionId(), $transactionId);
     }
 
