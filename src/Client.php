@@ -610,7 +610,7 @@ class Client
 
             return $citPaymentResponse;
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            if ($e->hasResponse()) {
+            if ($e->hasResponse() && $e->getCode() === 403) {
                 $decoded = json_decode($e->getResponse()->getBody());
                 return (new CitPaymentResponse())
                     ->setTransactionId($decoded->transactionId ?? null)
