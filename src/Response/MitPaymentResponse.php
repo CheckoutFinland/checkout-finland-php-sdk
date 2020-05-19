@@ -1,6 +1,6 @@
 <?php
 /**
- * Class RevertCitPaymentAuthHoldResponse
+ * Class MitPaymentResponse
  */
 
 namespace OpMerchantServices\SDK\Response;
@@ -8,13 +8,13 @@ namespace OpMerchantServices\SDK\Response;
 use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 
 /**
- * Class RevertCitPaymentAuthHoldResponse
+ * Class MitPaymentResponse
  *
- * Represents a response object of CIT payment authorization hold revert.
+ * Represents a response object of MIT payment creation.
  *
  * @package OpMerchantServices\SDK\Response
  */
-class RevertCitPaymentAuthHoldResponse implements ResponseInterface
+class MitPaymentResponse implements ResponseInterface
 {
     /**
      * The transaction id.
@@ -28,9 +28,9 @@ class RevertCitPaymentAuthHoldResponse implements ResponseInterface
      *
      * @param string $transactionId
      *
-     * @return CitPaymentResponse Return self to enable chaining.
+     * @return MitPaymentResponse Return self to enable chaining.
      */
-    public function setTransactionId(string $transactionId): RevertCitPaymentAuthHoldResponse
+    public function setTransactionId(string $transactionId): MitPaymentResponse
     {
         $this->transactionId = $transactionId;
 
@@ -42,7 +42,7 @@ class RevertCitPaymentAuthHoldResponse implements ResponseInterface
      *
      * @return string
      */
-    public function getTransactionId(): string
+    public function getTransactionId(): ?string
     {
         return $this->transactionId;
     }

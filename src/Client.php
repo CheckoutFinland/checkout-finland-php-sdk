@@ -10,18 +10,20 @@ use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use OpMerchantServices\SDK\Request\CitPaymentRequest;
 use OpMerchantServices\SDK\Request\GetTokenRequest;
+use OpMerchantServices\SDK\Request\MitPaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
 use OpMerchantServices\SDK\Request\EmailRefundRequest;
-use OpMerchantServices\SDK\Request\RevertCitPaymentAuthHoldRequest;
+use OpMerchantServices\SDK\Request\RevertPaymentAuthHoldRequest;
 use OpMerchantServices\SDK\Response\CitPaymentResponse;
 use OpMerchantServices\SDK\Response\GetTokenResponse;
+use OpMerchantServices\SDK\Response\MitPaymentResponse;
 use OpMerchantServices\SDK\Response\PaymentResponse;
 use OpMerchantServices\SDK\Response\PaymentStatusResponse;
 use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
-use OpMerchantServices\SDK\Response\RevertCitPaymentAuthHoldResponse;
+use OpMerchantServices\SDK\Response\RevertPaymentAuthHoldResponse;
 use OpMerchantServices\SDK\Util\Signature;
 use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -622,6 +624,35 @@ class Client
     }
 
     /**
+     * @param MitPaymentRequest $mitPayment
+     * @param Uri $uri
+     * @return MitPaymentResponse
+     * @throws HmacException
+     * @throws ValidationException
+     */
+    private function createMitPayment(MitPaymentRequest $mitPayment, Uri $uri): MitPaymentResponse
+    {
+        $this->validateRequestItem($mitPayment);
+
+        $mitPaymentResponse = $this->post(
+            $uri,
+            $mitPayment,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return MitPaymentResponse
+             */
+            function ($decoded) {
+                return (new MitPaymentResponse())
+                    ->setTransactionId($decoded->transactionId ?? null);
+            }
+        );
+
+        return $mitPaymentResponse;
+    }
+
+    /**
      * @param CitPaymentRequest $citPayment
      * @return CitPaymentResponse
      * @throws HmacException Thrown if HMAC calculation fails for responses.
@@ -645,6 +676,32 @@ class Client
         $uri = new Uri('/payments/token/cit/authorization-hold');
 
         return $this->createCitPayment($citPayment, $uri);
+    }
+
+    /**
+     * @param MitPaymentRequest $mitPayment
+     * @return MitPaymentResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException  Thrown if payment validation fails.
+     */
+    public function createMitPaymentCharge(MitPaymentRequest $mitPayment): MitPaymentResponse
+    {
+        $uri = new Uri('/payments/token/mit/charge');
+
+        return $this->createMitPayment($mitPayment, $uri);
+    }
+
+    /**
+     * @param MitPaymentRequest $mitPayment
+     * @return MitPaymentResponse
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function createMitPaymentAuthorizationHold(MitPaymentRequest $mitPayment): MitPaymentResponse
+    {
+        $uri = new Uri('/payments/token/mit/authorization-hold');
+
+        return $this->createMitPayment($mitPayment, $uri);
     }
 
     /**
@@ -683,38 +740,70 @@ class Client
     }
 
     /**
-     * @param RevertCitPaymentAuthHoldRequest $revertCitPaymentAuthHoldRequest
-     * @param string $transactionId The transaction id.
-     *
-     * @return RevertCitPaymentAuthHoldResponse
-     *
+     * @param MitPaymentRequest $mitPayment
+     * @param string $transactionId
+     * @return MitPaymentResponse
      * @throws HmacException Thrown if HMAC calculation fails for responses.
      * @throws ValidationException Thrown if payment validation fails.
      */
-    public function revertCitPaymentAuthorizationHold(RevertCitPaymentAuthHoldRequest $revertCitPaymentAuthHoldRequest): RevertCitPaymentAuthHoldResponse
+    public function createMitPaymentCommit(MitPaymentRequest $mitPayment, string $transactionId = ''): MitPaymentResponse
     {
-        $this->validateRequestItem($revertCitPaymentAuthHoldRequest);
-        $transactionId = $revertCitPaymentAuthHoldRequest->getTransactionId();
+        $this->validateRequestItem($mitPayment);
 
-        $uri = new Uri('/payments/' . $transactionId . '/token/revert');
+        $uri = new Uri('/payments/' . $transactionId . '/token/commit');
 
-        $revertCitPaymentAuthHoldResponse = $this->post(
+        $mitPaymentResponse = $this->post(
             $uri,
-            $revertCitPaymentAuthHoldRequest,
+            $mitPayment,
             /**
              * Create the response instance.
              *
              * @param mixed $decoded The decoded body.
-             * @return RevertCitPaymentAuthHoldResponse
+             * @return MitPaymentResponse
              */
             function ($decoded) {
-                return (new RevertCitPaymentAuthHoldResponse())
+                return (new MitPaymentResponse())
                     ->setTransactionId($decoded->transactionId ?? null);
             },
             $transactionId
         );
 
-        return $revertCitPaymentAuthHoldResponse;
+        return $mitPaymentResponse;
+    }
+
+    /**
+     * @param RevertPaymentAuthHoldRequest $revertCitPaymentAuthHoldRequest
+     * @param string $transactionId The transaction id.
+     *
+     * @return RevertPaymentAuthHoldResponse
+     *
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws ValidationException Thrown if payment validation fails.
+     */
+    public function revertPaymentAuthorizationHold(RevertPaymentAuthHoldRequest $revertPaymentAuthHoldRequest): RevertPaymentAuthHoldResponse
+    {
+        $this->validateRequestItem($revertPaymentAuthHoldRequest);
+        $transactionId = $revertPaymentAuthHoldRequest->getTransactionId();
+
+        $uri = new Uri('/payments/' . $transactionId . '/token/revert');
+
+        $revertPaymentAuthHoldResponse = $this->post(
+            $uri,
+            $revertPaymentAuthHoldRequest,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return RevertPaymentAuthHoldResponse
+             */
+            function ($decoded) {
+                return (new RevertPaymentAuthHoldResponse())
+                    ->setTransactionId($decoded->transactionId ?? null);
+            },
+            $transactionId
+        );
+
+        return $revertPaymentAuthHoldResponse;
     }
 
     /**

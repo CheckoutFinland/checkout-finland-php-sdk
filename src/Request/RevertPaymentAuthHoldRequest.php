@@ -14,7 +14,7 @@ use OpMerchantServices\SDK\Util\JsonSerializable;
  *
  * @package OpMerchantServices\SDK\Request
  */
-class RevertCitPaymentAuthHoldRequest implements \JsonSerializable, RequestInterface
+class RevertPaymentAuthHoldRequest implements \JsonSerializable, RequestInterface
 {
     use JsonSerializable;
 
@@ -54,9 +54,9 @@ class RevertCitPaymentAuthHoldRequest implements \JsonSerializable, RequestInter
      *
      * @param string $transactionId
      *
-     * @return RevertCitPaymentAuthHoldRequest Return self to enable chaining.
+     * @return RevertPaymentAuthHoldRequest Return self to enable chaining.
      */
-    public function setTransactionId(?string $transactionId): RevertCitPaymentAuthHoldRequest
+    public function setTransactionId(?string $transactionId): RevertPaymentAuthHoldRequest
     {
         $this->transactionId = $transactionId;
 
