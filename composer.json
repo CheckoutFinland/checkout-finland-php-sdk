@@ -31,6 +31,12 @@
             "email": "ville.pietarinen@geniem.com",
             "homepage": "http://github.com/villepietarinen",
             "role": "Developer"
+        },
+        {
+            "name": "Kimmo Kava",
+            "email": "kimmo.kava@ambientia.fi",
+            "homepage": "https://github.com/ambkimmok",
+            "role": "Developer"
         }
 
     ],
