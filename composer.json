@@ -46,7 +46,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.1",
-        "guzzlehttp/guzzle": "^6.5.3",
+        "guzzlehttp/guzzle": "^6.5.4",
         "ext-json": "*"
     },
     "autoload": {
