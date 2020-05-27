@@ -2,7 +2,6 @@
 
 namespace OpMerchantServices\SDK\Request;
 
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Exception\ValidationException;
 
 /**
@@ -10,7 +9,7 @@ use OpMerchantServices\SDK\Exception\ValidationException;
  *
  * @package OpMerchantServices\SDK\Request
  */
-class PaymentStatusRequest implements RequestInterface
+class PaymentStatusRequest
 {
 
     /**

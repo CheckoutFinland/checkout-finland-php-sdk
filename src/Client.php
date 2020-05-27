@@ -6,6 +6,7 @@
 namespace OpMerchantServices\SDK;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Interfaces\PaymentRequestInterface;
 use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use OpMerchantServices\SDK\Request\CitPaymentRequest;
@@ -25,7 +26,6 @@ use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
 use OpMerchantServices\SDK\Response\RevertPaymentAuthHoldResponse;
 use OpMerchantServices\SDK\Util\Signature;
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\HandlerStack;
@@ -895,11 +895,11 @@ class Client
     /**
      * Validate a request item.
      *
-     * @param RequestInterface $item A request instance.
+     * @param $item
      *
      * @throws ValidationException
      */
-    protected function validateRequestItem(?RequestInterface $item)
+    protected function validateRequestItem($item)
     {
         if (method_exists($item, 'validate')) {
             try {

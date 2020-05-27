@@ -5,7 +5,6 @@
 
 namespace OpMerchantServices\SDK\Request;
 
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Exception\ValidationException;
 use OpMerchantServices\SDK\Util\JsonSerializable;
 
@@ -14,7 +13,7 @@ use OpMerchantServices\SDK\Util\JsonSerializable;
  *
  * @package OpMerchantServices\SDK\Request
  */
-class RevertPaymentAuthHoldRequest implements \JsonSerializable, RequestInterface
+class RevertPaymentAuthHoldRequest implements \JsonSerializable
 {
     use JsonSerializable;
 

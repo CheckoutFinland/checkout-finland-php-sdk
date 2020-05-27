@@ -6,6 +6,7 @@
 namespace OpMerchantServices\SDK\Model;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Interfaces\CallbackUrlInterface;
 use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
@@ -16,7 +17,7 @@ use OpMerchantServices\SDK\Util\JsonSerializable;
  * @see https://checkoutfinland.github.io/psp-api/#/?id=callbackurl
  * @package OpMerchantServices\SDK\Model
  */
-class CallbackUrl implements \JsonSerializable
+class CallbackUrl implements \JsonSerializable, CallbackUrlInterface
 {
 
     use JsonSerializable;
@@ -78,9 +79,9 @@ class CallbackUrl implements \JsonSerializable
      * Set the success url.
      *
      * @param string $success
-     * @return CallbackUrl Return self to enable chaining.
+     * @return CallbackUrlInterface Return self to enable chaining.
      */
-    public function setSuccess(?string $success): CallbackUrl
+    public function setSuccess(?string $success): CallbackUrlInterface
     {
         $this->success = $success;
 
@@ -102,9 +103,9 @@ class CallbackUrl implements \JsonSerializable
      * Set the cancellation url.
      *
      * @param string $cancel
-     * @return CallbackUrl Return self to enable chaining.
+     * @return CallbackUrlInterface Return self to enable chaining.
      */
-    public function setCancel(?string $cancel): CallbackUrl
+    public function setCancel(?string $cancel): CallbackUrlInterface
     {
         $this->cancel = $cancel;
 

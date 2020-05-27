@@ -6,7 +6,6 @@
 namespace OpMerchantServices\SDK\Request;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Model\CallbackUrl;
 use OpMerchantServices\SDK\Model\RefundItem;
 use OpMerchantServices\SDK\Util\JsonSerializable;
