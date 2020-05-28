@@ -288,7 +288,7 @@ class Client
      * @throws HmacException       Thrown if HMAC calculation fails for responses.
      * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
      */
-    public function getGroupedPaymentProviders(int $amount = null, string $locale = 'FI')
+    public function getGroupedPaymentProviders(int $amount = null, string $locale = 'FI', array $groups = [])
     {
         $uri = new Uri('/merchants/grouped-payment-providers');
 
@@ -308,6 +308,10 @@ class Client
                 'amount' => $amount,
                 'language' => $locale,
             ];
+        }
+
+        if (!empty($groups)) {
+            $request_params['query']['groups'] = join(',', $groups);
         }
 
         $response = $this->http_client->get($uri, $request_params);

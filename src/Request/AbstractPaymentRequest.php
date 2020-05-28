@@ -203,6 +203,14 @@ abstract class AbstractPaymentRequest implements \JsonSerializable, PaymentReque
      */
     protected $callbackDelay;
 
+
+    /**
+     * Return only given groups
+     *
+     * @var string[]
+     */
+    protected $groups;
+
     /**
      * Get the stamp.
      *
@@ -505,5 +513,24 @@ abstract class AbstractPaymentRequest implements \JsonSerializable, PaymentReque
         $this->callbackDelay = $callbackDelay;
 
         return $this;
+    }
+
+    /**
+     * @param array $groups
+     * @return PaymentRequestInterface Return self to enable chaining.
+     */
+    public function setGroups(array $groups) : PaymentRequestInterface
+    {
+        $this->groups = $groups;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroups(): array
+    {
+        return $this->groups;
     }
 }

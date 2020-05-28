@@ -209,4 +209,15 @@ interface PaymentRequestInterface
      * @return PaymentRequestInterface Return self to enable chaining.
      */
     public function setCallbackDelay(int $callbackDelay) : PaymentRequestInterface;
+
+    /**
+     * @param string[] $groups
+     * @return PaymentRequestInterface
+     */
+    public function setGroups(array $groups) : PaymentRequestInterface;
+
+    /**
+     * @return string[]
+     */
+    public function getGroups() : array;
 }
