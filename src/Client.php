@@ -280,13 +280,16 @@ class Client
     }
 
     /**
-     * Get a grouped list of payment providers.
+     * Returns an array of following grouped payment providers fields:
+     * terms: Localized text with a link to the terms of payment.
+     * groups: Array of payment method group data (id, name, icon, providers)
      *
      * @param int $amount Purchase amount in currency's minor unit.
-     * @return Provider[]
-     *
-     * @throws HmacException       Thrown if HMAC calculation fails for responses.
-     * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @param string $locale
+     * @param array $groups
+     * @return array
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws RequestException A Guzzle HTTP request exception is thrown for erroneous requests.
      */
     public function getGroupedPaymentProviders(int $amount = null, string $locale = 'FI', array $groups = [])
     {
