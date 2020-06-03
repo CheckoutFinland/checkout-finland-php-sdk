@@ -8,7 +8,6 @@ namespace OpMerchantServices\SDK\Response;
 use OpMerchantServices\SDK\Interfaces\ResponseInterface;
 use OpMerchantServices\SDK\Model\Token\Card;
 use OpMerchantServices\SDK\Model\Token\Customer;
-use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Util\ObjectPropertyConverter;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface ItemInterface
+ * Interface Item
  */
 
 namespace OpMerchantServices\SDK\Interfaces;

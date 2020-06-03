@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface Request
+ * Interface PaymentRequest
  */
 
 namespace OpMerchantServices\SDK\Interfaces;
@@ -8,9 +8,9 @@ namespace OpMerchantServices\SDK\Interfaces;
 use OpMerchantServices\SDK\Exception\ValidationException;
 
 /**
- * Interface Request
+ * Interface PaymentRequest
  *
- * An interface for all request classes to implement.
+ * An interface for all payment request classes to implement.
  *
  * @package OpMerchantServices\SDK
  */

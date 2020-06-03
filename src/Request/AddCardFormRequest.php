@@ -6,7 +6,6 @@
 namespace OpMerchantServices\SDK\Request;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
-use OpMerchantServices\SDK\Interfaces\PaymentRequestInterface;
 use OpMerchantServices\SDK\Util\ObjectPropertyConverter;
 
 /**

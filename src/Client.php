@@ -6,7 +6,6 @@
 namespace OpMerchantServices\SDK;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
-use OpMerchantServices\SDK\Interfaces\PaymentRequestInterface;
 use OpMerchantServices\SDK\Model\Provider;
 use OpMerchantServices\SDK\Request\AddCardFormRequest;
 use OpMerchantServices\SDK\Request\CitPaymentRequest;
