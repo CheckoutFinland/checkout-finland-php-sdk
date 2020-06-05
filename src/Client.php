@@ -302,14 +302,14 @@ class Client
         $headers['signature'] = $mac;
         $request_params = [
             'headers' => $headers,
+            'query' => [
+                'language' => $locale
+            ]
         ];
 
         // Set the amount query parameter.
-        if ($amount !== null) {
-            $request_params['query'] = [
-                'amount' => $amount,
-                'language' => $locale,
-            ];
+        if (null !== $amount) {
+            $request_params['query']['amount'] = $amount;
         }
 
         if (!empty($groups)) {
