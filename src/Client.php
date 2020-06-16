@@ -25,7 +25,6 @@ use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
 use OpMerchantServices\SDK\Response\RevertPaymentAuthHoldResponse;
 use OpMerchantServices\SDK\Util\Signature;
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\HandlerStack;
@@ -280,15 +279,18 @@ class Client
     }
 
     /**
-     * Get a grouped list of payment providers.
+     * Returns an array of following grouped payment providers fields:
+     * terms: Localized text with a link to the terms of payment.
+     * groups: Array of payment method group data (id, name, icon, providers)
      *
      * @param int $amount Purchase amount in currency's minor unit.
-     * @return Provider[]
-     *
-     * @throws HmacException       Thrown if HMAC calculation fails for responses.
-     * @throws RequestException    A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @param string $locale
+     * @param array $groups
+     * @return array
+     * @throws HmacException Thrown if HMAC calculation fails for responses.
+     * @throws RequestException A Guzzle HTTP request exception is thrown for erroneous requests.
      */
-    public function getGroupedPaymentProviders(int $amount = null, string $locale = 'FI')
+    public function getGroupedPaymentProviders(int $amount = null, string $locale = 'FI', array $groups = [])
     {
         $uri = new Uri('/merchants/grouped-payment-providers');
 
@@ -300,14 +302,18 @@ class Client
         $headers['signature'] = $mac;
         $request_params = [
             'headers' => $headers,
+            'query' => [
+                'language' => $locale
+            ]
         ];
 
         // Set the amount query parameter.
-        if ($amount !== null) {
-            $request_params['query'] = [
-                'amount' => $amount,
-                'language' => $locale,
-            ];
+        if (null !== $amount) {
+            $request_params['query']['amount'] = $amount;
+        }
+
+        if (!empty($groups)) {
+            $request_params['query']['groups'] = join(',', $groups);
         }
 
         $response = $this->http_client->get($uri, $request_params);
@@ -895,11 +901,11 @@ class Client
     /**
      * Validate a request item.
      *
-     * @param RequestInterface $item A request instance.
+     * @param $item
      *
      * @throws ValidationException
      */
-    protected function validateRequestItem(?RequestInterface $item)
+    protected function validateRequestItem($item)
     {
         if (method_exists($item, 'validate')) {
             try {

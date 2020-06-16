@@ -6,7 +6,6 @@
 namespace OpMerchantServices\SDK\Request;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
-use OpMerchantServices\SDK\Interfaces\RequestInterface;
 use OpMerchantServices\SDK\Util\ObjectPropertyConverter;
 
 /**
@@ -14,7 +13,7 @@ use OpMerchantServices\SDK\Util\ObjectPropertyConverter;
  *
  * @package OpMerchantServices\SDK\Request
  */
-class GetTokenRequest implements RequestInterface, \JsonSerializable
+class GetTokenRequest implements \JsonSerializable
 {
     use ObjectPropertyConverter;
 
