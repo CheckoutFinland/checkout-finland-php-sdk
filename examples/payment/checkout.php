@@ -11,22 +11,18 @@ use CheckoutFinland\SDK\Client;
 use CheckoutFinland\SDK\Exception\HmacException;
 use GuzzleHttp\Exception\RequestException;
 
-// Create SDK client instance
-$client = new Client(
-    375917,
-    'SAIPPUAKAUPPIAS',
-    [
-        'cofPluginVersion' => 'php-sdk-test-1.0.0',
-    ]
-);
-
-$firstName = filter_input( INPUT_POST, 'first-name', FILTER_SANITIZE_STRING );
-$lastName = filter_input( INPUT_POST, 'last-name', FILTER_SANITIZE_STRING );
-$amount = (int) filter_input( INPUT_POST, 'amount', FILTER_SANITIZE_NUMBER_INT );
-$address = filter_input( INPUT_POST, 'address', FILTER_SANITIZE_STRING );
-$postalCode = filter_input( INPUT_POST, 'postal-code', FILTER_SANITIZE_STRING );
-$city = filter_input( INPUT_POST, 'city', FILTER_SANITIZE_STRING );
-$country = filter_input( INPUT_POST, 'country', FILTER_SANITIZE_STRING );
+$data = [
+    'email' => filter_input( INPUT_POST, 'email', FILTER_SANITIZE_STRING ),
+    'firstName' => filter_input( INPUT_POST, 'first-name', FILTER_SANITIZE_STRING ),
+    'lastName' => filter_input( INPUT_POST, 'last-name', FILTER_SANITIZE_STRING ),
+    'phone' => (int) filter_input( INPUT_POST, 'amount', FILTER_SANITIZE_NUMBER_INT ),
+    'amount' => (int) filter_input( INPUT_POST, 'amount', FILTER_SANITIZE_NUMBER_INT ),
+    'address' => filter_input( INPUT_POST, 'address', FILTER_SANITIZE_STRING ),
+    'postalCode' => filter_input( INPUT_POST, 'postal-code', FILTER_SANITIZE_STRING ),
+    'city' => filter_input( INPUT_POST, 'city', FILTER_SANITIZE_STRING ),
+    'country' => filter_input( INPUT_POST, 'country', FILTER_SANITIZE_STRING ),
+    'county' => filter_input( INPUT_POST, 'county', FILTER_SANITIZE_STRING )
+];
 
 // TODO: Create payment.
 

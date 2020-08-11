@@ -2,7 +2,6 @@
  /**
  * An example of a cart page.
  */
-
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +20,11 @@
             <legend>Fill in your payment information</legend>
 
                 <div>
+                    <label for="email">Email address</label>
+                    <input type="text" name="email" value="maija.meikalainen@example.com"/>
+                </div>
+
+                <div>
                     <label for="first-name">First name</label>
                     <input type="text" name="first-name" value="Maija"/>
                 </div>
@@ -28,6 +32,11 @@
                 <div>
                     <label for="last-name">Last name</label>
                     <input type="text" name="last-name" value="Meikäläinen" />
+                </div>
+
+                <div>
+                    <label for="phone">Telephone</label>
+                    <input type="number" name="phone" value="0400123123" />
                 </div>
 
                 <div>
@@ -53,6 +62,11 @@
                 <div>
                     <label for="country">Country</label>
                     <input type="text" name="country" value="FI" />
+                </div>
+
+                <div>
+                    <label for="county">County</label>
+                    <input type="text" name="county" value="Uusimaa" />
                 </div>
 
                 <input type="submit">Checkout</button>
