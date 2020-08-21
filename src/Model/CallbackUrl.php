@@ -39,11 +39,11 @@ class CallbackUrl implements \JsonSerializable, CallbackUrlInterface
             throw new ValidationException('Cancel is empty');
         }
 
-        if (filter_var($props['success'], FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === false) {
+        if (filter_var($props['success'], FILTER_VALIDATE_URL) === false) {
             throw new ValidationException('Success is not a valid URL');
         }
 
-        if (filter_var($props['cancel'], FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === false) {
+        if (filter_var($props['cancel'], FILTER_VALIDATE_URL) === false) {
             throw new ValidationException('Cancel is not a valid URL');
         }
 
