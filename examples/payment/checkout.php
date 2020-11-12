@@ -7,9 +7,8 @@
  * The user selects the payment provider which takes the user to complete the payment transaction.
  */
 
-use CheckoutFinland\SDK\Client;
-use CheckoutFinland\SDK\Exception\HmacException;
-use GuzzleHttp\Exception\RequestException;
+require_once('examples/payment/Providers.php');
+require_once('examples/payment/Payment.php');
 
 $data = [
     'email' => filter_input( INPUT_POST, 'email', FILTER_SANITIZE_STRING ),
@@ -24,26 +23,87 @@ $data = [
     'county' => filter_input( INPUT_POST, 'county', FILTER_SANITIZE_STRING )
 ];
 
-// TODO: Create payment.
+if ($data['county'] != '') {
 
-?>
+    $payment = new Payment();
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Checkout | OP Payment Service Example</title>
-</head>
-<body>
+    $providers = new Providers();
+
+    $paymentData = $payment->processPayment($data);
+
+    if (isset($paymentData['error'])) {
+        echo '<h3>An error has occurred: ' . $paymentData['error'] . '</h3>';
+        die();
+    }
+
+    $paymentData = $paymentData['data'];
+
+    $payProviders = $paymentData->getProviders();
+
+    $arr = array();
+    foreach ($payProviders as $key => $item) {
+        $arr[$item->getGroup()][$key] = $item;
+    }
+
+    $groupData = $providers->getProviderGroupData($data['amount'] * 100, $data['country']);
+
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Checkout | OP Payment Service Example</title>
+        <script>
+            function redirect(link) {
+                window.open(link, "mywindow");
+            }
+        </script>
+    </head>
+    <body>
     <h1>Checkout</h1>
 
     <form method="post" action="checkout.php">
         <fieldset>
             <legend>Select the payment provider</legend>
-            TODO: print out the provider forms.
+            <?php
+
+            echo '<a href="' . $paymentData->getHref() . '" target="_blank">OP Payment Service</a>';
+
+            $terms_link = $groupData['terms'];
+            echo '<div class="checkout-terms-link">' . $terms_link . '</div>';
+            echo '<div class="container-fluid ml-0">';
+
+            foreach ($arr as $group){
+
+                $id = reset($group)->getGroup();
+
+                echo '<h5 class="text-capitalize mt-4">' . $id . '</h5>';
+                echo '<div class="group-' . $id . ' row">';
+
+                foreach ($group as $provider) {
+
+                    $params = json_encode($provider->getParameters());
+                    $link = $provider->getUrl() . "?parameters=" . $params;
+
+                    echo "<div class='" . $provider->getName() . " border m-2' onclick='redirect(" . json_encode($link) . ");'>";
+                    echo "<img src='" . $provider->getIcon() . "' class='provider-logo'>";
+                    echo "<div class='provider-name d-none'>" . $provider->getName();
+                    echo "</div>";
+                    echo "</div>";
+                }
+                echo '</div>';
+            }
+            echo '</div>';
+
+                ?>
         </fieldset>
     </form>
-</body>
-</html>
+    </body>
+    </html>
+<?php
+} else {
+    echo 'Please fill all form fields!';
+}
+?>

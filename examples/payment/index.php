@@ -2,6 +2,8 @@
  /**
  * An example of a cart page.
  */
+require 'vendor/autoload.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +13,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>OP Payment Service Example</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style> div {max-width: 1000px;}</style>
 </head>
 <body>
     <h1>OP Payment Service Example</h1>
 
-    <form method="post" action="checkout.php">
+    <form method="post" action="index.php">
         <fieldset>
             <legend>Fill in your payment information</legend>
 
@@ -61,16 +65,24 @@
 
                 <div>
                     <label for="country">Country</label>
-                    <input type="text" name="country" value="FI" />
+                    <select id="country" name="country">
+                        <option value="FI">Finland</option>
+                        <option value="EN">Other</option>
+                        <option value="SV">Sweden</option>
+                    </select>
                 </div>
 
                 <div>
                     <label for="county">County</label>
-                    <input type="text" name="county" value="Uusimaa" />
+                    <input type="text" name="county" placeholder="Uusimaa" value="" />
                 </div>
 
-                <input type="submit">Checkout</button>
+            <input id='btn' name="submit" type='submit' value='Submit'>
             </fieldset>
+
+        <?php
+        include "checkout.php";
+        ?>
     </form>
 </body>
 </html>

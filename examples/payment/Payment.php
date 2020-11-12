@@ -1,20 +1,40 @@
 <?php
 
-use CheckoutFinland\SDK\Client;
-use CheckoutFinland\SDK\Exception\HmacException;
-use CheckoutFinland\SDK\Exception\ValidationException;
-use CheckoutFinland\SDK\Model\CallbackUrl;
-use CheckoutFinland\SDK\Request\PaymentRequest;
-use CheckoutFinland\SDK\Model\Customer;
-use CheckoutFinland\SDK\Model\Address;
-use CheckoutFinland\SDK\Model\Item;
-use CheckoutFinland\SDK\Response\PaymentResponse;
+require 'vendor/autoload.php';
+
+use GuzzleHttp\Exception\RequestException;
+use OpMerchantServices\SDK\Client;
+use OpMerchantServices\SDK\Exception\HmacException;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Model\CallbackUrl;
+use OpMerchantServices\SDK\Request\PaymentRequest;
+use OpMerchantServices\SDK\Model\Customer;
+use OpMerchantServices\SDK\Model\Address;
+use OpMerchantServices\SDK\Model\Item;
+use OpMerchantServices\SDK\Response\PaymentResponse;
 
 /**
  * Class Payment
  */
 class Payment
 {
+    /** @var array $exampleItems  */
+    protected $exampleItems = array (
+        array (
+                'title' => 'Example 1',
+                'amount' => 1,
+                'price' => 5.0,
+                'code' => 'example01',
+                'vat' => 24
+        ),
+        array (
+            'title' => 'Example 2',
+            'amount' => 2,
+            'price' => 2.5,
+            'code' => 'example02',
+            'vat' => 24
+        )
+    );
 
     /**
      * Handle payment data and create payment with SDK client
@@ -26,33 +46,32 @@ class Payment
     public function processPayment($data) {
 
         try {
+            $response['error'] = null;
             $client = new Client(
                 375917,
                 'SAIPPUAKAUPPIAS',
-                [
-                    'cofPluginVersion' => 'php-sdk-test-1.0.0',
-                ]
+                'php-sdk-test-1.0.0'
             );
 
             $payment = new PaymentRequest();
 
             $this->setPaymentData($payment, $data);
 
-            $response = $client->createPayment($payment);
+            $response['data'] = $client->createPayment($payment);
 
             return $response;
 
         } catch (RequestException $e) {
-            $errorMsg = $e->getMessage();
+            $response['error'] = $e->getMessage();
 
         } catch (HmacException $e) {
-            $errorMsg = $e->getMessage();
+            $response['error'] = $e->getMessage();
 
         } catch (ValidationException $e) {
-            $errorMsg = $e->getMessage();
+            $response['error'] = $e->getMessage();
 
         }
-        return $errorMsg;
+        return $response;
 
     }
 
@@ -68,11 +87,13 @@ class Payment
 
         $payment->setStamp(hash('sha256', time()));
 
+        $payment->setAmount($data['amount'] * 100);
+
         $payment->setReference('your order reference');
 
         $payment->setCurrency('EUR');
 
-        $payment->setLanguage('FI');
+        $payment->setLanguage($data['country']);
 
         $customer = $this->createCustomer($data);
 
@@ -141,8 +162,8 @@ class Payment
      */
     private function mapOrderItems() {
 
-        //Mockup function getOrderItems() for getting order item data
-        $orderItems = $this->_orderModel->getOrderItems();
+        //Mockup array exampleItems containing order item data
+        $orderItems = $this->exampleItems;
 
         //Loop through and map all order items
         $items = array_map(
@@ -162,7 +183,7 @@ class Payment
 
         $orderItem = new Item();
 
-        $orderItem->setUnitPrice($item['price'])
+        $orderItem->setUnitPrice(floatval($item['price']) * 100)
             ->setUnits($item['amount'])
             ->setVatPercentage($item['vat'])
             ->setProductCode($item['code'])
