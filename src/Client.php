@@ -12,6 +12,7 @@ use OpMerchantServices\SDK\Request\CitPaymentRequest;
 use OpMerchantServices\SDK\Request\GetTokenRequest;
 use OpMerchantServices\SDK\Request\MitPaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentRequest;
+use OpMerchantServices\SDK\Request\ShopInShopPaymentRequest;
 use OpMerchantServices\SDK\Request\PaymentStatusRequest;
 use OpMerchantServices\SDK\Request\RefundRequest;
 use OpMerchantServices\SDK\Request\EmailRefundRequest;
@@ -360,6 +361,42 @@ class Client
      * @throws ValidationException  Thrown if payment validation fails.
      */
     public function createPayment(PaymentRequest $payment)
+    {
+        $this->validateRequestItem($payment);
+
+        $uri = new Uri('/payments');
+
+        $payment_response = $this->post(
+            $uri,
+            $payment,
+            /**
+             * Create the response instance.
+             *
+             * @param mixed $decoded The decoded body.
+             * @return PaymentResponse
+             */
+            function ($decoded) {
+                return (new PaymentResponse())
+                    ->setTransactionId($decoded->transactionId ?? null)
+                    ->setHref($decoded->href ?? null)
+                    ->setProviders($decoded->providers ?? null);
+            }
+        );
+
+        return $payment_response;
+    }
+
+    /**
+     * Create a shop-in-shop payment request.
+     *
+     * @param ShopInShopPaymentRequest $payment A payment class instance.
+     *
+     * @return PaymentResponse
+     * @throws HmacException        Thrown if HMAC calculation fails for responses.
+     * @throws RequestException     A Guzzle HTTP request exception is thrown for erroneous requests.
+     * @throws ValidationException  Thrown if payment validation fails.
+     */
+    public function createShopInShopPayment(ShopInShopPaymentRequest $payment)
     {
         $this->validateRequestItem($payment);
 
