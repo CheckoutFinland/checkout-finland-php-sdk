@@ -31,6 +31,7 @@ class ShopInShopPaymentRequestTest extends TestCase
             ->setUnitPrice(10)
             ->setMerchant('111111')
             ->setCommission($com1)
+            ->setReference('1-1')
             ->setUnits(1);
 
         $com2 = new Commission();
@@ -44,6 +45,7 @@ class ShopInShopPaymentRequestTest extends TestCase
             ->setVatPercentage(25)
             ->setUnitPrice(10)
             ->setMerchant('222222')
+            ->setReference('1-2')
             ->setUnits(2);
 
         $r->setItems([$item1, $item2]);
@@ -65,10 +67,7 @@ class ShopInShopPaymentRequestTest extends TestCase
 
         $r->setRedirectUrls($redirect);
 
-        try {
-            $this->assertEquals(true, $r->validate());
-        } catch (ValidationException $e) {
-        }
+        $this->assertEquals(true, $r->validate());
     }
 
     public function testShopInShopPaymentRequestFail()
@@ -88,6 +87,7 @@ class ShopInShopPaymentRequestTest extends TestCase
             ->setProductCode('pr1')
             ->setVatPercentage(25)
             ->setUnitPrice(10)
+            ->setReference('1-1')
             ->setUnits(1);
 
         $com2 = new Commission();
@@ -101,6 +101,7 @@ class ShopInShopPaymentRequestTest extends TestCase
             ->setVatPercentage(25)
             ->setUnitPrice(10)
             ->setMerchant('222222')
+            ->setReference('1-2')
             ->setUnits(2);
 
         $r->setItems([$item1, $item2]);

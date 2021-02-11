@@ -402,6 +402,10 @@ class Item implements \JsonSerializable, ItemInterface
             throw new ValidationException('merchant is empty');
         }
 
+        if (empty($props['reference'])) {
+            throw new ValidationException('reference is empty');
+        }
+
         return true;
     }
 }
