@@ -5,7 +5,7 @@ PHP SDK for using OP Payment Service (formerly Checkout Finland)
 
 ### PHP
 
-- PHP version >= 7.1
+- PHP version >= 7.3
 
 ### Composer packages
 
