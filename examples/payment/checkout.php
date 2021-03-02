@@ -42,25 +42,6 @@ if ($data['county'] != '') {
 
     $arr = array();
     foreach ($payProviders as $key => $item) {
-//        $url = $item->getUrl();
-//        $formFields = [];
-//        foreach ($item->getParameters() as $parameter) {
-//            $formFields[$parameter->name] = $parameter->value;
-//        }
-//
-//        $options = array(
-//            'http' => array(
-//                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-//                'method'  => 'POST',
-//                'content' => http_build_query($formFields)
-//            )
-//        );
-//
-//        stream_context_set_default($options);
-//        $headers = get_headers($url, 1);
-//
-//        var_dump($headers);
-
         $arr[$item->getGroup()][$key] = $item;
     }
 
@@ -74,50 +55,15 @@ if ($data['county'] != '') {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Checkout | OP Payment Service Example</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="js/handleMethodClick.js"></script>
-        <script>
-            function redirect(link) {
-                window.open(link, "mywindow");
-            }
-        </script>
     </head>
     <body>
     <h1>Checkout</h1>
-
-    <form id="methods">
-        <?php
-
-//        if(isset($_POST[$pivo])) {
-        $url = $arr['mobile'][1]->getUrl();
-        $formFields = [];
-
-        foreach ($arr['mobile'][1]->getParameters() as $parameter) {
-            $formFields[$parameter->name] = $parameter->value;
-        }
-
-        // use key 'http' even if you send the request to https://...
-        $options = array(
-            'http' => array(
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query($formFields)
-            )
-        );
-
-        stream_context_set_default($options);
-        $headers = get_headers($url, 1);
-//        header('Location: ' . $headers['Location']);
-//        }
-        echo "<input type='submit' name='pivo' value='Pivo' data-url='" . $url . "' data-data='" . json_encode($formFields) . "'/>"
-
-        ?>
 
         <fieldset>
             <legend>Select the payment provider</legend>
             <?php
 
-            echo '<a href="' . $paymentData->getHref() . '" target="_blank">OP Payment Service</a>';
+            echo '<p>Go directly to <a href="' . $paymentData->getHref() . '" target="_blank">OP Payment Service</a></p>';
 
             $terms_link = $groupData['terms'];
             echo '<div class="checkout-terms-link">' . $terms_link . '</div>';
@@ -132,14 +78,16 @@ if ($data['county'] != '') {
 
                 foreach ($group as $provider) {
 
-                    $params = json_encode($provider->getParameters());
-                    $link = $provider->getUrl() . "?parameters=" . $params;
+                    echo "<div class='" . $provider->getName() . " border m-2' >";
+                    echo "  <form action='" . $provider->getUrl() . "' method='POST'>";
+                    foreach ($provider->getParameters() as $i => $param) {
+                        $param = json_decode(json_encode($param), true);
+                        echo "<input type='hidden' name='" . $param['name'] . "' value='" . $param['value'] . "' />";
+                    }
+                    echo "    <input type='image' src='" . $provider->getIcon() . "' alt='Submit' value='" . $provider->getName() . "' />";
+                    echo "  </form>";
+                    echo "</div>";
 
-                    echo "<div class='" . $provider->getName() . " border m-2' onclick='redirect(" . json_encode($link) . ");'>";
-                    echo "<img src='" . $provider->getIcon() . "' class='provider-logo'>";
-                    echo "<div class='provider-name d-none'>" . $provider->getName();
-                    echo "</div>";
-                    echo "</div>";
                 }
                 echo '</div>';
             }
@@ -147,7 +95,6 @@ if ($data['county'] != '') {
 
                 ?>
         </fieldset>
-    </form>
     </body>
     </html>
 <?php
