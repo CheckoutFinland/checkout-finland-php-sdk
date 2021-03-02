@@ -52,6 +52,11 @@ class Payment
                 'SAIPPUAKAUPPIAS',
                 'php-sdk-test-1.0.0'
             );
+//            $client = new Client(
+//                727711,
+//                '4KTewFRLVm.hKnegd3LbsPfrMN-NwvVboavRNylz.L1AVJEVr!CY6GC9PveDD6dMMUfGCccGmtUoN6Gj',
+//                'php-sdk-test-1.0.0'
+//            );
 
             $payment = new PaymentRequest();
 

@@ -78,11 +78,10 @@ require 'vendor/autoload.php';
                 </div>
 
             <input id='btn' name="submit" type='submit' value='Submit'>
-            </fieldset>
-
-        <?php
-        include "checkout.php";
-        ?>
+        </fieldset>
     </form>
+    <?php
+    include "checkout.php";
+    ?>
 </body>
 </html>

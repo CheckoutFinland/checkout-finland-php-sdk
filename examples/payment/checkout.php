@@ -42,6 +42,25 @@ if ($data['county'] != '') {
 
     $arr = array();
     foreach ($payProviders as $key => $item) {
+//        $url = $item->getUrl();
+//        $formFields = [];
+//        foreach ($item->getParameters() as $parameter) {
+//            $formFields[$parameter->name] = $parameter->value;
+//        }
+//
+//        $options = array(
+//            'http' => array(
+//                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+//                'method'  => 'POST',
+//                'content' => http_build_query($formFields)
+//            )
+//        );
+//
+//        stream_context_set_default($options);
+//        $headers = get_headers($url, 1);
+//
+//        var_dump($headers);
+
         $arr[$item->getGroup()][$key] = $item;
     }
 
@@ -55,6 +74,8 @@ if ($data['county'] != '') {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Checkout | OP Payment Service Example</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="js/handleMethodClick.js"></script>
         <script>
             function redirect(link) {
                 window.open(link, "mywindow");
@@ -64,7 +85,34 @@ if ($data['county'] != '') {
     <body>
     <h1>Checkout</h1>
 
-    <form method="post" action="checkout.php">
+    <form id="methods">
+        <?php
+
+//        if(isset($_POST[$pivo])) {
+        $url = $arr['mobile'][1]->getUrl();
+        $formFields = [];
+
+        foreach ($arr['mobile'][1]->getParameters() as $parameter) {
+            $formFields[$parameter->name] = $parameter->value;
+        }
+
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($formFields)
+            )
+        );
+
+        stream_context_set_default($options);
+        $headers = get_headers($url, 1);
+//        header('Location: ' . $headers['Location']);
+//        }
+        echo "<input type='submit' name='pivo' value='Pivo' data-url='" . $url . "' data-data='" . json_encode($formFields) . "'/>"
+
+        ?>
+
         <fieldset>
             <legend>Select the payment provider</legend>
             <?php
