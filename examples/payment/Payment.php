@@ -36,6 +36,8 @@ class Payment
         )
     );
 
+    private $base_url;
+
     /**
      * Handle payment data and create payment with SDK client
      *
@@ -46,17 +48,13 @@ class Payment
     public function processPayment($data) {
 
         try {
+            $this->base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
             $response['error'] = null;
             $client = new Client(
                 375917,
                 'SAIPPUAKAUPPIAS',
                 'php-sdk-test-1.0.0'
             );
-//            $client = new Client(
-//                727711,
-//                '4KTewFRLVm.hKnegd3LbsPfrMN-NwvVboavRNylz.L1AVJEVr!CY6GC9PveDD6dMMUfGCccGmtUoN6Gj',
-//                'php-sdk-test-1.0.0'
-//            );
 
             $payment = new PaymentRequest();
 
@@ -205,8 +203,8 @@ class Payment
 
         $callback = new CallbackUrl();
 
-        $callback->setSuccess('success_return_url');
-        $callback->setCancel('cancel_url');
+        $callback->setSuccess($this->base_url . '/response.php');
+        $callback->setCancel($this->base_url . '/response.php');
 
         return $callback;
     }
@@ -218,8 +216,8 @@ class Payment
 
         $callback = new CallbackUrl();
 
-        $callback->setSuccess('callback_success_url');
-        $callback->setCancel('callback_cancel_url');
+        $callback->setSuccess($this->base_url . '/response.php');
+        $callback->setCancel($this->base_url . '/response.php');
 
         return $callback;
     }
