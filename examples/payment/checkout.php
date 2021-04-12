@@ -99,6 +99,6 @@ if ($data['county'] != '') {
     </html>
 <?php
 } else {
-    echo 'Please fill all form fields!';
+    echo '<div class="alert alert-warning"> Please submit!</div>';
 }
 ?>

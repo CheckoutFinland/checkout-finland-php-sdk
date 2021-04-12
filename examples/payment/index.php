@@ -17,71 +17,73 @@ require 'vendor/autoload.php';
     <style> div {max-width: 1000px;}</style>
 </head>
 <body>
-    <h1>OP Payment Service Example</h1>
+    <div class="container-fluid">
+        <h1>OP Payment Service Example</h1>
 
-    <form method="post" action="index.php">
-        <fieldset>
-            <legend>Fill in your payment information</legend>
+        <form method="post" action="index.php">
+            <fieldset>
+                <legend>Fill in your payment information</legend>
 
-                <div>
-                    <label for="email">Email address</label>
-                    <input type="text" name="email" value="maija.meikalainen@example.com"/>
-                </div>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input class="form-control" type="text" name="email" value="maija.meikalainen@example.com"/>
+                    </div>
 
-                <div>
-                    <label for="first-name">First name</label>
-                    <input type="text" name="first-name" value="Maija"/>
-                </div>
+                    <div class="form-group">
+                        <label for="first-name">First name</label>
+                        <input class="form-control" type="text" name="first-name" value="Maija"/>
+                    </div>
 
-                <div>
-                    <label for="last-name">Last name</label>
-                    <input type="text" name="last-name" value="Meikäläinen" />
-                </div>
+                    <div class="form-group">
+                        <label for="last-name">Last name</label>
+                        <input class="form-control" type="text" name="last-name" value="Meikäläinen" />
+                    </div>
 
-                <div>
-                    <label for="phone">Telephone</label>
-                    <input type="number" name="phone" value="0400123123" />
-                </div>
+                    <div class="form-group">
+                        <label for="phone">Telephone</label>
+                        <input class="form-control" type="number" name="phone" value="0400123123" />
+                    </div>
 
-                <div>
-                    <label for="amount">Amount €</label>
-                    <input type="number" name="amount" value="10" />
-                </div>
+                    <div class="form-group">
+                        <label for="amount">Amount €</label>
+                        <input class="form-control" type="number" name="amount" value="10" />
+                    </div>
 
-                <div>
-                    <label for="address">Street address</label>
-                    <input type="text" name="address" value="Hämeenkatu 1" />
-                </div>
+                    <div class="form-group">
+                        <label for="address">Street address</label>
+                        <input class="form-control" type="text" name="address" value="Hämeenkatu 1" />
+                    </div>
 
-                <div>
-                    <label for="postal-code">Postal code</label>
-                    <input type="text" name="postal-code" value="33100" />
-                </div>
+                    <div class="form-group">
+                        <label for="postal-code">Postal code</label>
+                        <input class="form-control" type="text" name="postal-code" value="33100" />
+                    </div>
 
-                <div>
-                    <label for="city">City</label>
-                    <input type="text" name="city" value="Tampere" />
-                </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input class="form-control" type="text" name="city" value="Tampere" />
+                    </div>
 
-                <div>
-                    <label for="country">Country</label>
-                    <select id="country" name="country">
-                        <option value="FI">Finland</option>
-                        <option value="EN">Other</option>
-                        <option value="SV">Sweden</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <select class="form-control" id="country" name="country">
+                            <option value="FI">Finland</option>
+                            <option value="EN">Other</option>
+                            <option value="SV">Sweden</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <label for="county">County</label>
-                    <input type="text" name="county" placeholder="Uusimaa" value="" />
-                </div>
+                    <div class="form-group">
+                        <label for="county">County</label>
+                        <input class="form-control" type="text" name="county" placeholder="Uusimaa" value="Uusimaa" />
+                    </div>
 
-            <input id='btn' name="submit" type='submit' value='Submit'>
-        </fieldset>
-    </form>
-    <?php
-    include "checkout.php";
-    ?>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </fieldset>
+        </form>
+        <?php
+        include "checkout.php";
+        ?>
+    </div>
 </body>
 </html>
