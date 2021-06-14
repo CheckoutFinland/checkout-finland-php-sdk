@@ -1,5 +1,5 @@
-# OP Payment Service PHP-SDK
-PHP SDK for using OP Payment Service (formerly Checkout Finland)
+# Checkout Finland PHP-SDK
+PHP SDK for using Checkout Finland payment service
 
 ## Requirements
 
@@ -17,7 +17,7 @@ PHP SDK for using OP Payment Service (formerly Checkout Finland)
 Install with Composer:
 
 ```
-composer require op-merchant-services/op-payment-service-php-sdk
+composer require checkout-finland/checkout-finland-php-sdk
 ```
 
 The package uses PSR-4 autoloader. Activate autoloading by requiring the Composer autoloader:

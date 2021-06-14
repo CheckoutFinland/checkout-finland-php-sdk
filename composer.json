@@ -1,6 +1,6 @@
 {
-    "name": "op-merchant-services/op-payment-service-php-sdk",
-    "description": "PHP SDK for using OP Payment Service (formerly Checkout Finland)",
+    "name": "checkout-finland/checkout-finland-php-sdk",
+    "description": "PHP SDK for using Checkout Finland payment service",
     "authors": [
         {
             "name": "Miika Arponen",
@@ -41,7 +41,7 @@
 
     ],
     "keywords": [
-        "op payment service", "checkout finland", "payment service provider"
+        "checkout finland", "payment service provider"
     ],
     "license": "MIT",
     "require": {
