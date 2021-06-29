@@ -11,13 +11,13 @@ require 'vendor/autoload.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>OP Payment Service Example</title>
+    <title>Checkout Finland Payment Service Example</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style> div {max-width: 1000px;}</style>
 </head>
 <body>
     <div class="container-fluid">
-        <h1>OP Payment Service Example</h1>
+        <h1>Checkout Finland Payment Service Example</h1>
         <?php
         $status = $_GET["checkout-status"];
         if ($status === 'ok') {
