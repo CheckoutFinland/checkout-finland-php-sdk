@@ -54,7 +54,7 @@ if ($data['county'] != '') {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Checkout | OP Payment Service Example</title>
+        <title>Checkout Finland Payment Service Example</title>
     </head>
     <body>
     <h1>Checkout</h1>
@@ -63,7 +63,7 @@ if ($data['county'] != '') {
             <legend>Select the payment provider</legend>
             <?php
 
-            echo '<p>Go directly to <a href="' . $paymentData->getHref() . '" target="_blank">OP Payment Service</a></p>';
+            echo '<p>Go directly to <a href="' . $paymentData->getHref() . '" target="_blank">Checkout Finland Service</a></p>';
 
             $terms_link = $groupData['terms'];
             echo '<div class="checkout-terms-link">' . $terms_link . '</div>';
@@ -99,6 +99,6 @@ if ($data['county'] != '') {
     </html>
 <?php
 } else {
-    echo 'Please fill all form fields!';
+    echo '<div class="alert alert-warning"> Please submit!</div>';
 }
 ?>
