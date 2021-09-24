@@ -25,12 +25,12 @@ use OpMerchantServices\SDK\Response\RefundResponse;
 use OpMerchantServices\SDK\Response\EmailRefundResponse;
 use OpMerchantServices\SDK\Response\RevertPaymentAuthHoldResponse;
 use OpMerchantServices\SDK\Util\Signature;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Uri;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\MessageFormatter;
-use GuzzleHttp\Client as GuzzleHttpClient;
+use Guzzle6\Exception\RequestException;
+use Guzzle6\Psr7\Uri;
+use Guzzle6\HandlerStack;
+use Guzzle6\Middleware;
+use Guzzle6\MessageFormatter;
+use Guzzle6\Client as GuzzleHttpClient;
 use Psr\Http\Message\ResponseInterface;
 use OpMerchantServices\SDK\Exception\HmacException;
 
@@ -617,7 +617,7 @@ class Client
             );
 
             return $citPaymentResponse;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\Guzzle6\Exception\ClientException $e) {
             if ($e->hasResponse() && $e->getCode() === 403) {
                 $decoded = json_decode($e->getResponse()->getBody());
                 return (new CitPaymentResponse())

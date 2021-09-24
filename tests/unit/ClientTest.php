@@ -1,6 +1,6 @@
 <?php
 
-use GuzzleHttp\Exception\RequestException;
+use Guzzle6\Exception\RequestException;
 use OpMerchantServices\SDK\Client;
 use OpMerchantServices\SDK\Exception\HmacException;
 use OpMerchantServices\SDK\Exception\ValidationException;
@@ -467,7 +467,7 @@ class ClientTest extends TestCase
         try {
             $client = $this->client;
             $client->revertPaymentAuthorizationHold($revertCitPaymentAuthHoldRequestException);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (\GuzzleHttp6\Exception\ClientException $e) {
             // Fails, as transaction with the given transactionID has already been reverted
             $this->assertStringContainsString('{"status":"error","message":"Transaction not found"}', $e->getMessage());
         }
