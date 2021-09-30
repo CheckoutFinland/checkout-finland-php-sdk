@@ -9,8 +9,11 @@ PHP SDK for using Checkout Finland payment service
 
 ### Composer packages
 
-- [Guzzle](https://github.com/guzzle/guzzle) - PHP HTTP client for performing HTTP request.
 - [PHPUnit](https://github.com/sebastianbergmann/phpunit) - A programmer-oriented testing framework for running unit tests in PHP.
+
+### Library packages
+- [Guzzle](https://github.com/guzzle/guzzle) v6.5.5 - PHP HTTP client for performing HTTP request.
+
 
 ## Installation
 
@@ -39,6 +42,7 @@ _Note the path to the vendor directory is relative to your project._
 | src/Response  | Response classes and functions  |
 | src/Util  | Utility/trait classes and functions  |
 | src/Client.php  | Client class and functions  |
+| lib | Library packages eg. Guzzle
 | tests/unit  | PHP unit tests  |
 
 ## Basic functionalities
