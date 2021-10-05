@@ -6,7 +6,7 @@
 namespace OpMerchantServices\SDK\Model;
 
 use OpMerchantServices\SDK\Exception\ValidationException;
-use OpMerchantServices\SDK\Interfaces\ComissionInterface;
+use OpMerchantServices\SDK\Interfaces\CommissionInterface;
 use OpMerchantServices\SDK\Interfaces\ItemInterface;
 use OpMerchantServices\SDK\Util\JsonSerializable;
 
@@ -102,7 +102,7 @@ class Item implements \JsonSerializable, ItemInterface
      * Shop-in-Shop commission.
      * Do not use for normal payments.
      *
-     * @var ComissionInterface
+     * @var CommissionInterface
      */
     protected $commission;
 
@@ -339,9 +339,9 @@ class Item implements \JsonSerializable, ItemInterface
     /**
      * Get the commission.
      *
-     * @return ComissionInterface
+     * @return CommissionInterface
      */
-    public function getCommission(): ?ComissionInterface
+    public function getCommission(): ?CommissionInterface
     {
         return $this->commission;
     }
@@ -349,10 +349,10 @@ class Item implements \JsonSerializable, ItemInterface
     /**
      * Set the commission.
      *
-     * @param ComissionInterface $commission
+     * @param CommissionInterface $commission
      * @return ItemInterface Return self to enable chaining.
      */
-    public function setCommission(?ComissionInterface $commission) : ItemInterface
+    public function setCommission(?CommissionInterface $commission) : ItemInterface
     {
         $this->commission = $commission;
 
@@ -384,6 +384,26 @@ class Item implements \JsonSerializable, ItemInterface
         }
         if (empty($props['deliveryDate'])) {
             throw new ValidationException('deliveryDate is empty');
+        }
+
+        return true;
+    }
+
+    /**
+     * Validates shop-in-shop props with Respect\Validation library and throws an exception for invalid objects
+     *
+     * @throws ValidationException
+     */
+    public function validateShopInShop()
+    {
+        $props = get_object_vars($this);
+
+        if (empty($props['merchant'])) {
+            throw new ValidationException('merchant is empty');
+        }
+
+        if (empty($props['reference'])) {
+            throw new ValidationException('reference is empty');
         }
 
         return true;
