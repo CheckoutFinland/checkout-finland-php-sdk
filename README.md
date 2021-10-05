@@ -43,6 +43,7 @@ _Note the path to the vendor directory is relative to your project._
 | src/Client.php  | Client class and functions  |
 | lib | Library packages eg. Guzzle
 | tests/unit  | PHP unit tests  |
+| examples  | Examples  |
 
 ## Basic functionalities
 
