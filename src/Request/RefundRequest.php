@@ -3,23 +3,21 @@
  * Class Refund
  */
 
-namespace CheckoutFinland\SDK\Request;
+namespace OpMerchantServices\SDK\Request;
 
-use CheckoutFinland\SDK\Interfaces\RequestInterface;
-use CheckoutFinland\SDK\Model\CallbackUrl;
-use CheckoutFinland\SDK\Model\RefundItem;
-use CheckoutFinland\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Model\CallbackUrl;
+use OpMerchantServices\SDK\Model\RefundItem;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class Refund
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=http-request-body
  *
- * @package CheckoutFinland\SDK\Request
+ * @package OpMerchantServices\SDK\Request
  */
-class RefundRequest implements \JsonSerializable, RequestInterface
+class RefundRequest implements \JsonSerializable
 {
 
     use JsonSerializable;
@@ -27,7 +25,7 @@ class RefundRequest implements \JsonSerializable, RequestInterface
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
@@ -51,11 +49,25 @@ class RefundRequest implements \JsonSerializable, RequestInterface
             $items_total = $this->amount;
         }
 
-        v::key('amount', v::notEmpty()->intVal()->equals($items_total))
-        ->assert($props);
+        if (empty($props['amount'])) {
+            throw new ValidationException('Amount can not be empty');
+        }
 
-        // Validate the callback urls.
+        if (filter_var($props['amount'], FILTER_VALIDATE_INT) === false) {
+            throw new ValidationException('Amount is not an integer');
+        }
+
+        if ($items_total !== $props['amount']) {
+            throw new ValidationException('ItemsTotal does not match Amount');
+        }
+
+        if (empty($props['callbackUrls'])) {
+            throw new ValidationException('CallbackUrls are not set');
+        }
+
         $this->callbackUrls->validate();
+
+        return true;
     }
 
     /**

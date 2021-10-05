@@ -1,38 +1,45 @@
 <?php
 /**
- * Class Customer
+ * Class CustomerInterface
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Interfaces\CustomerInterface;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
- * Class Customer
+ * Class CustomerInterface
  *
  * The customer class defines the customer details object.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=customer
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
-class Customer implements \JsonSerializable
+class Customer implements \JsonSerializable, CustomerInterface
 {
 
     use JsonSerializable;
 
     /**
-     * Validates with Respect\Validation library and throws an exception for invalid objects
+     * Validate email
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('email', v::notEmpty()->email())
-        ->assert($props);
+        if (empty($props['email'])) {
+            throw new ValidationException('Email is empty');
+        }
+
+        if (filter_var($props['email'], FILTER_VALIDATE_EMAIL) === false) {
+            throw new ValidationException('Email is not a valid email address');
+        }
+
+        return true;
     }
 
     /**
@@ -88,7 +95,7 @@ class Customer implements \JsonSerializable
      *
      * @return self Return self to enable chaining.
      */
-    public function setEmail(?string $email) : Customer
+    public function setEmail(?string $email) : CustomerInterface
     {
         $this->email = $email;
 
@@ -113,7 +120,7 @@ class Customer implements \JsonSerializable
      *
      * @return self Return self to enable chaining.
      */
-    public function setFirstName(?string $firstName) : Customer
+    public function setFirstName(?string $firstName) : CustomerInterface
     {
         $this->firstName = $firstName;
 
@@ -138,7 +145,7 @@ class Customer implements \JsonSerializable
      *
      * @return self Return self to enable chaining.
      */
-    public function setLastName(?string $lastName) : Customer
+    public function setLastName(?string $lastName) : CustomerInterface
     {
         $this->lastName = $lastName;
 
@@ -163,7 +170,7 @@ class Customer implements \JsonSerializable
      *
      * @return self Return self to enable chaining.
      */
-    public function setPhone(?string $phone) : Customer
+    public function setPhone(?string $phone) : CustomerInterface
     {
         $this->phone = $phone;
 
@@ -188,7 +195,7 @@ class Customer implements \JsonSerializable
      *
      * @return self Return self to enable chaining.
      */
-    public function setVatId(?string $vatId) : Customer
+    public function setVatId(?string $vatId) : CustomerInterface
     {
         $this->vatId = $vatId;
 

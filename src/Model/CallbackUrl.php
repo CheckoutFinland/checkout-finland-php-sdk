@@ -3,11 +3,11 @@
  * Class CallbackUrl
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use CheckoutFinland\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Interfaces\CallbackUrlInterface;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class CallbackUrl
@@ -15,9 +15,9 @@ use Respect\Validation\Exceptions\NestedValidationException;
  * This class defines callback url details.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=callbackurl
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
-class CallbackUrl implements \JsonSerializable
+class CallbackUrl implements \JsonSerializable, CallbackUrlInterface
 {
 
     use JsonSerializable;
@@ -25,15 +25,29 @@ class CallbackUrl implements \JsonSerializable
     /**
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('success', v::notEmpty())
-        ->key('cancel', v::notEmpty())
-        ->assert($props);
+        if (empty($props['success'])) {
+            throw new ValidationException('Success is empty');
+        }
+
+        if (empty($props['cancel'])) {
+            throw new ValidationException('Cancel is empty');
+        }
+
+        if (filter_var($props['success'], FILTER_VALIDATE_URL) === false) {
+            throw new ValidationException('Success is not a valid URL');
+        }
+
+        if (filter_var($props['cancel'], FILTER_VALIDATE_URL) === false) {
+            throw new ValidationException('Cancel is not a valid URL');
+        }
+
+        return true;
     }
 
     /**
@@ -65,9 +79,9 @@ class CallbackUrl implements \JsonSerializable
      * Set the success url.
      *
      * @param string $success
-     * @return CallbackUrl Return self to enable chaining.
+     * @return CallbackUrlInterface Return self to enable chaining.
      */
-    public function setSuccess(?string $success): CallbackUrl
+    public function setSuccess(?string $success): CallbackUrlInterface
     {
         $this->success = $success;
 
@@ -89,9 +103,9 @@ class CallbackUrl implements \JsonSerializable
      * Set the cancellation url.
      *
      * @param string $cancel
-     * @return CallbackUrl Return self to enable chaining.
+     * @return CallbackUrlInterface Return self to enable chaining.
      */
-    public function setCancel(?string $cancel): CallbackUrl
+    public function setCancel(?string $cancel): CallbackUrlInterface
     {
         $this->cancel = $cancel;
 

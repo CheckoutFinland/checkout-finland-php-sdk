@@ -3,10 +3,8 @@
  * Class ValidationException
  */
 
-namespace CheckoutFinland\SDK\Exception;
+namespace OpMerchantServices\SDK\Exception;
 
-use Respect\Validation\Exceptions\NestedValidationException;
-use Throwable;
 
 /**
  * Class ValidationException
@@ -15,7 +13,7 @@ use Throwable;
  *
  * This exception holds the general expection message
  *
- * @package CheckoutFinland\SDK\Exception
+ * @package OpMerchantServices\SDK\Exception
  */
 class ValidationException extends \Exception
 {

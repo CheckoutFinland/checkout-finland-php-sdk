@@ -3,14 +3,14 @@
  * Class HmacException
  */
 
-namespace CheckoutFinland\SDK\Exception;
+namespace OpMerchantServices\SDK\Exception;
 
 /**
  * Class HmacException
  *
  * Thrown if the hmac validation fails.
  *
- * @package CheckoutFinland\SDK\Exception
+ * @package OpMerchantServices\SDK\Exception
  */
 class HmacException extends \Exception
 {

@@ -3,7 +3,7 @@
  * Trait JsonSerializable
  */
 
-namespace CheckoutFinland\SDK\Util;
+namespace OpMerchantServices\SDK\Util;
 
 /**
  * Trait JsonSerializable
@@ -16,7 +16,7 @@ trait JsonSerializable
      * return all object variables including
      * private/protected properties.
      *
-     * @return \stdClass
+     * @return array
      */
     public function jsonSerialize()
     {

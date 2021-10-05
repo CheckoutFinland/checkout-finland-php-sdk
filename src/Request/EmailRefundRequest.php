@@ -3,21 +3,19 @@
  * Class EmailRefund
  */
 
-namespace CheckoutFinland\SDK\Request;
+namespace OpMerchantServices\SDK\Request;
 
-use CheckoutFinland\SDK\Interfaces\RequestInterface;
-use CheckoutFinland\SDK\Model\CallbackUrl;
-use CheckoutFinland\SDK\Model\RefundItem;
-use CheckoutFinland\SDK\Util\JsonSerializable;
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Model\CallbackUrl;
+use OpMerchantServices\SDK\Model\RefundItem;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
  * Class EmailRefund
  *
  * @see https://checkoutfinland.github.io/psp-api/#/examples?id=email-refund-request-body
  *
- * @package CheckoutFinland\SDK\Request
+ * @package OpMerchantServices\SDK\Request
  */
 class EmailRefundRequest extends RefundRequest
 {
@@ -33,12 +31,21 @@ class EmailRefundRequest extends RefundRequest
      * Validates with Respect\Validation library and throws an exception for invalid objects
      *
      * @throws NestedValidationException Thrown when the validate() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         parent::validate();
 
-        v::notEmpty()->email()->validate($this->email);
+        if (empty($this->email)) {
+            throw new ValidationException('email can not be empty');
+        }
+
+        if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new ValidationException('email is not a valid email address');
+        }
+
+        return true;
     }
 
     /**

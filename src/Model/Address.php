@@ -1,23 +1,23 @@
 <?php
 /**
- * Class Address
+ * Class AddressInterface
  */
 
-namespace CheckoutFinland\SDK\Model;
+namespace OpMerchantServices\SDK\Model;
 
-use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\NestedValidationException;
-use CheckoutFinland\SDK\Util\JsonSerializable;
+use OpMerchantServices\SDK\Exception\ValidationException;
+use OpMerchantServices\SDK\Interfaces\AddressInterface;
+use OpMerchantServices\SDK\Util\JsonSerializable;
 
 /**
- * Class Address
+ * Class AddressInterface
  *
  * This class defines address details for a payment request.
  *
  * @see https://checkoutfinland.github.io/psp-api/#/?id=address
- * @package CheckoutFinland\SDK\Model
+ * @package OpMerchantServices\SDK\Model
  */
-class Address implements \JsonSerializable
+class Address implements \JsonSerializable, AddressInterface
 {
 
     use JsonSerializable;
@@ -25,17 +25,29 @@ class Address implements \JsonSerializable
     /**
      * Validates with Respect\Validation library and throws exception for invalid objects
      *
-     * @throws NestedValidationException Thrown when the assert() fails.
+     * @throws ValidationException
      */
     public function validate()
     {
         $props = get_object_vars($this);
 
-        v::key('streetAddress', v::notEmpty())
-        ->key('postalCode', v::notEmpty())
-        ->key('city', v::notEmpty())
-        ->key('country', v::notEmpty())
-        ->assert($props);
+        if (empty($props['streetAddress'])) {
+            throw new ValidationException('streetAddress is empty');
+        }
+
+        if (empty($props['postalCode'])) {
+            throw new ValidationException('postalCode is empty');
+        }
+
+        if (empty($props['city'])) {
+            throw new ValidationException('city is empty');
+        }
+
+        if (empty($props['country'])) {
+            throw new ValidationException('country is empty');
+        }
+
+        return true;
     }
 
     /**
@@ -89,9 +101,9 @@ class Address implements \JsonSerializable
      *
      * @param string $streetAddress
      *
-     * @return Address Return self to enable chaining.
+     * @return AddressInterface Return self to enable chaining.
      */
-    public function setStreetAddress(?string $streetAddress) : Address
+    public function setStreetAddress(?string $streetAddress) : AddressInterface
     {
         $this->streetAddress = $streetAddress;
 
@@ -114,9 +126,9 @@ class Address implements \JsonSerializable
      *
      * @param string $postalCode
      *
-     * @return Address Return self to enable chaining.
+     * @return AddressInterface Return self to enable chaining.
      */
-    public function setPostalCode(?string $postalCode) : Address
+    public function setPostalCode(?string $postalCode) : AddressInterface
     {
         $this->postalCode = $postalCode;
 
@@ -139,9 +151,9 @@ class Address implements \JsonSerializable
      *
      * @param string $city
      *
-     * @return Address Return self to enable chaining.
+     * @return AddressInterface Return self to enable chaining.
      */
-    public function setCity(?string $city) : Address
+    public function setCity(?string $city) : AddressInterface
     {
         $this->city = $city;
 
@@ -164,9 +176,9 @@ class Address implements \JsonSerializable
      *
      * @param string $county
      *
-     * @return Address Return self to enable chaining.
+     * @return AddressInterface Return self to enable chaining.
      */
-    public function setCounty(?string $county) : Address
+    public function setCounty(?string $county) : AddressInterface
     {
         $this->county = $county;
 
@@ -189,9 +201,9 @@ class Address implements \JsonSerializable
      *
      * @param string $country
      *
-     * @return Address Return self to enable chaining.
+     * @return AddressInterface Return self to enable chaining.
      */
-    public function setCountry(?string $country) : Address
+    public function setCountry(?string $country) : AddressInterface
     {
         $this->country = $country;
 

@@ -3,16 +3,16 @@
  * Class Signature
  */
 
-namespace CheckoutFinland\SDK\Util;
+namespace OpMerchantServices\SDK\Util;
 
-use CheckoutFinland\SDK\Exception\HmacException;
+use OpMerchantServices\SDK\Exception\HmacException;
 
 /**
  * Class Signature
  *
  * A utility class for creating and validating HMAC signatures.
  *
- * @package CheckoutFinland\SDK\Util
+ * @package OpMerchantServices\SDK\Util
  */
 class Signature
 {
