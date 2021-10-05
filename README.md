@@ -14,7 +14,6 @@ PHP SDK for using Checkout Finland payment service
 ### Library packages
 - [Guzzle](https://github.com/guzzle/guzzle) v6.5.5 - PHP HTTP client for performing HTTP request.
 
-
 ## Installation
 
 Install with Composer:
