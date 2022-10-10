@@ -1,4 +1,12 @@
 # Checkout Finland PHP-SDK
+
+## ⚠️ DEPRECATED
+
+**This SDK has been deprecated**. 
+
+All of its functionality now exists as the rebranded [`paytrail/paytrail-php-sdk`](https://github.com/paytrail/paytrail-php-sdk).
+<hr/>
+
 PHP SDK for using Checkout Finland payment service
 
 ## Requirements
